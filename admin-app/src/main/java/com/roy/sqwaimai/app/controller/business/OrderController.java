@@ -226,12 +226,13 @@ public class OrderController extends BaseController {
 
         }
         order.setBasket(basket);
-        OrderStatusBar statusBar = new OrderStatusBar();
-        statusBar.setColor("f60");
-        statusBar.setSub_title("");
-        statusBar.setTitle("已支付");
-        order.setStatus_code(Order.STATUS_PAID);
-        order.setStatus_bar(statusBar);
+//        OrderStatusBar statusBar = new OrderStatusBar();
+//        statusBar.setColor("f60");
+//        statusBar.setSub_title("");
+//        statusBar.setTitle("已支付");
+//        order.setStatus_code(Order.STATUS_PAID);
+        order.setStatus_code(Order.STATUS_INIT);
+//        order.setStatus_bar(statusBar);
         order.setTotal_amount(Double.valueOf(cart.getCart().getTotal()).intValue());
         order.setTotal_quantity(Integer.valueOf(basket.getGroup().get(0).size()));
         order.setUnique_id(order.getId());

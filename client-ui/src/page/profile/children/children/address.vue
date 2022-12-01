@@ -7,6 +7,7 @@
         	<ul class="addresslist">
         		<li v-for="(item,index) in removeAddress">
         			<div>
+                <p>{{item.address_detail}}</p>
         				<p>{{item.address}}</p>
         				<p><span>{{item.phone}}</span><span v-if="item.phonepk">、{{item.phonepk}}</span></p>
         			</div>
@@ -51,7 +52,7 @@
         },
         mixins: [getImgPath],
         mounted(){
-        	
+
         },
         components: {
             headTop,
@@ -60,7 +61,7 @@
              ...mapState([
                 'userInfo','removeAddress'
             ]),
-             
+
         },
         props:[],
         methods: {
@@ -100,10 +101,10 @@
         }
     }
 </script>
-  
+
 <style lang="scss" scoped>
     @import 'src/style/mixin';
-  
+
     .rating_page{
         position: absolute;
         top: 0;

@@ -12,6 +12,7 @@ import com.roy.sqwaimai.cache.TokenCache;
 import com.roy.sqwaimai.dao.MongoRepository;
 import com.roy.sqwaimai.service.front.IdsService;
 import com.roy.sqwaimai.service.front.PositionService;
+import com.roy.sqwaimai.service.system.FileService;
 import com.roy.sqwaimai.utils.*;
 import org.nutz.lang.Strings;
 import org.nutz.mapl.Mapl;
@@ -19,14 +20,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by zt on 2017/12/12 0012.
- */
 @RestController
 @RequestMapping("/v1/users")
 public class User2Controller extends BaseController {
@@ -39,6 +42,8 @@ public class User2Controller extends BaseController {
     private PositionService positionService;
     @Autowired
     private TokenCache tokenCache;
+    @Resource
+    private FileService fileService;
 
     @RequestMapping(value = "/v1/user", method = RequestMethod.GET)
     public Object getUser() {
@@ -60,7 +65,10 @@ public class User2Controller extends BaseController {
 
     @RequestMapping(method = RequestMethod.GET)
     public Object getUser(@RequestParam("user_id") Long userId) {
-        return Rets.success(mongoRepository.findOne(FrontUser.class, "user_id", userId));
+        Map user = mongoRepository.findOne("users", "user_id", userId);
+        Map userInfo = mongoRepository.findOne("userinfos", "user_id", Long.valueOf(user.get("user_id").toString()));
+        Object result = Mapl.merge(user, userInfo);
+        return Rets.success(result);
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
@@ -148,5 +156,19 @@ public class User2Controller extends BaseController {
         return Rets.success();
     }
 
-
+    @RequestMapping(method = RequestMethod.POST, value = "/{id}/avatar")
+    @ResponseBody
+    public Object uploadAvatar(@PathVariable("id") Long userId, @RequestParam("file") MultipartFile file){
+        Map<String,Object> result = Maps.newHashMap();
+        result.put("status",0);
+        String image_path = fileService.saveAvatar(userId,file);
+        if(StringUtils.isNotEmpty(image_path)){
+            result.put("status",1);
+            result.put("image_path",file.getOriginalFilename());
+        }
+        Map userInfo = mongoRepository.findOne("userinfos", "user_id", userId);
+        userInfo.put("avatar",file.getOriginalFilename());
+        mongoRepository.update(Long.valueOf(userInfo.get("id").toString()), "userinfos", userInfo);
+        return result;
+    }
 }

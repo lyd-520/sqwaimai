@@ -178,7 +178,7 @@
                     let data = new FormData();
                     data.append('file', input.files[0]);
                     try{
-                        let response = await fetch('/eus/v1/users/' + this.userInfo.user_id + '/avatar', {
+                        let response = await fetch('/v1/users/' + this.userInfo.user_id + '/avatar', {
                               method: 'POST',
                               credentials: 'include',
                               body: data

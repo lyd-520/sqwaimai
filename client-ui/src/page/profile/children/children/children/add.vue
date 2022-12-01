@@ -60,10 +60,10 @@
     			mesthree:'', //送餐地址
     			telenum:'', //手机号
     			telephone:'', //手机号提示
-    			standbytele:'', //备用手机号提示 
+    			standbytele:'', //备用手机号提示
     			standbytelenum:'', //备用手机号
     			addSearch:false, //添加搜索地址
-    			newAddress:{},			//增加数组的元素
+    			//newAddress:{},			//增加数组的元素
                 showAlert: false, //弹出框
                 alertText: null, //弹出信息
             }
@@ -80,7 +80,7 @@
              ...mapState([
                 'userInfo', 'addAddress','removeAddress','newAddress', 'geohash'
             ]),
-            
+
         },
         props:[],
         methods: {
@@ -96,14 +96,14 @@
             	this.verifythree=true;
             	if(this.mesthree.length == 0){
             		this.sendaddress='请详细填写送餐地址';
-            		
+
             	}else if(this.mesthree.length > 0 && this.mesthree.length <= 2){
             		this.sendaddress='送餐地址太短了，不能辨识';
             	}else{
             		this.sendaddress='';
             		this.verifythree=false;
             	}
-            	this.bindThing()	
+            	this.bindThing()
             },
             //输入手机号
             inputThingfour(){
@@ -158,7 +158,7 @@
         }
     }
 </script>
-  
+
 <style lang="scss" scoped>
     @import 'src/style/mixin';
   	.router-slid-enter-active, .router-slid-leave-active {
@@ -209,7 +209,7 @@
 				margin-top:.2rem;
     		}
     	}
-    	
+
     }
     .addbutton{
     	margin:.6rem auto;

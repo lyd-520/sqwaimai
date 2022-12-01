@@ -133,21 +133,24 @@ public class FoodController extends BaseController {
         }
         List<Food> foods = page.getRecords();
         for(int i=0;i<foods.size();i++){
-            foods.get(i).setShopName(getShopName(foods.get(i).getRestaurant_id()));
+            Shop shop = getShopName(foods.get(i).getRestaurant_id());
+            foods.get(i).setShopName(shop.getName());
+            foods.get(i).setShopAddress(shop.getAddress());
         }
         return Rets.success(page);
     }
-    Map<Long, String> shopNameMap = Maps.newHashMap();
-    private String getShopName(Long shopId){
-        String shopname = shopNameMap.get(shopId);
-        if(shopname==null){
-            Shop shop = mongoRepository.findOne(Shop.class,shopId);
+
+    Map<Long, Shop> shopNameMap = Maps.newHashMap();
+
+    private Shop getShopName(Long shopId){
+        Shop shop = shopNameMap.get(shopId);
+        if(shop==null){
+            shop = mongoRepository.findOne(Shop.class,shopId);
             if(shop!=null){
-                shopname = shop.getName();
-                shopNameMap.put(shopId,shopname);
+                shopNameMap.put(shopId,shop);
             }
         }
-        return shopname;
+        return shop;
     }
 
     @RequestMapping(value = "/v2/foods/count", method = RequestMethod.GET)

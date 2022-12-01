@@ -48,7 +48,7 @@ public class AddressController extends BaseController {
         mongoRepository.save(address);
         return Rets.success("添加地址成功");
     }
-    @RequestMapping(value = "/v1/users/${user_id}/addresses/${address_id}",method =  RequestMethod.POST)
+    @RequestMapping(value = "/v1/users/{user_id}/addresses/{address_id}",method =  RequestMethod.DELETE)
     public Object delete(@PathVariable("user_id") Long userId, @PathVariable("address_id") Long addressId){
         mongoRepository.delete("addresses", Maps.newHashMap("user_id",userId,"id",addressId));
         return Rets.success("删除地址成功");

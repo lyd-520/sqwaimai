@@ -13,16 +13,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- *
- * @author ：enilu
- * @date ：Created in 2019/6/29 22:32
- */
 public abstract  class BaseService<T, ID extends Serializable, R extends BaseRepository<T, ID>>
         implements CrudService<T, ID> {
     @Autowired

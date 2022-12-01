@@ -101,6 +101,7 @@ public class Food extends BaseMongoEntity{
     private String auditRemark;
 
     private String shopName;
+    private String shopAddress;
 
 
     //必须在setget方法加上该注释，否则_id值会覆盖在id上
@@ -318,6 +319,14 @@ public class Food extends BaseMongoEntity{
 
     public void setShopName(String shopName) {
         this.shopName = shopName;
+    }
+
+    public String getShopAddress() {
+        return shopAddress;
+    }
+
+    public void setShopAddress(String shopAddress) {
+        this.shopAddress = shopAddress;
     }
 
     /**

@@ -178,6 +178,7 @@ export default {
             }else{
                 path = this.getImgPath(this.avatar)
             }
+            console.info(path)
             this.SAVE_AVANDER(path);
             return path;
         }

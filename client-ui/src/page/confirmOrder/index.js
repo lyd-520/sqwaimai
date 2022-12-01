@@ -75,13 +75,9 @@ export default {
     //初始化数据
     async initData(){
       let newArr = new Array;
-      console.log('shopCart',this.shopCart)
       Object.values(this.shopCart).forEach(categoryItem => {
-        console.log(1)
         Object.values(categoryItem).forEach(itemValue=> {
-          console.log(2)
           Object.values(itemValue).forEach(item => {
-            console.log(3)
             newArr.push({
               attrs: [],
               extra: {},
@@ -94,21 +90,16 @@ export default {
               specs: [item.specs],
               stock: item.stock,
             })
-            console.log(4,newArr)
           })
         })
       })
-      console.log(5)
+      // console.log(5)
       //检验订单是否满足条件
 
       this.checkoutData = await checkout(this.geohash, [newArr], this.shopId);
-      console.log(7)
       this.SAVE_CART_ID_SIG({cart_id: this.checkoutData.cart.id, sig:  this.checkoutData.sig})
-      console.log(8)
       this.initAddress();
-      console.log(9)
       this.showLoading = false;
-      console.log(10)
     },
     //获取地址信息，第一个地址为默认选择地址
     async initAddress(){

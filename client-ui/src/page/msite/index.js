@@ -25,7 +25,7 @@ export default {
       this.geohash = this.$route.query.geohash
       address = this.$route.query.address
     }
-    console.log('geohash',this.geohash)
+    // console.log('geohash',this.geohash)
     //保存geohash 到vuex
     this.SAVE_GEOHASH(this.geohash);
     //获取位置信息

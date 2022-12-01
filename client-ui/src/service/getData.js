@@ -347,6 +347,13 @@ export const payRequest = (merchantOrderNo, userId) => fetch('/payapi/payment/qu
   version: '1.0.0',
 });
 
+/**
+ * 支付订单
+ */
+export const payOrder = (merchantOrderNo) => fetch('/payapi/payment/', {
+  merchantOrderNo
+}, 'POST');
+
 
 /**
  * 获取服务中心信息

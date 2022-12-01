@@ -108,9 +108,9 @@ export default {
 		async initData(){
 			//获取数据
 			let resResponse = await shopList(this.latitude, this.longitude, this.offset, this.restaurantCategoryId);
-			console.log('resresponse',resResponse)
+			// console.log('resresponse',resResponse)
 			let res = resResponse.records
-      console.log('res',res)
+      // console.log('res',res)
 			this.shopListArr = [...res];
 			if (res.length < 20) {
 				this.touchend = true;
@@ -180,7 +180,7 @@ export default {
 	watch: {
 		//监听父级传来的restaurantCategoryIds，当值发生变化的时候重新获取餐馆数据，作用于排序和筛选
 		restaurantCategoryIds: function (value){
-		  console.log('watchids',value)
+		  // console.log('watchids',value)
 			this.listenPropChange();
 		},
 		//监听父级传来的排序方式

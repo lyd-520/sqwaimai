@@ -31,7 +31,7 @@ function filterAsyncRouterByMenu(asyncRouterMap, menus) {
       }
       return true
     }
-    console.log(route.path)
+    // console.log(route.path)
     return false
   })
   return accessedRouters

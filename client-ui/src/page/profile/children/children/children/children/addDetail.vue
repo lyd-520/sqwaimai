@@ -86,7 +86,7 @@
             },
             //选择地址
             listClick(index){
-            	this.SAVE_ADDDETAIL(this.adressList[index].name);
+            	this.SAVE_ADDDETAIL(this.addressList[index].address);
             	this.$router.go(-1);
             }
         }

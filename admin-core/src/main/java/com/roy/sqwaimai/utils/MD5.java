@@ -184,6 +184,8 @@ public class MD5 {
     }
 
     public static void main(String[] args) {
-        System.out.println(MD5.md5("admin", "8pgby"));
+//        System.out.println(MD5.md5("client", "8pgby"));
+        String newPassword = MD5.getMD5String(MD5.getMD5String("123456").substring(2, 7) + MD5.getMD5String("123456"));
+        System.out.println(newPassword);
     }
 }

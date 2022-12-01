@@ -225,6 +225,7 @@ public class ShopController extends BaseController {
         Shop shop = new Shop();
         BeanUtil.copyProperties(shopVo, shop);
         shop.setId(idsService.getId(Ids.RESTAURANT_ID));
+        shop.setDisabled(1);
         List activities = Json.fromJson(List.class, shopVo.getActivitiesJson());
         int index = 0;
         for (int i = 0; i < activities.size(); i++) {

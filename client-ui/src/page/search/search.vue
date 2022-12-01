@@ -77,12 +77,12 @@
 
     },
     async beforeMount() {
-      console.log('geohash1', this.$route.params.geohash)
-      console.log('geohash2', this.$route.query.geohash)
+      // console.log('geohash1', this.$route.params.geohash)
+      // console.log('geohash2', this.$route.query.geohash)
       if (!this.$route.params.geohash) {
         const address = await cityGuess();
         this.geohash = address.latitude + ',' + address.longitude;
-        console.log('geosh3',address)
+        // console.log('geosh3',address)
       } else {
         this.geohash = this.$route.params.geohash
       }

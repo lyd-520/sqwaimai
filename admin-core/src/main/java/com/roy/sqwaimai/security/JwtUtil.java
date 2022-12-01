@@ -69,7 +69,8 @@ public class JwtUtil {
             String password = jwt.getClaim("password").asString();
             return new AccountInfo(username, userId, userType,password);
         } catch (JWTDecodeException e) {
-            return null;
+//            return null;
+            return new AccountInfo();
         }
     }
     public static AccountInfo getAccountInfo(   ) {

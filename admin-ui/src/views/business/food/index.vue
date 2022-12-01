@@ -48,7 +48,7 @@
                 <span>{{ props.row.description }}</span>
               </el-form-item>
               <el-form-item label="餐馆地址">
-                <span>{{ props.row.restaurant_address }}</span>
+                <span>{{ props.row.shopAddress}}</span>
               </el-form-item>
               <el-form-item label="食品评分">
                 <span>{{ props.row.rating }}</span>

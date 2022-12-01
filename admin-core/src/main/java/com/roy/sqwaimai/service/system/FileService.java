@@ -132,4 +132,33 @@ public class FileService extends BaseService<FileInfo,Long, FileInfoRepository> 
         }
         return fileInfo;
     }
+
+    public String saveAvatar(Long userId, MultipartFile file) {
+        if(!file.isEmpty()){
+            //存文件
+            String imagePath = configCache.get(ConfigKeyEnum.SYSTEM_FILE_UPLOAD_PATH.getValue()) + File.separator + file.getOriginalFilename();
+            File targetFile = new File(imagePath);
+            if(targetFile.exists()){
+                targetFile.delete();
+            }
+            try {
+                file.transferTo(targetFile);
+                //存FileInfo
+                FileInfo fileInfo = new FileInfo();
+                fileInfo.setCreateTime(new Date());
+                fileInfo.setOriginalFileName(fileInfo.getOriginalFileName());
+                fileInfo.setRealFileName(targetFile.getName());
+                fileInfoRepository.save(fileInfo);
+
+                //存Mongo
+
+                return imagePath;
+            } catch (IOException e) {
+                return "";
+            }
+        }
+        return "";
+
+
+    }
 }

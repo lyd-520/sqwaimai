@@ -69,6 +69,8 @@ public class ShiroConfig {
         filterRuleMap.put("/configuration/ui", "anon");
         //登录接口不拦截
         filterRuleMap.put("/account/login", "anon");
+        //获取用户状态接口
+        filterRuleMap.put("/account/info", "anon");
 
         // 所有请求通过我们自己的JWT Filter
         filterRuleMap.put("/**", "jwt");

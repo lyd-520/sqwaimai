@@ -128,6 +128,7 @@ export default {
           tableData.stateStr = item.stateStr
           tableData.auditRemark = item.auditRemark
           tableData.shopName = item.shopName
+          tableData.shopAddress = item.shopAddress
           this.tableData.push(tableData)
         })
       })

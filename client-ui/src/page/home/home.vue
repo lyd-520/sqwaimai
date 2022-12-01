@@ -15,7 +15,7 @@
                 </svg>
             </router-link>
         </nav>
-        <section id="hot_city_container">
+        <!-- <section id="hot_city_container">
             <h4 class="city_title">热门城市</h4>
             <ul class="citylistul clear">
                 <router-link  tag="li" v-for="item in hotcity" :to="'/city/' + item.id" :key="item.id">
@@ -36,7 +36,7 @@
                     </ul>
                 </li>
             </ul>
-        </section>
+        </section> -->
     </div>
 </template>
 
