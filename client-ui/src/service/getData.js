@@ -350,7 +350,7 @@ export const payRequest = (merchantOrderNo, userId) => fetch('/payapi/payment/qu
 /**
  * 支付订单
  */
-export const payOrder = (merchantOrderNo) => fetch('/payapi/payment/', {
+export const payOrder = (merchantOrderNo) => fetch('/payapi/payment/payOrder', {
   merchantOrderNo
 }, 'POST');
 
@@ -427,6 +427,8 @@ export const getOrderList = (user_id, offset) => fetch('/bos/v2/users/' + user_i
 
 export const finishOrder = (user_id, orderid) => fetch('/bos/v1/users/' + user_id + '/orders/' + orderid + '/finish');
 
+export const cancelOrder = (user_id, orderid) => fetch('/bos/v1/users/' + user_id + '/orders/' + orderid + '/cancel');
+
 
 /**
  * 获取订单详情
@@ -472,7 +474,7 @@ export const signout = () => fetch('/v1/users/v2/signout');
 /**
  * 改密码
  */
-export const changePassword = (username, oldpassWord, newpassword, confirmpassword, captcha_code) => fetch('/v2/changepassword', {
+export const changePassword = (username, oldpassWord, newpassword, confirmpassword, captcha_code) => fetch('/v1/users/v2/changepassword', {
   username,
   oldpassWord,
   newpassword,

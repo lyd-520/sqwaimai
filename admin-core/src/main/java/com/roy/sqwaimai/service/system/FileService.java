@@ -124,7 +124,7 @@ public class FileService extends BaseService<FileInfo,Long, FileInfoRepository> 
         fileInfo.setAblatePath(configCache.get(ConfigKeyEnum.SYSTEM_FILE_UPLOAD_PATH.getValue()) + File.separator+fileInfo.getRealFileName());
         return fileInfo;
     }
-    @Cacheable(value = Cache.APPLICATION, key = "'" + CacheKey.FILE_INFO + "'+#fileName")
+//    @Cacheable(value = Cache.APPLICATION, key = "'" + CacheKey.FILE_INFO + "'+#fileName")
     public FileInfo getByName(String fileName) {
         FileInfo fileInfo = fileInfoRepository.findByRealFileName(fileName);
         if(fileInfo!=null) {

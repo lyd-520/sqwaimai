@@ -50,4 +50,8 @@ public class PageFactory<T> {
             return page;
         }
     }
+
+    public Page<T> rawPage(){
+        return new Page<T>();
+    }
 }

@@ -3,9 +3,7 @@
         <head-top head-title="重置密码" goBack="true"></head-top>
         <form class="restForm">
             <section class="input_container phone_number">
-                <input type="text" placeholder="账号" name="phone" maxlength="11" v-model="phoneNumber" @input="inputPhone">
-                <!-- <button @click.prevent="getVerifyCode" :class="{right_phone_number:rightPhoneNumber}" v-show="!computedTime">获取验证码</button>
-                <button  @click.prevent v-show="computedTime">已发送({{computedTime}}s)</button> -->
+                <input type="text" placeholder="账号" name="phone" maxlength="11" v-model="phoneNumber">
             </section>
              <section class="input_container">
                 <input type="text" placeholder="旧密码" name="oldPassWord" v-model="oldPassWord">
@@ -43,7 +41,6 @@
                 phoneNumber: null, //电话号码
                 oldPassWord: null,
                 newPassWord: null, //新密码
-                rightPhoneNumber: false, //输入的手机号码是否符合要求
                 confirmPassWord: null, //确认密码
                 captchaCodeImg: null, //验证码地址
                 mobileCode: null, //短信验证码
@@ -62,47 +59,6 @@
             this.getCaptchaCode()
         },
         methods: {
-            //判断输入的电话号码
-            inputPhone(){
-                if(/.+/gi.test(this.phoneNumber)){
-                    this.rightPhoneNumber = true;
-                }else{
-                    this.rightPhoneNumber = false;
-                }
-            },
-            //获取验证吗
-            async getVerifyCode(){
-                if (this.rightPhoneNumber) {
-                    this.computedTime = 30;
-                    //倒计时
-                    this.timer = setInterval(() => {
-                        this.computedTime --;
-                        if (this.computedTime == 0) {
-                            clearInterval(this.timer)
-                        }
-                    }, 1000)
-                    //判断用户是否存在
-                    let res = await checkExsis(this.phoneNumber, this.accountType);
-                    //判断返回的信息是否正确，用户是否注册
-                    if (res.message) {
-                        this.showAlert = true;
-                        this.alertText = res.message;
-                        return
-                    }else if(!res.is_exists) {
-                        this.showAlert = true;
-                        this.alertText = '您输入的手机号尚未绑定';
-                        return
-                    }
-                    //获取验证信息
-                    let getCode = await mobileCode(this.phoneNumber);
-                    if (getCode.message) {
-                        this.showAlert = true;
-                        this.alertText = getCode.message;
-                        return
-                    }
-                    this.validate_token = getCode.validate_token;
-                }
-            },
              async getCaptchaCode(){
                 let res = await getcaptchas();
                 this.captchaCodeImg = res.code;
@@ -135,7 +91,21 @@
                     return
                 }
                 // 发送重置信息
-                let res = await changePassword(this.phoneNumber, this.oldPassWord, this.newPassWord, this.confirmPassWord, this.mobileCode);
+                // let res = await changePassword(this.phoneNumber, this.oldPassWord, this.newPassWord, this.confirmPassWord, this.mobileCode);
+                // (username, oldpassWord, newpassword, confirmpassword, captcha_code)
+                let param = new FormData()
+                param.append("username",this.phoneNumber)
+                param.append("oldpassWord",this.oldPassWord)
+                param.append("newpassword",this.newPassWord)
+                param.append("confirmpassword",this.confirmPassWord)
+                param.append("captcha_code",this.captcha_code)
+
+                let res = await fetch('/rider/changepassword', {
+                              method: 'POST',
+                              credentials: 'include',
+                              body: param
+                            })
+
                 if (res.message) {
                     this.showAlert = true;
                     this.alertText = res.message;

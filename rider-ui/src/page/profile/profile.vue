@@ -3,8 +3,8 @@
         <head-top go-back='true' :head-title="profiletitle"></head-top>
         <section>
             <section class="profile-number">
-                <router-link :to="userInfo&&userInfo.user_id? '/profile/info' : '/login'" class="profile-link">
-                    <img :src="imgBaseUrl + userInfo.avatar" class="privateImage" v-if="userInfo&&userInfo.user_id">
+                <router-link :to="userInfo&&userInfo.rider_id? '/profile/info' : '/login'" class="profile-link">
+                    <img :src="imgBaseUrl + userInfo.avatar" class="privateImage" v-if="userInfo&&userInfo.rider_id">
                     <span class="privateImage" v-else>
                         <svg class="privateImage-svg">
                             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#avatar-default"></use>
@@ -20,6 +20,7 @@
                             </span>
                             <span class="icon-mobile-number">{{mobile}}</span>
                         </p>
+                        <p><span class="icon-mobile-number">服务城市：{{guessCity}}</span></p>
                     </div>
                     <span class="arrow">
                         <svg class="arrow-svg" fill="#fff">
@@ -31,61 +32,56 @@
             <section class="info-data">
                 <ul class="clear">
                     <router-link to="/balance" tag="li" class="info-data-link">
-                        <span class="info-data-top"><b>{{parseInt(balance).toFixed(2)}}</b>元</span>
-                        <span class="info-data-bottom">我的余额</span>
+                        <span class="info-data-top"><b>{{order_count}}</b>个</span>
+                        <span class="info-data-bottom">完成订单</span>
                     </router-link>
                     <router-link to="/benefit" tag="li" class="info-data-link">
-                        <span class="info-data-top"><b>{{count}}</b>个</span>
-                        <span class="info-data-bottom">我的优惠</span>
+                        <span class="info-data-top"><b>{{balance_amount}}</b>元</span>
+                        <span class="info-data-bottom">总收益</span>
                     </router-link>
                     <router-link to="/points" tag="li" class="info-data-link">
-                        <span class="info-data-top"><b>{{pointNumber}}</b>分</span>
-                        <span class="info-data-bottom">我的积分</span>
+                        <span class="info-data-top"><b>{{balance}}</b>元</span>
+                        <span class="info-data-bottom">待结算</span>
                     </router-link>
                 </ul>
             </section>
             <section class="profile-1reTe">
+
+                
+                <div class="myorder" v-if="!this.userInfo">
+                    <span>请先登录，并绑定手机号</span>
+                </div>
+
                 <!-- 我的订单 -->
-                <router-link to='/order' class="myorder">
+                <!-- <div class="myorder" v-if="(this.userInfo && this.userInfo.work_status == 0)" @click="goonline"> -->
+                <div class="myorder" @click="goonline">
                     <aside>
                         <svg fill="#4aa5f0">
                             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#order"></use>
                         </svg>
                     </aside>
                     <div class="myorder-div">
-                        <span>我的订单</span>
+                        <span>上线抢单</span>
                         <span class="myorder-divsvg">
                             <svg fill="#bbb">
                                 <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>
                             </svg>
                         </span>
                     </div>
-                </router-link>
-                <!-- 积分商城 -->
-                <a href='https://home.m.duiba.com.cn/#/chome/index' class="myorder">
+                </div>
+                <!-- <router-link to='/order' class="myorder" v-if="(this.userInfo.work_status == 0)">
+                    
+                </router-link> -->
+                <!-- 获取订单 -->
+                <!-- <router-link to='/order' class="myorder" v-if="this.userInfo"> -->
+                <router-link to='/order' class="myorder">
                     <aside>
-                        <svg fill="#fc7b53">
-                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#point"></use>
-                        </svg>
-                    </aside>
-                    <div class="myorder-div">
-                        <span>积分商城</span>
-                        <span class="myorder-divsvg">
-                            <svg fill="#bbb">
-                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>
-                            </svg>
-                        </span>
-                    </div>
-                </a>
-                <!-- 饿了么会员卡 -->
-                <router-link to='/vipcard' class="myorder">
-                    <aside>
-                        <svg fill="#ffc636">
+                        <svg fill="#4aa5f0">
                             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#vip"></use>
                         </svg>
                     </aside>
                     <div class="myorder-div">
-                        <span>饿了么会员卡</span>
+                        <span>获取订单</span>
                         <span class="myorder-divsvg">
                             <svg fill="#bbb">
                                 <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>
@@ -93,77 +89,75 @@
                         </span>
                     </div>
                 </router-link>
-            </section>
-            <section class="profile-1reTe">
-                <!-- 服务中心 -->
-                <router-link to='/service' class="myorder">
+                <!-- 下线休息 -->
+                <!-- <router-link to='/order' class="myorder" v-if="(this.userInfo && this.userInfo.work_status == 1)"> -->
+                    <div class="myorder" @click="gooffline">
                     <aside>
                         <svg fill="#4aa5f0">
-                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#service"></use>
+                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#point"></use>
                         </svg>
                     </aside>
                     <div class="myorder-div">
-                        <span>服务中心</span>
+                        <span>下线休息</span>
                         <span class="myorder-divsvg">
                             <svg fill="#bbb">
                                 <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>
                             </svg>
                         </span>
                     </div>
-                </router-link>
-                <!-- 下载饿了么APP -->
-                <router-link to='/download' class="myorder">
-                    <aside>
-                        <svg fill="#3cabff">
-                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#download"></use>
-                        </svg>
-                    </aside>
-                    <div class="myorder-div" style="border-bottom:0;">
-                        <span>下载饿了么APP</span>
-                        <span class="myorder-divsvg">
-                            <svg fill="#bbb">
-                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>
-                            </svg>
-                        </span>
-                    </div>
-                </router-link>
+                </div>
             </section>
         </section>
         <foot-guide></foot-guide>
         <transition name="router-slid" mode="out-in">
             <router-view></router-view>
         </transition>
+        <alert-tip v-if="showAlert" :showHide="showAlert" @closeTip="closeTip" :alertText="alertText"></alert-tip>
     </div>
 </template>
 
 <script>
 import headTop from 'src/components/header/head'
 import footGuide from 'src/components/footer/footGuide'
+import alertTip from 'src/components/common/alertTip'
 import {mapState, mapMutations} from 'vuex'
 import {imgBaseUrl} from 'src/config/env'
 import {getImgPath} from 'src/components/common/mixin'
+import {rideronline,rideroffline,cityGuess} from 'src/service/getData'
 
 export default {
     data(){
         return{
-            profiletitle: '我的',
+            profiletitle: '骑手信息',
             username: '登录/注册',           //用户名
             resetname: '',
             mobile: '暂无绑定手机号',             //电话号码
-            balance: 0,            //我的余额
-            count : 0,             //优惠券个数
-            pointNumber : 0,       //积分数
+            balance: 0,            //待结算
+            order_count : 0,             //完成订单数
+            balance_amount : 0,       //总收益
             avatar: '',             //头像地址
             imgBaseUrl,
+            showAlert: false, //显示提示组件
+            alertText: null, //提示的内容
+            riderid: '',
+            guessCity: '',   //当前城市
+            guessCityid: '', //当前城市id
         }
     },
     mounted(){
         this.initData();
+        // 获取当前城市
+        cityGuess().then(res => {
+            this.guessCity = res.name;
+            this.guessCityid = res.id;
+        })
     },
     mixins: [getImgPath],
     components:{
         headTop,
         footGuide,
+        alertTip,
+        cityGuess
     },
 
     computed:{
@@ -178,7 +172,6 @@ export default {
             }else{
                 path = this.getImgPath(this.avatar)
             }
-            console.info(path)
             this.SAVE_AVANDER(path);
             return path;
         }
@@ -186,25 +179,69 @@ export default {
 
     methods:{
         ...mapMutations([
-            'SAVE_AVANDER'
+            'SAVE_AVANDER','RECORD_USERINFO'
         ]),
         initData(){
-            if (this.userInfo && this.userInfo.user_id) {
+console.info(this.userInfo)
+            if (this.userInfo && this.userInfo.rider_id) {
                 this.avatar = this.userInfo.avatar;
-                this.username = this.userInfo.username;
+                this.username = this.userInfo.rider_name;
                 this.mobile = this.userInfo.mobile || '暂无绑定手机号';
                 this.balance = this.userInfo.balance;
-                this.count = this.userInfo.gift_amount;
-                this.pointNumber = this.userInfo.point;
+                this.order_count = this.userInfo.order_count;
+                this.balance_amount = this.userInfo.balance_amount;
+                this.riderid = this.userInfo.rider_id
             }else{
                 this.username = '登录/注册';
                 this.mobile = '暂无绑定手机号';
             }
         },
-    },
-    watch: {
-        userInfo: function (value){
-            this.initData()
+        async goonline(){
+            if(!this.userInfo){
+                this.showAlert=true
+                this.alertText="请先登录"
+                return
+            }
+            if(!this.userInfo.mobile){
+                this.showAlert=true
+                this.alertText="请先绑定手机号"
+                return
+            }
+            if(1 == this.userInfo.work_status){
+                this.showAlert=true
+                this.alertText="你已上线"
+                return
+            }
+            let res = await rideronline(this.riderid)
+            if(res && res.rider_id){
+                this.RECORD_USERINFO(res)
+                this.$router.push("/city/"+this.guessCityid)
+            }
+        },
+        async gooffline(){
+            if(!this.userInfo){
+                this.showAlert=true
+                this.alertText="请先登录"
+                return
+            }
+            if(!this.userInfo.mobile){
+                this.showAlert=true
+                this.alertText="请先绑定手机号"
+                return
+            }
+            if(0 == this.userInfo.work_status){
+                this.showAlert=true
+                this.alertText="你已下线"
+                return
+            }
+            let res = await rideroffline(this.riderid)
+            if(res && res.rider_id){
+                this.RECORD_USERINFO(res)
+                // this.$router.push("/city/"+this.guessCityid)
+            }
+        },
+        closeTip(){
+            this.showAlert = false;
         }
     }
 }

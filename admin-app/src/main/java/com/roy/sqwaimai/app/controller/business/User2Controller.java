@@ -118,8 +118,6 @@ public class User2Controller extends BaseController {
             }
 
         }
-
-
     }
 
     @RequestMapping(value = "/v2/signout", method = RequestMethod.GET)

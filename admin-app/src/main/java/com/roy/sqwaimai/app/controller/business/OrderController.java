@@ -3,10 +3,7 @@ package com.roy.sqwaimai.app.controller.business;
 import com.roy.sqwaimai.app.controller.BaseController;
 import com.roy.sqwaimai.bean.constant.factory.PageFactory;
 import com.roy.sqwaimai.bean.entity.front.*;
-import com.roy.sqwaimai.bean.entity.front.sub.OrderBasket;
-import com.roy.sqwaimai.bean.entity.front.sub.OrderFee;
-import com.roy.sqwaimai.bean.entity.front.sub.OrderItem;
-import com.roy.sqwaimai.bean.entity.front.sub.OrderStatusBar;
+import com.roy.sqwaimai.bean.entity.front.sub.*;
 import com.roy.sqwaimai.bean.vo.business.OrderVo;
 import com.roy.sqwaimai.bean.vo.front.Rets;
 import com.roy.sqwaimai.dao.MongoRepository;
@@ -78,10 +75,10 @@ public class OrderController extends BaseController {
         return Rets.success(page);
     }
 
-    @RequestMapping(value = "/bos/getOrder", method = RequestMethod.GET)
+    @RequestMapping(value = "/bos/getOrder")
     public Object getOrder(
-            @RequestParam(value = "id", required = false) Long orderId) {
-        Order order = mongoRepository.findOne(Order.class, orderId);
+            @RequestParam(value = "orderid", required = false) Long orderid) {
+        Order order = mongoRepository.findOne(Order.class, orderid);
         OrderBasket basket = order.getBasket();
         List<List<OrderItem>>  groups = basket.getGroup();
         List<Map> orderItems = Lists.newArrayList();
@@ -117,6 +114,13 @@ public class OrderController extends BaseController {
         return Rets.success(ret);
     }
 
+    @RequestMapping(value = "/rider/getOrder")
+    public Object riderGetOrder(
+            @RequestParam(value = "orderid", required = false) Long orderid) {
+        Order order = mongoRepository.findOne(Order.class, orderid);
+        return Rets.success(order);
+    }
+
     /**
      * 修改订单状态
      * @param orderId
@@ -128,11 +132,8 @@ public class OrderController extends BaseController {
             @RequestParam(value = "id", required = false) Long orderId,
             @RequestParam(value = "status", required = false) Integer status) {
         Order order = mongoRepository.findOne(Order.class, orderId);
-        OrderStatusBar statusBar = order.getStatus_bar();
-        statusBar.setTitle(Order.getStatusCodeStr(status));
-        statusBar.setSub_title("");
-        order.setStatus_bar(statusBar);
         order.setStatus_code(status);
+        order.setStatus_title(Order.getStatusCodeStr(status));
         mongoRepository.update(order);
         return Rets.success(order);
     }
@@ -153,11 +154,8 @@ public class OrderController extends BaseController {
         if(order.getUser_id().intValue()!=userId.intValue()){
             return Rets.failure("无权操作该订单");
         }
-        OrderStatusBar statusBar = order.getStatus_bar();
-        statusBar.setTitle(Order.getStatusCodeStr(Order.STATUS_DONE));
-        statusBar.setSub_title("");
-        order.setStatus_bar(statusBar);
-        order.setStatus_code(Order.STATUS_DONE);
+        order.setStatus_code(Order.STATUS_FINISHED);
+        order.setStatus_title(Order.getStatusCodeStr(Order.STATUS_FINISHED));
         mongoRepository.update(order);
 
         //订单金额加入到商铺未结算金额
@@ -191,16 +189,24 @@ public class OrderController extends BaseController {
         if(order.getUser_id().intValue()!=userId.intValue()){
             return Rets.failure("无权操作该订单");
         }
-        OrderStatusBar statusBar = order.getStatus_bar();
-        statusBar.setTitle(Order.getStatusCodeStr(Order.STATUS_CANCEL));
-        statusBar.setSub_title("已取消");
-        order.setStatus_bar(statusBar);
         order.setStatus_code(Order.STATUS_CANCEL);
+        order.setStatus_title(Order.getStatusCodeStr(Order.STATUS_CANCEL));
         mongoRepository.update(order);
         return Rets.success(order);
-
-
     }
+
+    @RequestMapping(value = "/bos/v1/users/{user_id}/orders/{orderId}/snapshot", method = RequestMethod.GET)
+    public Object snapshotOrder(@PathVariable("user_id") Long userId,
+                              @PathVariable("orderId") Long orderId) {
+
+
+        Order order = mongoRepository.findOne(Order.class, orderId);
+        if(order.getUser_id().intValue()!=userId.intValue()){
+            return Rets.failure("无权操作该订单");
+        }
+        return Rets.success(order);
+    }
+
     @PostMapping(value = "/v1/users/{userId}/carts/{cartId}/orders")
     public Object save(@PathVariable("userId") Long userId, @PathVariable("cartId") Long cartId) {
         OrderVo orderVo = getRequestPayload(OrderVo.class);
@@ -213,6 +219,14 @@ public class OrderController extends BaseController {
         order.setRestaurant_id(shop.getId());
         order.setRestaurant_name(shop.getName());
         order.setRestaurant_image_url(shop.getImage_path());
+        OrderShopAddress orderShopAddress = new OrderShopAddress();
+        orderShopAddress.setId(shop.getId());
+        orderShopAddress.setName(shop.getName());
+        orderShopAddress.setImage_url(shop.getImage_path());
+        orderShopAddress.setLatitude(shop.getLatitude());
+        orderShopAddress.setLongitude(shop.getLongitude());
+        order.setOrderShopAddress(orderShopAddress);
+
         order.setFormatted_create_at(DateUtil.format(createTime, "yyyy-MM-dd HH:mm"));
         order.setOrder_time(createTime.getTime());
         order.setTime_pass(900);
@@ -223,23 +237,30 @@ public class OrderController extends BaseController {
             OrderFee orderFee = (OrderFee) Mapl.maplistToObj(cart.getCart().getExtra().get(0), OrderFee.class);
             basket.setDeliver_fee(orderFee);
             basket.setPacking_fee(Maps.newHashMap("price", cart.getCart().getDeliver_amount()));
-
         }
         order.setBasket(basket);
-//        OrderStatusBar statusBar = new OrderStatusBar();
-//        statusBar.setColor("f60");
-//        statusBar.setSub_title("");
-//        statusBar.setTitle("已支付");
-//        order.setStatus_code(Order.STATUS_PAID);
         order.setStatus_code(Order.STATUS_INIT);
-//        order.setStatus_bar(statusBar);
+        order.setStatus_title(Order.getStatusCodeStr(Order.STATUS_INIT));
         order.setTotal_amount(Double.valueOf(cart.getCart().getTotal()).intValue());
         order.setTotal_quantity(Integer.valueOf(basket.getGroup().get(0).size()));
         order.setUnique_id(order.getId());
         order.setUser_id(userId);
+
         order.setAddress_id(Long.valueOf(orderVo.getAddress_id()));
+        Address address = mongoRepository.findOne(Address.class,"id", Long.valueOf(orderVo.getAddress_id()));
+        OrderAddress orderAddress = new OrderAddress();
+        orderAddress.setId( address.getId());
+        orderAddress.setAddress(address.getAddress());
+        orderAddress.setPhone(address.getPhone());
+        orderAddress.setBakupphone(address.getPhone_bk());
+        orderAddress.setName(address.getName());
+        orderAddress.setSt_geohash(address.getSt_geohash());
+        orderAddress.setUser_id(address.getUser_id());
+        orderAddress.setCity_id(address.getCity_id());
+        orderAddress.setSex(address.getSex());
+        order.setOrder_address(orderAddress);
         mongoRepository.save(order);
-        return Rets.success();
+        return Rets.success(order);
     }
 
 }

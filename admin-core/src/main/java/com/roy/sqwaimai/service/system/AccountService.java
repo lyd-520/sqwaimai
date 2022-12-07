@@ -4,12 +4,6 @@ import com.roy.sqwaimai.cache.TokenCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-/**
- * AccountService
- *
- *@Author enilu
- * @version 2018/9/12 0012
- */
 @Service
 public class AccountService {
     @Autowired

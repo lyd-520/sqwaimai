@@ -6,7 +6,7 @@
                 <span></span>
             </div>
             <p class="tip_text">{{alertText}}</p>
-            <div class="confrim" @click="closeTip">确认</div>
+            <div class="confirm" @click="closeTip">确认</div>
         </section>
     </div>
 </template>
@@ -91,7 +91,7 @@
             margin-top: .8rem;
             padding: 0 .4rem;
         }
-        .confrim{
+        .confirm{
             @include sc(.8rem, #fff);
             font-weight: bold;
             margin-top: .8rem;

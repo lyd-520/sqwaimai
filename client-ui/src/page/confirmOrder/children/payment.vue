@@ -99,7 +99,7 @@
             ]),
             //初始化信息
             async initData(){
-            	this.payDetail = await payRequest(this.orderMessage.order_id, this.userInfo.user_id);
+            	this.payDetail = await payRequest(this.orderMessage.id, this.userInfo.user_id);
                 if (this.payDetail.message) {
                     this.showAlert = true;
                     this.alertText = this.payDetail.message;
@@ -123,7 +123,7 @@
                 this.showAlert = true;
                 // this.alertText = '当前环境无法支付，请打开官方APP进行付款';
                 this.alertText = '当前环境无法支付，将直接完成订单付款';
-                await payOrder(this.orderMessage.order_id);
+                await payOrder(this.orderMessage.id);
                 this.gotoOrders = true;
             },
             //关闭提示框，跳转到订单列表页

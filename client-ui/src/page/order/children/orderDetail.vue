@@ -5,7 +5,7 @@
             <section class="scroll_insert">
                 <section class="order_titel">
                     <img :src="imgBaseUrl + orderDetail.restaurant_image_url">
-                    <p>{{orderDetail.status_bar.title}}</p>
+                    <p>{{orderDetail.status_title}}</p>
                     <p>{{orderDetail.timeline_node.description}}</p>
                     <router-link class="order_again" :to="{path: '/shop', query: {geohash, id: orderDetail.restaurant_id}}">再来一单</router-link>
                 </section>
@@ -74,7 +74,7 @@
                     <section class="item_style">
                         <p class="item_left">下单时间：</p>
                         <div class="item_right">
-                            <p>{{orderDetail.formatted_created_at}}</p>
+                            <p>{{orderDetail.formatted_create_at}}</p>
                         </div>
                     </section>
                 </section>

@@ -69,6 +69,8 @@ public class MongoRepository {
         return mongoTemplate.updateFirst(Query.query(Criteria.where("id").is(id)), update, collectionName);
     }
 
+
+
     public UpdateResult update(String id, String collectionName, Map<String, Object> keyValues) {
         Update update = null;
         for (Map.Entry<String, Object> entry : keyValues.entrySet()) {

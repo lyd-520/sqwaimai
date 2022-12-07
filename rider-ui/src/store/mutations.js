@@ -20,8 +20,10 @@ import {
 	ORDER_SUCCESS,
 	SAVE_SHOPID,
 	SAVE_ORDER,
+	CLEAR_ORDER,
 	OUT_LOGIN,
 	RETSET_NAME,
+	RESET_MOBILE,
 	SAVE_AVANDER,
 	SAVE_ADDRESS,
 	SAVE_ADDDETAIL,
@@ -125,7 +127,7 @@ export default {
 	[RECORD_USERINFO](state, info) {
 		state.userInfo = info;
 		state.login = true;
-		setStore('user_id', info.user_id);
+		setStore('user_id', info.rider_id);
 	},
 	//获取用户信息存入vuex
 	[GET_USERINFO](state, info) {
@@ -144,6 +146,10 @@ export default {
 	//修改用户名
 	[RETSET_NAME](state,username) {
 		state.userInfo = Object.assign({}, state.userInfo,{username})
+	},
+	//修改手机号
+	[RESET_MOBILE](state,mobile) {
+		state.userInfo = Object.assign({}, state.userInfo,{mobile})
 	},
 	//保存商铺id
 	[SAVE_SHOPID](state, shopid) {
@@ -210,6 +216,9 @@ export default {
 	//进入订单详情页前保存该订单信息
 	[SAVE_ORDER](state, orderDetail) {
 		state.orderDetail = orderDetail;
+	},
+	[CLEAR_ORDER](state) {
+		state.orderDetail = null;
 	},
 	//退出登录
 	[OUT_LOGIN](state) {

@@ -1,6 +1,6 @@
 <template>
   <div class="order_page">
-    <head-top head-title="订单列表" go-back='true'></head-top>
+    <head-top head-title="订单列表"></head-top>
 
     <ul class="order_list_ul" v-load-more="loaderMore">
       <li class="order_list_li" v-for="item in orderList" :key="item.id">
@@ -15,10 +15,10 @@
                     <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>
                   </svg>
                 </h4>
-                <p class="order_time">{{item.formatted_created_at}}</p>
+                <p class="order_time">{{item.formatted_create_at}}</p>
               </section>
               <p class="order_status">
-                {{item.status_bar.title}}
+                {{item.status_title}}
               </p>
             </header>
             <section class="order_basket">
@@ -27,11 +27,14 @@
             </section>
           </section>
           <div class="order_again">
-            <compute-time v-if="item.status_bar.title == '等待支付'" :time="item.time_pass"></compute-time>
-            <span v-if="item.status_bar.title == '派送中'" @click="handleFinishOrder(item.id)" tag="span" class="finish">订单完成</span>
-            <span v-if="item.status_bar.title == '已支付'" @click="handleCancelOrder(item.id)" tag="span" class="finish">取消订单</span>
-
-            <router-link v-if="item.status_bar.title == '订单完成'" :to="{path: '/shop', query: {geohash, id: item.restaurant_id}}" tag="span" class="buy_again">再来一单</router-link>
+            <!-- 等待支付 倒计时-->
+            <compute-time v-if="item.status_code == '0'" :time="item.time_pass"></compute-time>
+            <!-- 订单付款后，可以取消  -->
+            <span v-if="item.status_code == '1'" @click="handleCancelOrder(item.id)" tag="span" class="finish">取消订单</span>
+            <!-- 订单派送中，可以完成-->
+            <span v-if="item.status_code == '3'" @click="handleFinishOrder(item.id)" tag="span" class="finish">订单完成</span>
+            <!-- 订单派送完成，可以再来一单 -->
+            <router-link v-if="item.status_code == '4'" :to="{path: '/shop', query: {geohash, id: item.restaurant_id}}" tag="span" class="buy_again">再来一单</router-link>
           </div>
         </section>
       </li>
@@ -131,9 +134,9 @@
          for(var i in this.orderList){
            const order = this.orderList[i]
            if(orderId == order.id){
-             order.status_bar.title='订单完成'
-             order.status_code=4
-             this.orderList[i] = order
+            //  order.status_title='订单完成'
+            //  order.status_code=4
+             this.orderList[i] = res
            }
          }
         })
@@ -144,9 +147,9 @@
           for(const i in this.orderList){
             const order = this.orderList[i]
             if(orderId == order.id){
-              order.status_bar.title='已取消'
-              order.status_code=-1
-              this.orderList[i] = order
+              // order.status_title='已取消'
+              // order.status_code=-1
+              this.orderList[i] = res
             }
           }
         })

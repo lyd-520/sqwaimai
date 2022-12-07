@@ -135,7 +135,19 @@
                     return
                 }
                 // 发送重置信息
-                let res = await changePassword(this.phoneNumber, this.oldPassWord, this.newPassWord, this.confirmPassWord, this.mobileCode);
+                // let res = await changePassword(this.phoneNumber, this.oldPassWord, this.newPassWord, this.confirmPassWord, this.mobileCode);
+                let param = new FormData()
+                param.append("username",this.phoneNumber)
+                param.append("oldpassWord",this.oldPassWord)
+                param.append("newpassword",this.newPassWord)
+                param.append("confirmpassword",this.confirmPassWord)
+                param.append("captcha_code",this.captcha_code)
+                let res = await fetch('/v1/users/v2/changepassword', {
+                              method: 'POST',
+                              credentials: 'include',
+                              body: param
+                            })
+
                 if (res.message) {
                     this.showAlert = true;
                     this.alertText = res.message;

@@ -20,6 +20,7 @@ public class Ids extends BaseMongoEntity{
     public static  final String CART_ID = "cart_id";
     public static  final String ADDRESS_ID="address_id";
     public static  final String USER_ID="user_id";
+    public static  final String RIDER_ID="rider_id";
     public static  final String ORDER_ID="order_id";
     @Id
     private String _id;
@@ -35,6 +36,7 @@ public class Ids extends BaseMongoEntity{
     private Long sku_id;
     private Long admin_id;
     private Long statis_id;
+    private Long rider_id;
     //必须在setget方法加上该注释，否则_id值会覆盖在id上
     @JSONField(name="_id")
     public String get_id() {
@@ -138,5 +140,13 @@ public class Ids extends BaseMongoEntity{
 
     public void setStatis_id(Long statis_id) {
         this.statis_id = statis_id;
+    }
+
+    public Long getRider_id() {
+        return rider_id;
+    }
+
+    public void setRider_id(Long rider_id) {
+        this.rider_id = rider_id;
     }
 }

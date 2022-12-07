@@ -20,12 +20,7 @@ public class PaymentService {
         Order order = mongoRepository.findOne(Order.class, "id", Long.valueOf(merchantOrderNo));
 
         order.setStatus_code(Order.STATUS_PAID);
-
-        OrderStatusBar statusBar = new OrderStatusBar();
-        statusBar.setColor("f60");
-        statusBar.setSub_title("");
-        statusBar.setTitle("已支付");
-        order.setStatus_bar(statusBar);
+        order.setStatus_title(Order.getStatusCodeStr(Order.STATUS_PAID));
         mongoRepository.update(order);
         return true;
     }

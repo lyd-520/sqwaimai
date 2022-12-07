@@ -6,12 +6,10 @@ import com.roy.sqwaimai.dao.MongoRepository;
 import com.roy.sqwaimai.service.front.PaymentService;
 import com.roy.sqwaimai.utils.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.Map;
 
 /**
  * @author ：microapp.store
@@ -38,8 +36,9 @@ public class PaymentController extends BaseController {
                 )
         );
     }
-    @RequestMapping(value = "/queryOrder",method = RequestMethod.POST)
-    public Object payOrder(@RequestParam("merchantOrderNo") String merchantOrderNo){
+    @RequestMapping(value = "/payOrder",method = RequestMethod.POST)
+    public Object payOrder(@RequestBody Map<String,String> params){
+        String merchantOrderNo = params.get("merchantOrderNo");
         if(paymentService.payOrder(merchantOrderNo)){
             return Rets.success("支付完成");
         }else{

@@ -1,59 +1,72 @@
  <template>
   <div class="order_detail_page">
-        <head-top head-title="订单详情" go-back='true'></head-top>
-        <section v-if="!showLoading" id="scroll_section" class="scroll_container">
+        <head-top head-title="订单详情" go-back='false'></head-top>
+        <section v-if="(!showLoading && this.orderData.id)" id="scroll_section" class="scroll_container">
             <section class="scroll_insert">
                 <section class="order_titel">
-                    <img :src="imgBaseUrl + orderDetail.restaurant_image_url">
-                    <p>{{orderDetail.status_bar.title}}</p>
-                    <p>{{orderDetail.timeline_node.description}}</p>
-                    <router-link class="order_again" :to="{path: '/shop', query: {geohash, id: orderDetail.restaurant_id}}">再来一单</router-link>
+                    <img :src="imgBaseUrl+orderData.restaurant_image_url">
+                    <p>订单ID：{{orderData.id}}</p>
+                    <p>{{orderData.status_title}}</p>
                 </section>
                 <section class="food_list">
-                    <router-link class="food_list_header" :to="{path: '/shop', query: {geohash, id: orderDetail.restaurant_id}}">
+                    <div class="food_list_header">
                         <div class="shop_name">
-                            <img :src="imgBaseUrl + orderDetail.restaurant_image_url">
-                            <span>{{orderDetail.restaurant_name}}</span>
+                            <img :src="imgBaseUrl+orderData.restaurant_image_url">
+                            <span>{{orderData.restaurant_name}}</span>
                         </div>
                         <svg fill="#333" class="arrow_right">
                             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>
                         </svg>
-                    </router-link>
+                    </div>
                     <ul class="food_list_ul">
-                        <li v-for="item in orderDetail.basket.group[0]">
+                        <li v-for="item in orderData.basket.group[0]">
                             <p class="food_name ellipsis">{{item.name}}</p>
                             <div class="quantity_price">
                                 <span>X{{item.quantity}}</span>
-                                <span>¥{{item.price}}</span>
                             </div>
                         </li>
                     </ul>
                     <div class="deliver_fee">
                         <span>配送费</span>
-                        <span>{{orderDetail.basket.deliver_fee&&orderDetail.basket.deliver_fee.price || 0}}</span>   
+                        <span>{{orderData.basket.deliver_fee&&orderData.basket.deliver_fee.price || 0}}</span>   
                     </div>
-                    <div class="pay_ment">实付{{orderDetail.total_amount.toFixed(2)}}</div>
                 </section>
                 <section class="order_detail_style">
                     <header>配送信息</header>
                     <section class="item_style">
+                        <p class="item_left">收件人：</p>
+                        <div class="item_right">
+                            <p>{{orderData.order_address.name}}</p>
+                        </div>
+                    </section>
+                    <section class="item_style">
+                        <p class="item_left">电话号码：</p>
+                        <div class="item_right">
+                            <p>{{orderData.order_address.phone}}</p>
+                        </div>
+                    </section>
+                    <section class="item_style">
+                        <p class="item_left">备用电话：</p>
+                        <div class="item_right">
+                            <p>{{orderData.order_address.phone}}</p>
+                        </div>
+                    </section>
+                    <section class="item_style">
+                        <p class="item_left">收件地址：</p>
+                        <div class="item_right">
+                            <p>{{orderData.order_address.address}}</p>
+                        </div>
+                    </section>
+                    <section class="item_style">
                         <p class="item_left">送达时间：</p>
                         <div class="item_right">
-                            <p>{{orderData.deliver_time}}</p>
+                            <p>{{orderData.formatted_deliver_at}}</p>
                         </div>
                     </section>
                     <section class="item_style">
-                        <p class="item_left">送货地址：</p>
+                        <p class="item_left">地图导航：</p>
                         <div class="item_right">
-                            <p>{{orderData.consignee}}</p>
-                            <p>{{orderData.phone}}</p>
-                            <p>{{orderData.address}}</p>
-                        </div>
-                    </section>
-                    <section class="item_style">
-                        <p class="item_left">配送方式：</p>
-                        <div class="item_right">
-                            <p>蜂鸟专送</p>
+                            <p>暂不支持</p>
                         </div>
                     </section>
                 </section>
@@ -62,7 +75,7 @@
                     <section class="item_style">
                         <p class="item_left">订单号：</p>
                         <div class="item_right">
-                            <p>{{orderDetail.id}}</p>
+                            <p>{{orderData.id}}</p>
                         </div>
                     </section>
                     <section class="item_style">
@@ -74,27 +87,37 @@
                     <section class="item_style">
                         <p class="item_left">下单时间：</p>
                         <div class="item_right">
-                            <p>{{orderDetail.formatted_created_at}}</p>
+                            <p>{{orderData.formatted_create_at}}</p>
                         </div>
                     </section>
                 </section>
+                <section class="order_titel">
+                    <a class="order_again" v-if="canCheck" @click="gocheckOrder">抢单</a>
+                    <a class="order_again" v-if="canSend" @click="confirmsendOrder">订单送达</a>
+                </section>
             </section>
         </section>
+        <alert-tip v-if="showAlert" :showHide="showAlert" @closeTip="closeTip" :alertText="alertText"></alert-tip>
+        <confirm-tip v-if="showConfirm" :showHide="showConfirm"  @reject="rejectsendorder" @confirm="gosendorder" :confirmText="confirmText"></confirm-tip>
         <transition name="loading">
             <loading v-if="showLoading"></loading>
         </transition>
+        <foot-guide></foot-guide>
     </div>
 </template>
 
 <script>
     import {mapState, mapMutations} from 'vuex'
+    import footGuide from 'src/components/footer/footGuide'
     import headTop from 'src/components/header/head'
     import {getImgPath} from 'src/components/common/mixin'
-    import {getOrderDetail} from 'src/service/getData'
+    import {getOrderDetail,checkOrder,sendOrder} from 'src/service/getData'
     import loading from 'src/components/common/loading'
+    import alertTip from 'src/components/common/alertTip'
+    import confirmTip from 'src/components/common/confirmTip'
     import BScroll from 'better-scroll'
     import {imgBaseUrl} from 'src/config/env'
-
+    
 
     export default {
 
@@ -102,7 +125,13 @@
             return{
                 showLoading: true, //显示加载动画
                 orderData: null,
-                imgBaseUrl
+                imgBaseUrl,
+                canCheck: true ,  //是否可以抢单
+                canSend: false , //是否可以送单
+                showAlert: false,
+                alertText: "",
+                showConfirm: false,
+                confirmText: ""
             }
         },
         mounted(){
@@ -112,27 +141,108 @@
         components: {
             headTop,
             loading,
+            alertTip,
+            confirmTip,
+            footGuide
         },
         computed: {
             ...mapState([
-                'orderDetail', 'geohash', 'userInfo'
+                'geohash', 'userInfo','orderDetail'
             ]),
         },
         methods: {
+            ...mapMutations([
+                'CLEAR_ORDER','RECORD_USERINFO'
+            ]),
             async initData(){
-                if (this.userInfo && this.userInfo.user_id) {
-                    this.orderData = await getOrderDetail(this.userInfo.user_id, this.orderDetail.unique_id);
-                    this.showLoading = false;
-                    this.$nextTick(() => {
+                //store中没有userInfo，登录状态有问题。
+                if(!this.userInfo || !this.userInfo.rider_id){
+                    this.showAlert=true
+                    this.alertText="需要登录才能访问"
+                    return false
+                }
+                //store中有orderDetail，就表示是查看订单详情。
+                if(this.orderDetail){
+                    this.orderData = this.orderDetail
+                    if(this.userInfo.sending_order_id<=0){
+                        this.canSend=false
+                        this.canCheck=false
+                    }
+                    if(this.userInfo.sending_order_id == this.orderDetail.id){
+                        this.canSend=true
+                        this.canCheck=false
+                    }else{
+                        this.canSend = false;
+                        if(this.userInfo.sending_order_id <=0){
+                            this.canCheck=true
+                        }else{
+                            this.canCheck=false;
+                        }
+                    }
+                    //store中没有orderDetail，就表示是派单页面，根据用户ID查他派送中的订单。
+                }else{
+                    if(this.userInfo.sending_order_id<=0){
+                        this.showAlert=true
+                        this.alertText="当前没有派送中的订单"
+                        return false
+                    }
+                    this.orderData = await getOrderDetail(this.userInfo.sending_order_id)
+                    this.canCheck=false
+                    this.canSend=true
+                }
+                this.CLEAR_ORDER()
+                this.showLoading = false;       
+                this.$nextTick(() => {
                         new BScroll('#scroll_section', {  
                             deceleration: 0.001,
                             bounce: true,
                             swipeTime: 1800,
                             click: true,
                         }); 
-                    })
+                    })          
+            },
+            closeTip(){
+                this.showAlert = false;
+                this.$router.push("/")
+            },
+            async gocheckOrder(){
+                if(this.userInfo && this.userInfo.sending_order_id>0){
+                    this.showAlert=true
+                    this.alertText='骑手一次只能派送一个订单'
+                }else{
+                    let res = await checkOrder(this.userInfo.rider_id,this.orderData.id)
+                    if(res.error){
+                        this.showAlert=true
+                        this.alertText=res.error
+                    }else{
+                        //返回用户信息
+                        this.RECORD_USERINFO(res)
+                        // this.SAVE_ORDER(this.orderData);
+                        this.initData();
+                    }
                 }
             },
+            confirmsendOrder(){
+                this.showConfirm=true
+                this.confirmText="请确认订单已经送达给客户"
+            },
+            async gosendorder(){
+                let res = await sendOrder(this.userInfo.rider_id,this.orderData.id)
+    console.info(res)
+                if(res.error){
+                    this.confirmText=""
+                    this.showConfirm=false
+                    this.alertText=res.error
+                    this.showAlert=true
+                }else{
+                    this.RECORD_USERINFO(res)
+                    this.$router.push("/")
+                }
+            },
+            rejectsendorder(){
+                this.showConfirm=false;
+                this.confirmText=""
+            }
         },
         watch: {
             userInfo: function (value) {
@@ -166,7 +276,7 @@
         left: 0;
         right: 0;
         bottom: 0;
-        padding-top: 1.95rem;
+        padding-top: 4rem;
     }
     .scroll_insert{
         padding-bottom: 3rem;
@@ -195,9 +305,9 @@
             text-align: center;
         }
         .order_again{
-            @include sc(.6rem, $blue);
+            @include sc(1rem, $blue);
             margin-top: .5rem;
-            border: 0.025rem solid $blue;
+            border: 0.1rem solid $blue;
             padding: .15rem .4rem;
             border-radius: .1rem;
         }

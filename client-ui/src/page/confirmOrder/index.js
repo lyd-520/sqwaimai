@@ -26,12 +26,10 @@ export default {
     this.geohash = this.$route.query.geohash;
     //获取上个页面传递过来的shopid值
     this.shopId = this.$route.query.shopId;
-    console.log('shopId',this.shopId);
     this.INIT_BUYCART();
     this.SAVE_SHOPID(this.shopId);
     //获取当前商铺购物车信息
     this.shopCart = this.cartList[this.shopId];
-    console.log('shopCart',this.shopCart)
   },
   mounted(){
     if (this.geohash) {
@@ -93,7 +91,6 @@ export default {
           })
         })
       })
-      // console.log(5)
       //检验订单是否满足条件
 
       this.checkoutData = await checkout(this.geohash, [newArr], this.shopId);

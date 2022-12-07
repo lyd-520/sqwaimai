@@ -1,9 +1,7 @@
 package com.roy.sqwaimai.bean.entity.front;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.roy.sqwaimai.bean.entity.front.sub.OrderBasket;
-import com.roy.sqwaimai.bean.entity.front.sub.OrderStatusBar;
-import com.roy.sqwaimai.bean.entity.front.sub.OrderTimelineNode;
+import com.roy.sqwaimai.bean.entity.front.sub.*;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -19,8 +17,10 @@ public class Order extends BaseMongoEntity {
     public static  final Integer STATUS_DOING = 2;
     //派送中
     public static  final Integer STATUS_DELIVERYING= 3;
+    //派送完成
+    public static  final Integer STATUS_DELIVERED= 4;
     //完成订单
-    public static  final Integer STATUS_DONE = 4;
+    public static  final Integer STATUS_FINISHED = 5;
     //完成订单
     public static  final Integer STATUS_CANCEL = -1;
 
@@ -33,12 +33,15 @@ public class Order extends BaseMongoEntity {
     private Long unique_id;
     private Long user_id;
     private Long address_id;
+    private OrderAddress order_address;
     private Integer top_show=0;
     private OrderBasket basket = new OrderBasket();
-    private OrderStatusBar status_bar;
+//    private OrderStatusBar status_bar;
     private OrderTimelineNode timeline_node;
     private String formatted_create_at;
     private Long order_time;
+    private Long deliver_time;
+    private String formatted_deliver_at;
     private Integer time_pass=900;
     private Integer is_brand=0;
     private Integer is_deletable=1;
@@ -57,10 +60,12 @@ public class Order extends BaseMongoEntity {
     private String restaurant_image_url;
     private String restaurant_name;
     private Integer restaurant_type=0;
+    private OrderShopAddress orderShopAddress;
     /**
      * 订单状态
      */
     private Integer status_code=STATUS_PAID;
+    private String status_title;
 
     public static String getStatusCodeStr(Integer status_code){
         switch (status_code){
@@ -75,8 +80,9 @@ public class Order extends BaseMongoEntity {
             case 3:
                 return "派送中";
             case 4:
-                return "订单完成";
-
+                return "派送完成";
+            case 5:
+                return "已完成";
         }
         return "";
     }

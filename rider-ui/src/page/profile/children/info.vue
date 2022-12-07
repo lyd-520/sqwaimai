@@ -19,11 +19,11 @@
                     </span>
                 </div>
             </section>
-            <router-link to="/profile/info/setusername" class="info-router">
+            <section class="info-router" @click="changeusername">
                 <section class="headportrait headportraitwo">
-                    <h2>用户名</h2>
+                    <h2>修改用户名</h2>
                     <div class="headportrait-div">
-                        <p>{{username}}</p>
+                        <p>{{userInfo.rider_name}}</p>
                         <span class="headportrait-div-bottom">
                             <svg fill="#d8d8d8">
                                 <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>
@@ -31,27 +31,15 @@
                         </span>
                     </div>
                 </section>
-            </router-link>
-            <router-link to="/profile/info/address" class="info-router">
-                <section class="headportrait headportraitwo headportraithree">
-                        <h2>收货地址</h2>
-                        <div class="headportrait-div">
-                            <span class="headportrait-div-bottom">
-                                <svg fill="#d8d8d8">
-                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>
-                                </svg>
-                            </span>
-                        </div>
-                </section>
-            </router-link>
+            </section>
             <section class="bind-phone">
                 账号绑定
             </section>
-            <section class="info-router" @click="changePhone">
+            <router-link to="/profile/info/setusermobile" class="info-router">
                 <section class="headportrait headportraitwo headportraithree">
                         <h2><img src="../../../images/bindphone.png" style="display:inline-block;margin-right:.4rem;" alt="">手机</h2>
                         <div class="headportrait-div">
-                            <p>{{infotel}}</p>
+                            <p>{{userInfo.mobile}}</p>
                             <span class="headportrait-div-bottom">
                                 <svg fill="#d8d8d8">
                                     <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>
@@ -59,7 +47,7 @@
                             </span>
                         </div>
                 </section>
-            </section>
+            </router-link>
             <section class="bind-phone">
                 安全设置
             </section>
@@ -167,9 +155,9 @@
                 removeStore('user_id')
                 await signout();
             },
-            changePhone(){
+            changeusername(){
                 this.showAlert = true;
-                this.alertText = '请在手机APP中设置';
+                this.alertText = '暂不支持修改用户名';
             },
             async uploadAvatar(){
                 //上传头像
@@ -178,7 +166,7 @@
                     let data = new FormData();
                     data.append('file', input.files[0]);
                     try{
-                        let response = await fetch('/v1/users/' + this.userInfo.user_id + '/avatar', {
+                        let response = await fetch('/rider/' + this.userInfo.rider_id + '/avatar', {
                               method: 'POST',
                               credentials: 'include',
                               body: data
@@ -186,21 +174,15 @@
                         let res = await response.json();
                         if (res.status == 1) {
                             this.userInfo.avatar = res.image_path;
+                        }else if(res.status ==2){
+                            this.showAlert = true;
+                            this.alertText = '文件已存在，请更换文件名';
                         }
                     }catch (error) {
                         this.showAlert = true;
                         this.alertText = '上传失败';
                         throw new Error(error);
                     }
-                }
-            }
-        },
-        watch: {
-            userInfo: function (value) {
-                if (value && value.user_id) {
-                    this.username = value.username;
-                    this.infotel = value.mobile;
-                    this.avatar = value.avatar;
                 }
             }
         }

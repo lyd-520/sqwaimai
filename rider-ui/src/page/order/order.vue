@@ -1,12 +1,15 @@
 <template>
   <div class="order_page">
-    <head-top head-title="订单列表" go-back='true'></head-top>
+    <head-top head-title="推荐附近订单" go-back='true'>
+      <div slot="changecity" class="refresh_order" @click="refreshOrder">刷新</div>
+    </head-top>
 
-    <ul class="order_list_ul" v-load-more="loaderMore">
+    <ul class="order_list_ul">
+      <span v-if="errormessage">{{errormessage}}</span>
       <li class="order_list_li" v-for="item in orderList" :key="item.id">
         <img :src="imgBaseUrl + item.restaurant_image_url" class="restaurant_image">
         <section class="order_item_right">
-          <section @click="showDetail(item)">
+          <section>
             <header class="order_item_right_header">
               <section class="order_header">
                 <h4>
@@ -15,28 +18,27 @@
                     <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>
                   </svg>
                 </h4>
-                <p class="order_time">{{item.formatted_created_at}}</p>
+                <p class="order_time">{{item.formatted_create_at}}</p>
               </section>
               <p class="order_status">
-                {{item.status_bar.title}}
+                {{item.status_title}}
               </p>
             </header>
             <section class="order_basket">
-              <p class="order_name ellipsis">{{item.basket.group[0][0].name}}{{item.basket.group[0].length > 1 ? ' 等' + item.basket.group[0].length + '件商品' : ''}}</p>
-              <p class="order_amount">¥{{item.total_amount.toFixed(2)}}</p>
+              <p class="order_name ellipsis">商店地址：xx街道xx社区xx号店铺门口</p><br />
+            </section>
+            <section class="order_basket">
+              <p class="order_name ellipsis">店铺距你</p> <p class="order_amount">{{item.total_amount.toFixed(2)}}米</p>
             </section>
           </section>
           <div class="order_again">
-            <compute-time v-if="item.status_bar.title == '等待支付'" :time="item.time_pass"></compute-time>
-            <span v-if="item.status_bar.title == '派送中'" @click="handleFinishOrder(item.id)" tag="span" class="finish">订单完成</span>
-            <span v-if="item.status_bar.title == '已支付'" @click="handleCancelOrder(item.id)" tag="span" class="finish">取消订单</span>
-
-            <router-link v-if="item.status_bar.title == '订单完成'" :to="{path: '/shop', query: {geohash, id: item.restaurant_id}}" tag="span" class="buy_again">再来一单</router-link>
+            <span tag="span" class="finish" @click="gocheckOrder(item)">抢单</span>
+            <span tag="span" class="finish" @click="goshowDetail(item)">查看</span> 
           </div>
         </section>
       </li>
     </ul>
-    <foot-guide></foot-guide>
+    <alert-tip v-if="showAlert" :showHide="showAlert" @closeTip="closeTip" :alertText="alertText"></alert-tip>
     <transition name="loading">
       <loading v-show="showLoading"></loading>
     </transition>
@@ -52,105 +54,90 @@
   import headTop from 'src/components/header/head'
   import computeTime from 'src/components/common/computeTime'
   import loading from 'src/components/common/loading'
+  import alertTip from 'src/components/common/alertTip'
   import {getImgPath} from 'src/components/common/mixin'
-  import footGuide from 'src/components/footer/footGuide'
-  import {getOrderList,finishOrder,cancelOrder} from 'src/service/getData'
-  import {loadMore} from 'src/components/common/mixin'
+  import {getOrderList,checkOrder,cancelOrder} from 'src/service/getData'
   import {imgBaseUrl} from 'src/config/env'
-
 
   export default {
     data() {
       return {
         orderList: null, //订单列表
-        offset: 0,
-        preventRepeat: false,  //防止重复获取
         showLoading: true, //显示加载动画
-        imgBaseUrl
+        imgBaseUrl,
+        errormessage:'',
+        showAlert: false, //显示提示组件
+        alertText: null, //提示的内容
       }
     },
     mounted() {
       this.initData();
     },
-    mixins: [loadMore],
     components: {
       headTop,
-      footGuide,
       loading,
+      alertTip,
       computeTime,
     },
     computed: {
+      //获取city页面选择的纬度和经度
       ...mapState([
-        'userInfo', 'geohash'
+        'userInfo','latitude','longitude'
       ]),
     },
     methods: {
       ...mapMutations([
-        'SAVE_ORDER'
+        'SAVE_ORDER','RECORD_USERINFO'
       ]),
       //初始化获取信息
       async initData() {
-        if (this.userInfo && this.userInfo.user_id) {
-          let response = await getOrderList(this.userInfo.user_id, this.offset);
-          let res = response.records
-          this.orderList = [...res];
-          this.hideLoading();
-        } else {
-          this.hideLoading();
+        if (this.userInfo && this.userInfo.rider_id) {
+          let response = await getOrderList(this.userInfo.rider_id,this.latitude,this.longitude)
+          if(response.records){
+            let res = response.records
+            this.orderList = [...res];
+            this.errormessage=""
+          }else{
+            this.orderList = [];
+            this.errormessage=response
+          }
         }
-      },
-      //加载更多
-      async loaderMore() {
-        if (this.preventRepeat) {
-          return
-        }
-        this.preventRepeat = true;
-        this.showLoading = true;
-        this.offset += 10;
-        //获取信息
-        let res = await getOrderList(this.userInfo.user_id, this.offset);
-        this.orderList = [...this.orderList, ...res];
         this.hideLoading();
-        if (res.length < 10) {
-          return
-        }
-        this.preventRepeat = false;
       },
       //显示详情页
-      showDetail(item) {
+      goshowDetail(item) {
         this.SAVE_ORDER(item);
-        this.preventRepeat = false;
-        this.$router.push('/order/orderDetail');
+        this.$router.push('/orderDetail');
       },
+      async gocheckOrder(item) {
+        if(this.userInfo && this.userInfo.sending_order_id>0){
+            this.showAlert=true
+            this.alertText='骑手一次只能派送一个订单'
+        }else{
+          let res = await checkOrder(this.userInfo.rider_id,item.id)
+          if(res.error){
+            this.showAlert=true
+            this.alertText=res.error
+          }else{
+            //返回用户信息
+            this.RECORD_USERINFO(res)
+            // this.$router.push('/')
+            this.SAVE_ORDER(item);
+            this.$router.push('/orderDetail');
+        }
+      }
+    },
       //生产环境与发布环境隐藏loading方式不同
       hideLoading() {
         this.showLoading = false;
       },
-      handleFinishOrder(orderId) {
-        finishOrder(this.userInfo.user_id,orderId).then(res => {
-         for(var i in this.orderList){
-           const order = this.orderList[i]
-           if(orderId == order.id){
-             order.status_bar.title='订单完成'
-             order.status_code=4
-             this.orderList[i] = order
-           }
-         }
-        })
+      async refreshOrder(){
+        this.showLoading = true;
+        this.initData();
       },
-      handleCancelOrder(orderId){
-
-        cancelOrder(this.userInfo.user_id,orderId).then(res => {
-          for(const i in this.orderList){
-            const order = this.orderList[i]
-            if(orderId == order.id){
-              order.status_bar.title='已取消'
-              order.status_code=-1
-              this.orderList[i] = order
-            }
-          }
-        })
-      }
+       closeTip(){
+            this.showAlert = false;
+        }
     },
     watch: {
       userInfo: function (value) {
@@ -164,7 +151,11 @@
 
 <style lang="scss" scoped>
   @import 'src/style/mixin';
-
+  .refresh_order {
+        right: 0.4rem;
+        @include sc(0.6rem, #fff);
+        @include ct;
+      }
   .order_page {
     background-color: #f1f1f1;
     margin-bottom: 1.95rem;
@@ -187,7 +178,6 @@
         @include wh(2rem, 2rem);
         margin-right: 0.4rem;
       }
-
       .order_item_right {
         flex: 5;
 

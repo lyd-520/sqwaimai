@@ -38,7 +38,8 @@ module.exports = {
             '/payapi',
             '/img',
             '/file',
-            '/position'
+            '/position',
+            '/rider'
         ],
         proxypath: 'http://localhost:8082',
         // CSS Sourcemaps off by default because relative paths are "buggy"

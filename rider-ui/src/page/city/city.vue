@@ -1,7 +1,8 @@
 <template>
   <div class="city_container">
     <head-top :head-title="cityname" go-back='true'>
-      <router-link to="/home" slot="changecity" class="change_city">切换城市</router-link>
+      <!-- <router-link to="/home" slot="changecity" class="change_city">切换城市</router-link> -->
+      <div slot="changecity" class="change_city">选择接单地点</div>
     </head-top>
     <form class="city_form" v-on:submit.prevent>
       <div>
@@ -27,6 +28,7 @@
   import headTop from 'src/components/header/head'
   import {currentcity, searchplace} from 'src/service/getData'
   import {getStore, setStore, removeStore} from 'src/config/mUtils'
+  import {mapState,mapMutations} from 'vuex'
 
   export default {
     data() {
@@ -40,7 +42,11 @@
         placeNone: false, // 搜索无结果，显示提示信息
       }
     },
-
+    computed:{
+      ...mapState([
+            'userInfo',
+        ]),
+    },
     mounted() {
       this.cityid = this.$route.params.cityid;
       //获取当前城市名字
@@ -53,10 +59,8 @@
     components: {
       headTop
     },
-
-    computed: {},
-
     methods: {
+      ...mapMutations(["RECORD_ADDRESS","RECORD_USERINFO"]),
       initData() {
         //获取搜索历史记录
         if (getStore('placeHistory')) {
@@ -81,15 +85,14 @@
        * 如果没有则新增，如果有则不做重复储存，判断完成后进入下一页
        */
       nextpage(index, item) {
-        console.log('item',item)
-        const geohash = item.location
+        const location = item.location
         let history = getStore('placeHistory');
         let choosePlace = this.placelist[index];
         if (history) {
           let checkrepeat = false;
           this.placeHistory = JSON.parse(history);
           this.placeHistory.forEach(item => {
-            if (item.geohash == geohash) {
+            if (item.location.lat == location.lat && item.location.lng == location.lng) {
               checkrepeat = true;
             }
           })
@@ -100,7 +103,11 @@
           this.placeHistory.push(choosePlace)
         }
         setStore('placeHistory', this.placeHistory)
-        this.$router.push({path: '/msite', query: {'geohash': geohash.lat + ',' + geohash.lng,'address':item.address}})
+        //记录当前选择的纬度和经度
+        // const latAndLng = this.geohash.split(',')
+        this.RECORD_ADDRESS({latitude:location.lat,longitude:location.lng});
+        this.RECORD_USERINFO(this.userInfo)
+        this.$router.push({path: '/order'})
       },
       clearAll() {
         removeStore('placeHistory');
