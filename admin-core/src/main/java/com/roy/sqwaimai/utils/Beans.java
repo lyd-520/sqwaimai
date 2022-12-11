@@ -3,11 +3,6 @@ package com.roy.sqwaimai.utils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 
-/**
- * Created  on 2017/12/29 0029.
- *
- *@Author enilu
- */
 public class Beans<T> {
     static BeanWrapper beanWrapper =  null;
     public static <T> Beans<T> me( T obj) {

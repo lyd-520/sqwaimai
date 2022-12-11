@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.*;
 
 /**
  * Created  on 2018/1/5 0005.
- *
- *@Author enilu
  */
 @RestController
 public class ActivityController extends BaseController {

@@ -21,10 +21,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Set;
 
-/**
- * @author ：enilu
- * @date ：Created in 2019/7/30 22:58
- */
 @Service
 public class ApiRealm extends AuthorizingRealm {
 

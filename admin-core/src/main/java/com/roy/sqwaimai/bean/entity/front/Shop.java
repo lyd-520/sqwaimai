@@ -10,12 +10,6 @@ import javax.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.Map;
 
-/**
- * 商铺
- * Created  on 2017/12/29 0029.
- *
- * @author zt
- */
 @Document(collection = "shops")
 @Data
 public class Shop extends BaseMongoEntity {

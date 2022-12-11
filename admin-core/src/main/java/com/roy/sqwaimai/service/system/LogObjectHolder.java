@@ -10,9 +10,6 @@ import java.io.Serializable;
 
 /**
  * 被修改的bean临时存放的地方
- *
- *@Author enilu
- * @date 2019-08-13
  */
 @Component
 @Scope(scopeName = WebApplicationContext.SCOPE_SESSION)

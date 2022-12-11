@@ -14,9 +14,6 @@ import java.util.List;
 
 /**
  * 全局参数缓存实现类
- *
- *@Author enilu
- * @version 2018/12/20 0020
  */
 @Service
 public class ConfigCacheImpl implements ConfigCache {

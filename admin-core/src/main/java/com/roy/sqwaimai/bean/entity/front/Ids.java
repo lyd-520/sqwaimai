@@ -4,11 +4,6 @@ import com.alibaba.fastjson.annotation.JSONField;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-/**
- * Created  on 2017/12/29 0029.
- *
- *@Author enilu
- */
 @Document(collection = "ids")
 public class Ids extends BaseMongoEntity{
     public static  final String ADMIN_ID="admin_id";

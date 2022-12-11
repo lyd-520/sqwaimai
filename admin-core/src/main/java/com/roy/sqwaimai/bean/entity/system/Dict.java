@@ -9,11 +9,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 
-/**
- * Created  on 2018/4/2 0002.
- *
- *@Author enilu
- */
 @Entity(name="t_sys_dict")
 @Table(appliesTo = "t_sys_dict",comment = "字典")
 @Data

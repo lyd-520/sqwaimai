@@ -19,12 +19,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * LogController
- *
- *@Author enilu
- * @version 2018/10/5 0005
- */
 @RestController
 @RequestMapping("/log")
 public class LogController extends BaseController {

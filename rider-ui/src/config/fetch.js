@@ -24,17 +24,19 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
 		let requestConfig = {
 			credentials: 'include',
 			method: type,
-			headers: {
-				'Accept': 'application/json',
-				'Content-Type': 'application/json'
-			},
 			mode: "cors",
-			cache: "force-cache"
+			cache: "force-cache",
+			credentials: 'include'
 		}
 
 		if (type == 'POST') {
+			let param = new FormData()
+			Object.keys(data).forEach(key => {
+				param.append(key,data[key])
+			})
+
 			Object.defineProperty(requestConfig, 'body', {
-				value: JSON.stringify(data)
+				value: param
 			})
 		}
 		try {

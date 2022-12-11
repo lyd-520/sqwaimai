@@ -1,10 +1,5 @@
 package com.roy.sqwaimai.bean.entity.front;
 
-/**
- * Created  on 2018/1/3 0003.
- *
- *@Author enilu
- */
 public class KeyValue {
     private String name;
     private String value;

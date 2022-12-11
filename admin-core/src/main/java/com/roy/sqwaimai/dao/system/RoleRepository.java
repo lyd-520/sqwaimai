@@ -7,11 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-/**
- * Created  on 2018/3/21 0021.
- *
- *@Author enilu
- */
 public interface RoleRepository extends BaseRepository<Role,Long> {
     @Query(nativeQuery = true,value = "SELECT id, pId, NAME, ( CASE WHEN (pId = 0 OR pId IS NULL) THEN 'true' ELSE 'false' END ) OPEN FROM t_sys_role")
     List roleTreeList();

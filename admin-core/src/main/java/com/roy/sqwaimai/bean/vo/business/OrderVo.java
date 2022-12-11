@@ -4,8 +4,6 @@ import lombok.Data;
 
 /**
  * 订单信息
- * @author ：enilu
- * @date ：Created in 2019/10/24 14:18
  */
 @Data
 public class OrderVo {

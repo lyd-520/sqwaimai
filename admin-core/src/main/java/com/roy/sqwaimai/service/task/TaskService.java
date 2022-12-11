@@ -17,8 +17,6 @@ import java.util.List;
 
 /**
  * 定时任务服务类
- * @author  enilu
- * @date 2019-06-13
  */
 @Service
 public class TaskService extends BaseService<Task,Long, TaskRepository> {

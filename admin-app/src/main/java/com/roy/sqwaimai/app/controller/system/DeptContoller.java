@@ -21,12 +21,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-/**
- * DeptContoller
- *
- *@Author enilu
- * @version 2018/9/15 0015
- */
 @RestController
 @RequestMapping("/dept")
 public class DeptContoller extends BaseController {

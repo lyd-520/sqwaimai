@@ -2,6 +2,39 @@
   <div class="order_page">
     <head-top head-title="订单列表"></head-top>
 
+    <nav class="order_search_nav">
+    		<div class="swiper-container">
+		        <div class="swiper-wrapper">
+		            <div class="swiper-slide order_types_container">
+                  <div class="link_to_order">
+                    <figure>
+                      <figcaption>全部订单</figcaption>
+                    </figure>
+                  </div>
+                  <div class="link_to_order">
+                    <figure>
+                      <figcaption>待付款</figcaption>
+                    </figure>
+                  </div>
+                  <div class="link_to_order">
+                    <figure>
+                      <figcaption>派送中</figcaption>
+                    </figure>
+                  </div>
+                  <div class="link_to_order">
+                    <figure>
+                      <figcaption>待接收</figcaption>
+                    </figure>
+                  </div>
+                  <div class="link_to_order">
+                    <figure>
+                      <figcaption>接收完成</figcaption>
+                    </figure>
+                  </div>
+		            </div>
+		        </div>
+		    </div>
+    	</nav>
     <ul class="order_list_ul" v-load-more="loaderMore">
       <li class="order_list_li" v-for="item in orderList" :key="item.id">
         <img :src="imgBaseUrl + item.restaurant_image_url" class="restaurant_image">
@@ -32,12 +65,15 @@
             <!-- 订单付款后，可以取消  -->
             <span v-if="item.status_code == '1'" @click="handleCancelOrder(item.id)" tag="span" class="finish">取消订单</span>
             <!-- 订单派送中，可以完成-->
-            <span v-if="item.status_code == '3'" @click="handleFinishOrder(item.id)" tag="span" class="finish">订单完成</span>
+            <span v-if="item.status_code == '4'" @click="handleFinishOrder(item.id)" tag="span" class="finish">订单完成</span>
             <!-- 订单派送完成，可以再来一单 -->
-            <router-link v-if="item.status_code == '4'" :to="{path: '/shop', query: {geohash, id: item.restaurant_id}}" tag="span" class="buy_again">再来一单</router-link>
+            <router-link v-if="item.status_code == '5'" :to="{path: '/shop', query: {geohash, id: item.restaurant_id}}" tag="span" class="buy_again">再来一单</router-link>
           </div>
         </section>
       </li>
+      <li>          
+          <p>===========</p>
+        </li>
     </ul>
     <foot-guide></foot-guide>
     <transition name="loading">
@@ -104,6 +140,7 @@
       },
       //加载更多
       async loaderMore() {
+console.info("loadMore")
         if (this.preventRepeat) {
           return
         }
@@ -131,18 +168,16 @@
       },
       handleFinishOrder(orderId) {
         finishOrder(this.userInfo.user_id,orderId).then(res => {
+          console.info(res)
          for(var i in this.orderList){
            const order = this.orderList[i]
            if(orderId == order.id){
-            //  order.status_title='订单完成'
-            //  order.status_code=4
              this.orderList[i] = res
            }
          }
         })
       },
       handleCancelOrder(orderId){
-
         cancelOrder(this.userInfo.user_id,orderId).then(res => {
           for(const i in this.orderList){
             const order = this.orderList[i]
@@ -168,6 +203,41 @@
 <style lang="scss" scoped>
   @import 'src/style/mixin';
 
+
+  .order_search_nav{
+		padding-top: 2.1rem;
+		background-color: #fff;
+		border-bottom: 0.025rem solid $bc;
+		height: 4rem;
+		.swiper-container{
+			@include wh(100%, auto);
+			padding-bottom: 0.6rem;
+			.swiper-pagination{
+				bottom: 0.2rem;
+			}
+		}
+		.fl_back{
+			@include wh(100%, 100%);
+		}
+	}
+
+  .order_types_container{
+		display:flex;
+		flex-wrap: nowrap;
+		.link_to_order{
+			width: 20%;
+			padding: 0.3rem 0rem;
+			@include fj(center);
+			figure{
+				figcaption{
+					text-align: center;
+          background: lightgray;
+					@include sc(0.55rem, #666);
+				}
+			}
+		}
+	}
+
   .order_page {
     background-color: #f1f1f1;
     margin-bottom: 1.95rem;
@@ -178,7 +248,7 @@
   }
 
   .order_list_ul {
-    padding-top: 1.95rem;
+    padding-top: 0.3rem;
 
     .order_list_li {
       background-color: #fff;

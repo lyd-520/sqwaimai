@@ -12,11 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
-/**
- * Created  on 2018/1/5 0005.
- *
- *@Author enilu
- */
 @RestController
 public class RatingController extends BaseController {
     @Autowired

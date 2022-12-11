@@ -10,11 +10,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * Created  on 2018/1/5 0005.
- *
- *@Author enilu
- */
 @RestController
 public class DeliveryController extends BaseController {
     @Autowired

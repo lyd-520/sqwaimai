@@ -11,10 +11,10 @@
                     </section>
                 </header>
                 <p class="content_num">
-                    <span>0.00</span>
+                    <span>{{userInfo.balance}}</span>
                     <span>元</span>
                 </p>
-                <div class="promit_button">提现</div>
+                <div class="promit_button" @click="checkout">提现</div>
             </section>
         </section>
         <p class="deal_detail">交易明细</p>
@@ -23,6 +23,7 @@
             <p>暂无明细记录</p>
         </div>
         <alert-tip v-if="showAlert" @closeTip="showAlert = false" :alertText="alertText"></alert-tip>
+        <confirm-tip v-if="showConfirm" :showHide="showConfirm"  @reject="goreject" @confirm="goconfirm" :confirmText="confirmText"></confirm-tip>
         <transition name="router-slid" mode="out-in">
             <router-view></router-view>
         </transition>
@@ -30,28 +31,78 @@
 </template>
 
 <script>
+    import {mapState, mapMutations} from 'vuex'
     import headTop from 'src/components/header/head'
     import alertTip from 'src/components/common/alertTip'
+    import confirmTip from 'src/components/common/confirmTip'
+    import { clearBalance } from 'src/service/getData'
     
     export default {
       data(){
             return{
                 showAlert: false,
                 alertText: null,
+                showConfirm: false,
+                confirmText: ""
             }
         },
         mounted(){
-          
+            this.initData();
         },
         components: {
             headTop,
             alertTip,
+            confirmTip
         },
         computed: {
-           
+            ...mapState([
+                'userInfo'
+            ]),
         },
         methods: {
-            
+            ...mapMutations([
+                'RECORD_USERINFO'
+            ]),
+            async initData(){
+                //store中没有userInfo，登录状态有问题。
+                if(!this.userInfo || !this.userInfo.rider_id){
+                    this.showAlert=true
+                    this.alertText="需要登录才能访问"
+                    return false
+                }
+            },
+            closeTip(){
+                this.showAlert = false;
+                this.$router.push("/")
+            },
+            async goconfirm(){
+//                 let param = new FormData()
+//                 param.append('userid',this.userInfo.rider_id)
+//                 let res = await fetch('/rider/clearbalance',{
+//                               method: 'POST',
+//                               credentials: 'include',
+//                               body: param
+//                             })
+// console.info(res)
+                let res = await clearBalance(this.userInfo.rider_id)
+                if(res.error){
+                    this.confirmText=""
+                    this.showConfirm=false
+                    this.alertText=res.error
+                    this.showAlert=true
+                }else{
+                    this.RECORD_USERINFO(res)
+                    this.$router.push("/")
+                }
+            },
+            goreject(){        
+                this.showConfirm=false;
+                this.confirmText=""
+            },
+            checkout(){
+                this.showConfirm=true;
+                this.confirmText="暂不提供提现渠道。确定后将直接清空余额"
+            }
         }
     }
 </script>
@@ -105,7 +156,7 @@
                 line-height: 2rem;
                 margin-top: 1rem;
                 text-align: center;
-                background-color: #ccc;
+                background-color: #4cd964;
             }
         }
     }

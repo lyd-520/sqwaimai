@@ -4,8 +4,6 @@ import java.util.List;
 
 /**
  * 食品规格
- *
- *@Author enilu
  */
 public class SpecFood {
     //原价

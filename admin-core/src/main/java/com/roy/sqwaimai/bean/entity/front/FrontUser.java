@@ -4,11 +4,6 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-/**
- * Created  on 2019/10/09
- *
- *@Author enilu.cn
- */
 @Data
 @Document(collection = "users")
 public class FrontUser extends BaseMongoEntity{

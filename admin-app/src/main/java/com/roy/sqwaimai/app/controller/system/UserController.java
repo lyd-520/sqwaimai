@@ -32,12 +32,6 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.List;
 
-/**
- * UserController
- *
- *@Author enilu
- * @version 2018/9/15 0015
- */
 @RestController
 @RequestMapping("/user")
 public class UserController extends BaseController {

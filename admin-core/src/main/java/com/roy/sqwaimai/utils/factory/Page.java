@@ -8,24 +8,15 @@ import org.springframework.data.domain.Sort;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Created  on 2018/3/22 0022.
- *
- *@Author enilu
- */
 public class Page<T>  {
 
     private Sort sort;
     /**
      * 该操作只是为了忽略RowBounds属性
-     *
-     *
      */
     private transient int offset;
     /**
      * 该操作只是为了忽略RowBounds属性
-     *
-     *
      */
     private transient int limit;
 

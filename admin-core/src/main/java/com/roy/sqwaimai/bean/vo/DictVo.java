@@ -1,11 +1,5 @@
 package com.roy.sqwaimai.bean.vo;
 
-/**
- * DictVo
- *
- *@Author enilu
- * @version 2018/8/14 0014
- */
 public class DictVo {
     private String key;
     private String value;

@@ -22,12 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-/**
- * DictController
- *
- *@Author enilu
- * @version 2018/11/17 0017
- */
 @RestController
 @RequestMapping("/dict")
 public class DictController extends BaseController {

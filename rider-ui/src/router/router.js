@@ -1,6 +1,5 @@
 import App from '../App'
 
-const home = r => require.ensure([], () => r(require('../page/home/home')), 'home')
 const city = r => require.ensure([], () => r(require('../page/city/city')), 'city')
 const login = r => require.ensure([], () => r(require('../page/login/login')), 'login')
 const profile = r => require.ensure([], () => r(require('../page/profile/profile')), 'profile')
@@ -17,7 +16,6 @@ const balance = r => require.ensure([], () => r(require('../page/balance/balance
 const balanceDetail = r => require.ensure([], () => r(require('../page/balance/children/detail')), 'balanceDetail')
 const service = r => require.ensure([], () => r(require('../page/service/service')), 'service')
 const questionDetail = r => require.ensure([], () => r(require('../page/service/children/questionDetail')), 'questionDetail')
-const find = r => require.ensure([], () => r(require('../page/find/find')), 'find')
 
 export default [{
     path: '/',
@@ -27,11 +25,6 @@ export default [{
         {
             path: '',
             redirect: '/profile'
-        },
-        //首页城市列表页
-        {
-            path: '/home',
-            component: home
         },
         //当前选择城市页
         {
@@ -96,14 +89,6 @@ export default [{
                 path: 'detail', //余额说明
                 component: balanceDetail,
             }]
-        },
-
-
-
-        //发现页
-        {
-            path: '/find',
-            component: find
         },
         //服务中心
         {

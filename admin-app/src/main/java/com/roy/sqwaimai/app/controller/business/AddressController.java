@@ -20,11 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * Created  on 2018/1/5 0005.
- *
- *@Author enilu
- */
 @RestController
 public class AddressController extends BaseController {
     private Logger logger = LoggerFactory.getLogger(AddressController.class);

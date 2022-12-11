@@ -29,9 +29,6 @@ import java.util.Map;
 
 /**
  * 基础controller
- *
- *@Author enilu
- * @version 2018-07-25
  */
 public class BaseController {
     private static Logger logger = LoggerFactory.getLogger(BaseController.class);

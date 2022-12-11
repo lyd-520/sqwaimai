@@ -2,9 +2,6 @@ package com.roy.sqwaimai.bean.exception;
 
 /**
  * 封装异常
- *
- * @author fengshuonan
- * @Date 2017/12/28 下午10:32
  */
 public class ApplicationException extends RuntimeException {
 

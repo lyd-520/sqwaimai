@@ -2,10 +2,6 @@ package com.roy.sqwaimai.bean.entity.front.sub;
 
 import lombok.Data;
 
-/**
- * @author ：enilu
- * @date ：Created in 2019/10/24 23:21
- */
 @Data
 public class Score {
     private Integer compare_rating = 0;

@@ -7,8 +7,6 @@ import java.util.*;
 
 /**
  * 集合工具类
- *
- *@Author enilu
  */
 public final class Lists {
 

@@ -25,9 +25,6 @@ import java.util.Optional;
 
 /**
  * 常量的生产工厂
- *
- * @author fengshuonan
- * @date 2017年2月13日 下午10:55:21
  */
 @Component
 @DependsOn("springContextHolder")
@@ -58,9 +55,6 @@ public class ConstantFactory implements IConstantFactory {
 
     /**
      * 根据用户id获取用户名称
-     *
-     * @author stylefeng
-     * @Date 2017/5/9 23:41
      */
     @Override
     public String getUserNameById(Long userId) {
@@ -91,9 +85,6 @@ public class ConstantFactory implements IConstantFactory {
 
     /**
      * 根据用户id获取用户账号
-     *
-     * @author stylefeng
-     * @date 2017年5月16日21:55:371
      */
     @Override
     public String getUserAccountById(Long userId) {

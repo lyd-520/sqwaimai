@@ -242,6 +242,8 @@ export const sendOrder = (userid,orderid) => fetch('/rider/sendorder',{userid,or
 
 export const getAddressList = (user_id) => fetch('/v1/users/' + user_id + '/addresses')
 
+export const clearBalance = (userid) => fetch('/rider/clearbalance',{userid},'POST')
+
 /**
  *个人中心里搜索地址
  */
@@ -275,12 +277,13 @@ export const signout = () => fetch('/v1/users/v2/signout');
 /**
  * 改密码
  */
-export const changePassword = (username, oldpassWord, newpassword, confirmpassword, captcha_code) => fetch('/rider/changepassword', {
+export const changePassword = (username, oldpassWord, newpassword, confirmpassword, captcha_code,captchaId) => fetch('/rider/changepassword', {
   username,
   oldpassWord,
   newpassword,
   confirmpassword,
-  captcha_code
+  captcha_code,
+  captchaId
 }, 'POST');
 
 export const changemobile = (riderid, mobile) =>fetch('/rider/'+riderid+'/updatemobile/'+mobile, {riderid,mobile}, 'POST');

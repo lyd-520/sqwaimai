@@ -9,11 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * Created  on 2018/1/4 0004.
- *
- *@Author enilu
- */
 @RestController
 public class EntryController extends BaseController {
     @Autowired

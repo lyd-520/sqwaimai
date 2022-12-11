@@ -22,11 +22,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created  on 2018/1/5 0005.
- *
- *@Author enilu
- */
 @RestController
 public class OrderController extends BaseController {
     @Autowired
@@ -40,8 +35,6 @@ public class OrderController extends BaseController {
         Page<Order> page = new PageFactory<Order>().defaultPage();
         page = mongoRepository.queryPage(page, Order.class, Maps.newHashMap("user_id", userId));
         return Rets.success(page);
-
-
     }
 
     @RequestMapping(value = "/bos/orders/count", method = RequestMethod.GET)

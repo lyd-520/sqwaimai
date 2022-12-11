@@ -4,10 +4,6 @@ import lombok.Data;
 
 import java.util.List;
 
-/**
- * @author ：enilu.cn
- * @date ：Created in 2019/10/18 22:46
- */
 @Data
 public class Cart {
     private Long id;

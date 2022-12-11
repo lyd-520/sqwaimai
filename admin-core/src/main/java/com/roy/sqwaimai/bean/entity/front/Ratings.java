@@ -9,10 +9,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 
-/**
- * @author ：enilu
- * @date ：Created in 2019/10/24 23:19
- */
 @Data
 @Document(collection = "ratings")
 public class Ratings extends BaseMongoEntity {

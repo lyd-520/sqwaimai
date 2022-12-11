@@ -14,11 +14,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created  on 2018/3/21 0021.
- *
- *@Author enilu
- */
 @Service
 public class DeptService extends BaseService<Dept,Long, DeptRepository> {
     @Autowired

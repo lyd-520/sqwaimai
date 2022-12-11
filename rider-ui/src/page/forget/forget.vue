@@ -15,7 +15,7 @@
                 <input type="text" placeholder="请确认密码" name="confirmPassWord" v-model="confirmPassWord">
             </section>
             <section class="input_container captcha_code_container">
-                <input type="text" placeholder="验证码" name="mobileCode" maxlength="6" v-model="mobileCode">
+                <input type="text" placeholder="验证码" name="captcha_code" maxlength="6" v-model="captcha_code">
                 <div class="img_change_img">
                     <img v-show="captchaCodeImg" :src="captchaCodeImg">
                     <div class="change_img" @click="getCaptchaCode">
@@ -33,7 +33,7 @@
 <script>
     import headTop from 'src/components/header/head'
     import alertTip from 'src/components/common/alertTip'
-    import {mobileCode, checkExsis, sendMobile, getcaptchas, changePassword} from 'src/service/getData'
+    import {getcaptchas, changePassword} from 'src/service/getData'
 
     export default {
         data(){
@@ -43,12 +43,12 @@
                 newPassWord: null, //新密码
                 confirmPassWord: null, //确认密码
                 captchaCodeImg: null, //验证码地址
-                mobileCode: null, //短信验证码
+                captcha_code: null, //短信验证码
                 computedTime: 0, //倒数记时
                 showAlert: false, //显示提示组件
                 alertText: null, //提示的内容
                 accountType: 'mobile',//注册方式
-                captchaCodeImg: null,
+                captchCodeId: null
             }
         },
         components: {
@@ -62,6 +62,7 @@
              async getCaptchaCode(){
                 let res = await getcaptchas();
                 this.captchaCodeImg = res.code;
+                this.captchCodeId = res.captchCodeId
             },
             //重置密码
             async resetButton(){
@@ -85,26 +86,29 @@
                     this.showAlert = true;
                     this.alertText = '两次输入的密码不一致';
                     return
-                }else if(!this.mobileCode){
+                }else if(!this.captcha_code){
                     this.showAlert = true;
                     this.alertText = '请输验证码';
                     return
                 }
+    console.info(this.captcha_code)
+    console.info(this.captchCodeId)
+    console.info(changePassword)
                 // 发送重置信息
-                // let res = await changePassword(this.phoneNumber, this.oldPassWord, this.newPassWord, this.confirmPassWord, this.mobileCode);
+                let res = await changePassword(this.phoneNumber, this.oldPassWord, this.newPassWord, this.confirmPassWord, this.captcha_code,this.captchCodeId);
                 // (username, oldpassWord, newpassword, confirmpassword, captcha_code)
-                let param = new FormData()
-                param.append("username",this.phoneNumber)
-                param.append("oldpassWord",this.oldPassWord)
-                param.append("newpassword",this.newPassWord)
-                param.append("confirmpassword",this.confirmPassWord)
-                param.append("captcha_code",this.captcha_code)
+                // let param = new FormData()
+                // param.append("username",this.phoneNumber)
+                // param.append("oldpassWord",this.oldPassWord)
+                // param.append("newpassword",this.newPassWord)
+                // param.append("confirmpassword",this.confirmPassWord)
+                // param.append("captcha_code",this.captcha_code)
 
-                let res = await fetch('/rider/changepassword', {
-                              method: 'POST',
-                              credentials: 'include',
-                              body: param
-                            })
+                // let res = await fetch('/rider/changepassword', {
+                //               method: 'POST',
+                //               credentials: 'include',
+                //               body: param
+                //             })
 
                 if (res.message) {
                     this.showAlert = true;

@@ -422,6 +422,8 @@ var sendLogin = (code, mobile, validate_token) => fetch('/v1/login/app_mobile', 
 export const getOrderList = (user_id, offset) => fetch('/bos/v2/users/' + user_id + '/orders', {
   limit: 10,
   offset,
+  sort:'status_code',
+  order:'asc',
   t: new Date().getTime()
 });
 

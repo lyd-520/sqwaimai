@@ -6,11 +6,6 @@ import org.springframework.data.annotation.Id;
 
 import java.util.List;
 
-/**
- * Created  on 2018/1/5 0005.
- *
- *@Author enilu
- */
 @Data
 public class OrderItem {
     @Id

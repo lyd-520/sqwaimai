@@ -51,13 +51,17 @@ public class RiderController extends BaseController{
 
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public Object login(@RequestBody LoginVo loginVo) {
+//    public Object login(@RequestBody LoginVo loginVo) {
+//    public Object login(@RequestParam("username") String username,@RequestParam("password") String password) {
+    public Object login(LoginVo loginVo) {
+//        LoginVo loginVo = new LoginVo();
         String captchCode = tokenCache.get(loginVo.getCaptchCodeId(), String.class);
         if (!Strings.equals(loginVo.getCaptchaCode(), captchCode)) {
             return Rets.failure(Maps.newHashMap("type", "ERROR_CAPTCHA", "message", "验证码不正确"));
         }
         Map rider = mongoRepository.findOne("riders", "rider_name", loginVo.getUsername());
-        String newPassword = MD5.getMD5String(MD5.getMD5String(loginVo.getPassword()).substring(2, 7) + MD5.getMD5String(loginVo.getPassword()));
+//        String newPassword = MD5.getMD5String(MD5.getMD5String(loginVo.getPassword()).substring(2, 7) + MD5.getMD5String(loginVo.getPassword()));
+        String newPassword = CryptUtils.encodePassword(loginVo.getPassword());
         if (rider == null) {
             FrontRider frontRider = new FrontRider();
             frontRider.setRider_id(idsService.getId(Ids.RIDER_ID));
@@ -115,25 +119,30 @@ public class RiderController extends BaseController{
                                  @RequestParam("oldpassWord") String oldPassword,
                                  @RequestParam("newpassword") String newPassword,
                                  @RequestParam("confirmpassword") String confirmPassword,
-                                 @RequestParam("captcha_code") String captchaCode) {
-
-        String captch = (String) getSession(CaptchaCode.CAPTCH_KEY);
+                                 @RequestParam("captcha_code") String captchaCode,
+                                 @RequestParam("captchaId") String captchaId
+    ) {
+        String captch = tokenCache.get(captchaId, String.class);
         if (!Strings.equals(captchaCode, captch)) {
             return Rets.failure(Maps.newHashMap("type", "ERROR_CAPTCHA", "message", "验证码不正确"));
         }
         Map user = mongoRepository.findOne("riders", "rider_name", userName);
+//        String oldDecodedPassword = MD5.getMD5String(MD5.getMD5String(oldPassword).substring(2, 7) + MD5.getMD5String(oldPassword));
+        String oldDecodedPassword = CryptUtils.encodePassword(oldPassword);
+
         if (user == null) {
             return Rets.failure(Maps.newHashMap("type", "ERROR_QUERY", "message", "用户不存在"));
         }
-        if (!Strings.equals(oldPassword, Strings.sNull(user.get("password")))) {
+        if (!Strings.equals(oldDecodedPassword, Strings.sNull(user.get("password")))) {
             return Rets.failure(Maps.newHashMap("type", "ERROR_QUERY", "message", "原密码错误"));
         }
-        if (Strings.equals(newPassword, confirmPassword)) {
+        if (!Strings.equals(newPassword, confirmPassword)) {
             return Rets.failure(Maps.newHashMap("type", "ERROR_QUERY", "message", "新密码不一致"));
         }
 
-        user.put("password", newPassword);
-        mongoRepository.update(Long.valueOf(user.get("id").toString()), "riders", user);
+        String newEncodedPassword = CryptUtils.encodePassword(newPassword);
+        user.put("password", newEncodedPassword);
+        mongoRepository.update(Long.valueOf(user.get("rider_id").toString()), "riders", user);
 
         return Rets.success();
     }
@@ -147,9 +156,7 @@ public class RiderController extends BaseController{
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/online")
-//    public Object riderOnLine(@RequestParam("riderid") String riderid){
-    public Object riderOnLine(@RequestBody() Map<String ,String> params){
-        String riderid = params.get("riderid");
+    public Object riderOnLine(@RequestParam("riderid") String riderid){
         FrontRiderInfo riderInfo = mongoRepository.findOne(FrontRiderInfo.class, "rider_id", Long.parseLong(riderid));
         //修改骑手状态
         riderInfo.setWork_status(FrontRiderInfo.STATUS_ONLINE);
@@ -158,14 +165,15 @@ public class RiderController extends BaseController{
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/offline")
-    public Object riderOffLine(@RequestBody() Map<String ,String> params){
-        String riderid = params.get("riderid");
+    public Object riderOffLine(@RequestParam("riderid") String riderid){
         FrontRiderInfo riderInfo = mongoRepository.findOne(FrontRiderInfo.class, "rider_id", Long.parseLong(riderid));
-        //修改骑手状态
-        riderInfo.setWork_status(FrontRiderInfo.STATUS_OFFLINE);
         //有派送中的订单，不允许下线。
-
-
+        if(riderInfo.getSending_order_id()>0){
+            return Maps.newHashMap("error","订单["+riderInfo.getSending_order_id()+"]派送中。请先派送完订单。");
+        }else{
+            riderInfo.setWork_status(FrontRiderInfo.STATUS_OFFLINE);
+            mongoRepository.update(riderInfo);
+        }
         return riderInfo;
     }
 
@@ -178,7 +186,9 @@ public class RiderController extends BaseController{
      */
     @RequestMapping(value = "/{user_id}/orders", method = RequestMethod.POST)
     public Object orders(@PathVariable("user_id") Long userId,
-                         @RequestBody Map<String,String> params) {
+                         @RequestParam("limit")  int limit,
+                         @RequestParam(value = "latitude",required = false) Double latitude,
+                         @RequestParam(value = "longitude",required = false) Double longitude) {
 
         FrontRiderInfo frontRiderInfo = mongoRepository.findOne(FrontRiderInfo.class, "rider_id", userId);
         if(null == frontRiderInfo){
@@ -187,13 +197,9 @@ public class RiderController extends BaseController{
             return "请先上线";
         }
         
-        if(!params.containsKey("limit")){
-            return "查询参数不足";
-        }
-        int limit = Integer.parseInt(params.get("limit"));
         //查询完成付款单的订单
         //没有指定位置，就随意查询未付款订单
-        if(!params.containsKey("latitude")||!params.containsKey("longitude")){
+        if(latitude<=0.00 || longitude <=0.00){
             Map<String,Object> orderqueryParam = Maps.newHashMap();
             orderqueryParam.put("status_code",Order.STATUS_PAID);
             Page<Order> page = new PageFactory<Order>().defaultPage();
@@ -202,8 +208,6 @@ public class RiderController extends BaseController{
             Page page = new PageFactory().rawPage();
             List<Map> queryOrders = Lists.newArrayList();
             //传了指定位置，先找附近的商店，作为订单的起点
-            double latitude = Double.parseDouble(params.get("latitude"));
-            double longitude = Double.parseDouble(params.get("longitude"));
             // 查找附近的商店
             String cfgrange = cfgService.getCfgValue("system.search.range");
             GeoResults<Map> geoResults = mongoRepository.near(Double.valueOf(longitude), Double.valueOf(latitude), "shops", Maps.newHashMap(),Integer.parseInt(cfgrange));
@@ -285,10 +289,8 @@ public class RiderController extends BaseController{
     private Object cacheLock = new Object();
 
     @RequestMapping(value = "checkOrder", method = RequestMethod.POST)
-    public Object checkOrder(@RequestBody Map<String,String> params){
-        long userid = Long.valueOf(params.get("userid"));
-        long orderid = Long.valueOf(params.get("orderid"));
-
+    public Object checkOrder(@RequestParam("userid") long userid,
+                             @RequestParam("orderid") long orderid){
         //在rider表中记录骑手的订单ID。 要防止同一个订单ID被多个骑手注册
         //同步锁，防止高并发时，后面的线程覆盖前面线程的锁对象。
         synchronized (cacheLock){
@@ -311,18 +313,18 @@ public class RiderController extends BaseController{
                 order.setStatus_code(Order.STATUS_DELIVERYING);
                 order.setStatus_title(Order.getStatusCodeStr(Order.STATUS_DELIVERYING));
                 mongoRepository.update(order);
-                return frontRiderInfo;
+                return Rets.success(frontRiderInfo);
             }
         }
     }
     //订单送达
     @RequestMapping(value= "/sendorder",method = RequestMethod.POST)
-    public Object sendOrder(@RequestBody Map<String,String> params){
-        long userid = Long.valueOf(params.get("userid"));
-        long orderid = Long.valueOf(params.get("orderid"));
+    public Object sendOrder(@RequestParam("userid") long userid,
+                            @RequestParam("orderid") long orderid){
         //更新订单  订单状态，送达时间
         Order order = mongoRepository.findOne(Order.class, "id", orderid);
         order.setStatus_code(Order.STATUS_DELIVERED);
+        order.setStatus_title(Order.getStatusCodeStr(Order.STATUS_DELIVERED));
         Date now = new Date();
         order.setDeliver_time(now.getTime());
         order.setFormatted_deliver_at(DateUtil.format(now, "yyyy-MM-dd HH:mm"));
@@ -339,5 +341,13 @@ public class RiderController extends BaseController{
         mongoRepository.update(frontRiderInfo);
 
         return Rets.success(frontRiderInfo);
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/clearbalance")
+    public Object clearbalance(@RequestParam("userid") String riderid){
+        FrontRiderInfo riderInfo = mongoRepository.findOne(FrontRiderInfo.class, "rider_id", Long.parseLong(riderid));
+        riderInfo.setBalance(0.00);
+        mongoRepository.update(riderInfo);
+        return Rets.success(riderInfo);
     }
 }

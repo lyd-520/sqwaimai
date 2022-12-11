@@ -8,9 +8,11 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="admin-app" />
-        <module name="admin-generator" />
         <module name="admin-core" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="admin-generator" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>

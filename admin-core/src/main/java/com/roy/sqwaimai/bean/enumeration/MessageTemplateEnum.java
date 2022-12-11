@@ -1,11 +1,5 @@
 package com.roy.sqwaimai.bean.enumeration;
 
-/**
- * descript
- *
- * @author ：enilu
- * @date ：Created in 2019/6/10 20:10
- */
 public enum MessageTemplateEnum {
     /**
      * 注册验证码

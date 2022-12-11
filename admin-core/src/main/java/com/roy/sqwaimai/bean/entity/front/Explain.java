@@ -6,11 +6,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Map;
 
-/**
- * Created  on 2019/10/10
- *
- *@Author enilu.cn
- */
 @Data
 @Document(collection = "explains")
 public class Explain extends BaseMongoEntity{

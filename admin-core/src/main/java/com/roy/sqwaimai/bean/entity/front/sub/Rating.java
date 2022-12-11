@@ -5,10 +5,6 @@ import lombok.Data;
 
 import java.util.List;
 
-/**
- * @author ：enilu
- * @date ：Created in 2019/10/24 23:21
- */
 @Data
 public class Rating {
     private String avatar="";

@@ -10,11 +10,6 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created  on 2018/2/26 0026.
- *
- *@Author enilu
- */
 public class BeanUtil {
     /**
     * 将对象装换为map

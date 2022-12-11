@@ -4,11 +4,6 @@ import com.alibaba.fastjson.annotation.JSONField;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-/**
- * Created  on 2018/1/4 0004.
- *
- *@Author enilu
- */
 @Document(collection = "activities")
 public class Activity extends BaseMongoEntity {
     @Id

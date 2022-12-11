@@ -143,7 +143,8 @@
             loading,
             alertTip,
             confirmTip,
-            footGuide
+            footGuide,
+            BScroll
         },
         computed: {
             ...mapState([
@@ -193,13 +194,13 @@
                 this.CLEAR_ORDER()
                 this.showLoading = false;       
                 this.$nextTick(() => {
-                        new BScroll('#scroll_section', {  
-                            deceleration: 0.001,
-                            bounce: true,
-                            swipeTime: 1800,
-                            click: true,
-                        }); 
-                    })          
+                    new BScroll('#scroll_section', {  
+                        deceleration: 0.001,
+                        bounce: true,
+                        swipeTime: 1800,
+                        click: true,
+                    }); 
+                })          
             },
             closeTip(){
                 this.showAlert = false;
@@ -228,7 +229,6 @@
             },
             async gosendorder(){
                 let res = await sendOrder(this.userInfo.rider_id,this.orderData.id)
-    console.info(res)
                 if(res.error){
                     this.confirmText=""
                     this.showConfirm=false

@@ -7,11 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created  on 2018/1/5 0005.
- *
- *@Author enilu
- */
 @Data
 public class OrderBasket {
 

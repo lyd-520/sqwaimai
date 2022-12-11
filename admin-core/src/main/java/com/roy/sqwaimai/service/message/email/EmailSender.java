@@ -2,12 +2,6 @@ package com.roy.sqwaimai.service.message.email;
 
 import org.springframework.core.io.InputStreamSource;
 
-/**
- * descript
- *
- * @author ：enilu
- * @date ：Created in 2019/6/17 19:33
- */
 public interface EmailSender {
     /**
      * 发送邮件

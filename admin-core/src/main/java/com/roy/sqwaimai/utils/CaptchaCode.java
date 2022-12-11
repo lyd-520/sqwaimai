@@ -7,11 +7,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-/**
- * Created  on 2018/1/5 0005.
- *
- *@Author enilu
- */
 public class CaptchaCode {
     public static  String CAPTCH_KEY = "captcha";
     private static char mapTable[] = {

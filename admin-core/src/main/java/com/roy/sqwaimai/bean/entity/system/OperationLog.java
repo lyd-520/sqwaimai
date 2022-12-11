@@ -9,12 +9,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.util.Date;
 
-/**
- * Created  on 2018/4/2 0002.
- *
- *@Author enilu
- */
-
 @Entity(name = "t_sys_operation_log")
 @Table(appliesTo = "t_sys_operation_log",comment = "操作日志")
 @Data

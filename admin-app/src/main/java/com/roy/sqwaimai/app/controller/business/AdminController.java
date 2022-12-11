@@ -30,11 +30,6 @@ import java.util.List;
 import java.util.Map;
 
 
-/**
- * Created on 2017/12/12 0012.
- *@Author enilu
- */
-
 @RestController
 @RequestMapping("/admin")
 public class AdminController extends BaseController {

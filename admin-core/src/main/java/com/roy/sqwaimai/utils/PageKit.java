@@ -2,9 +2,6 @@ package com.roy.sqwaimai.utils;
 
 /**
  * 分页工具类
- * 
- * @author xiaoleilu
- * 
  */
 public class PageKit {
 

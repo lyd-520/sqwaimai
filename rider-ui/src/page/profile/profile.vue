@@ -46,15 +46,13 @@
                 </ul>
             </section>
             <section class="profile-1reTe">
-
-                
                 <div class="myorder" v-if="!this.userInfo">
                     <span>请先登录，并绑定手机号</span>
                 </div>
 
                 <!-- 我的订单 -->
-                <!-- <div class="myorder" v-if="(this.userInfo && this.userInfo.work_status == 0)" @click="goonline"> -->
-                <div class="myorder" @click="goonline">
+                <div class="myorder" v-if="(this.userInfo && this.userInfo.work_status == 0)" @click="goonline">
+                <!-- <div class="myorder" @click="goonline"> -->
                     <aside>
                         <svg fill="#4aa5f0">
                             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#order"></use>
@@ -74,14 +72,14 @@
                 </router-link> -->
                 <!-- 获取订单 -->
                 <!-- <router-link to='/order' class="myorder" v-if="this.userInfo"> -->
-                <router-link to='/order' class="myorder">
+                <router-link to='/orderDetail' class="myorder" v-if="this.userInfo && this.userInfo.sending_order_id > 0">
                     <aside>
                         <svg fill="#4aa5f0">
                             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#vip"></use>
                         </svg>
                     </aside>
                     <div class="myorder-div">
-                        <span>获取订单</span>
+                        <span>我的订单</span>
                         <span class="myorder-divsvg">
                             <svg fill="#bbb">
                                 <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>
@@ -90,8 +88,8 @@
                     </div>
                 </router-link>
                 <!-- 下线休息 -->
-                <!-- <router-link to='/order' class="myorder" v-if="(this.userInfo && this.userInfo.work_status == 1)"> -->
-                    <div class="myorder" @click="gooffline">
+                <div class="myorder" @click="gooffline" v-if="(this.userInfo && this.userInfo.work_status == 1)">
+                    <!-- <div class="myorder" @click="gooffline"> -->
                     <aside>
                         <svg fill="#4aa5f0">
                             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#point"></use>
@@ -182,7 +180,6 @@ export default {
             'SAVE_AVANDER','RECORD_USERINFO'
         ]),
         initData(){
-console.info(this.userInfo)
             if (this.userInfo && this.userInfo.rider_id) {
                 this.avatar = this.userInfo.avatar;
                 this.username = this.userInfo.rider_name;
@@ -235,8 +232,12 @@ console.info(this.userInfo)
                 return
             }
             let res = await rideroffline(this.riderid)
-            if(res && res.rider_id){
+            if(res && res.error){
+                this.showAlert=true
+                this.alertText="res.error"
+            }else if(res.rider_id){
                 this.RECORD_USERINFO(res)
+                this.initData()
                 // this.$router.push("/city/"+this.guessCityid)
             }
         },

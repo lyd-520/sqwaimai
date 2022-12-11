@@ -20,11 +20,6 @@ import java.util.Base64;
 import java.util.Map;
 import java.util.UUID;
 
-/**
- * Created  on 2018/1/5 0005.
- *
- *@Author enilu
- */
 @RestController
 public class CaptchaController extends BaseController {
 

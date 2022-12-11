@@ -7,11 +7,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created  on 2018/1/3 0003.
- *
- *@Author enilu
- */
 @Document(collection = "menus")
 public class Menu  extends BaseMongoEntity{
     @Id

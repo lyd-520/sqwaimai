@@ -8,11 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-/**
- * Created  on 2018/4/2 0002.
- *
- *@Author enilu
- */
 @Entity(name = "t_sys_relation")
 @Table(appliesTo = "t_sys_relation",comment = "菜单角色关系")
 @Data

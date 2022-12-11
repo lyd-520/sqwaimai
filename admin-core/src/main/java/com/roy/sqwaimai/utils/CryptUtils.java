@@ -15,7 +15,6 @@ import java.util.Date;
 
 /**
  * 加密工具类
- * @author  enilu
  */
 public class CryptUtils {
 
@@ -347,4 +346,7 @@ public class CryptUtils {
 		return sign;
 	}
 
+	public static String encodePassword(String password){
+		return MD5.getMD5String(MD5.getMD5String(password).substring(2, 7) + MD5.getMD5String(password));
+	}
 }

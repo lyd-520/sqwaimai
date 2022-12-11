@@ -4,11 +4,6 @@ import lombok.Data;
 
 import java.io.Serializable;
 
-/**
- * Created  on 2017/12/29 0029.
- *
- *@Author enilu
- */
 @Data
 public class CityInfo implements Serializable {
     private String lat;

@@ -10,11 +10,6 @@ import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.validation.constraints.NotBlank;
 
-/**
- * Created  on 2018/4/2 0002.
- *
- *@Author enilu
- */
 @Entity(name="t_sys_cfg")
 @Table(appliesTo = "t_sys_cfg",comment = "系统参数")
 @Data

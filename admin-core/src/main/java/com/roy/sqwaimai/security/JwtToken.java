@@ -2,10 +2,6 @@ package com.roy.sqwaimai.security;
 
 import org.apache.shiro.authc.AuthenticationToken;
 
-/**
- * @author ：enilu
- * @date ：Created in 2019/7/30 22:58
- */
 public class JwtToken implements AuthenticationToken {
 
     /**

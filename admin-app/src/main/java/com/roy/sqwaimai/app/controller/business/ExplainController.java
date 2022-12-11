@@ -9,11 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * Created  on 2019/10/10
- *
- *@Author enilu.cn
- */
 @RestController
 public class ExplainController extends BaseController {
     @Autowired

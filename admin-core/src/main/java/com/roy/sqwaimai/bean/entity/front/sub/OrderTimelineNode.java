@@ -4,11 +4,6 @@ import lombok.Data;
 
 import java.util.List;
 
-/**
- * Created  on 2018/1/7 0007.
- *
- *@Author enilu
- */
 @Data
 public class OrderTimelineNode {
     private List actions;

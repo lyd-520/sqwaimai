@@ -56,7 +56,7 @@
   import loading from 'src/components/common/loading'
   import alertTip from 'src/components/common/alertTip'
   import {getImgPath} from 'src/components/common/mixin'
-  import {getOrderList,checkOrder,cancelOrder} from 'src/service/getData'
+  import {getOrderList,checkOrder} from 'src/service/getData'
   import {imgBaseUrl} from 'src/config/env'
 
   export default {

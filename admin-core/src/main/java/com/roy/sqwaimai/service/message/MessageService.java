@@ -1,6 +1,5 @@
 package com.roy.sqwaimai.service.message;
 
-
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.roy.sqwaimai.bean.entity.message.Message;
@@ -14,7 +13,7 @@ import com.roy.sqwaimai.service.BaseService;
 import com.roy.sqwaimai.service.message.email.EmailSender;
 import com.roy.sqwaimai.service.message.sms.SmsSender;
 import com.roy.sqwaimai.utils.StringUtils;
-import org.apache.commons.lang.text.StrSubstitutor;
+import org.apache.commons.text.StringSubstitutor;
 import org.nutz.lang.Lang;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,12 +24,6 @@ import org.springframework.stereotype.Service;
 import java.text.MessageFormat;
 import java.util.*;
 
-/**
- * MessageService
- *
- *@Author enilu
- * @version 2019/05/17 0017
- */
 @Service
 public class MessageService extends BaseService<Message,Long, MessageRepository> {
     private Logger logger = LoggerFactory.getLogger(getClass());
@@ -40,8 +33,6 @@ public class MessageService extends BaseService<Message,Long, MessageRepository>
     private MessagesenderRepository messagesenderRepository;
     @Autowired
     private MessagetemplateRepository messagetemplateRepository;
-
-
 
     public boolean delete(String ids) {
         final ArrayList<String> list = Lists.newArrayList(Splitter.on(',').split(ids));
@@ -107,7 +98,9 @@ public class MessageService extends BaseService<Message,Long, MessageRepository>
     }
 
     private String getContent(String template, Map<String, Object> dataMap) {
-        return StrSubstitutor.replace(template, dataMap);
+        StringSubstitutor sub = new StringSubstitutor(dataMap);
+        return sub.replace(template);
+//        return StrSubstitutor.replace(template, dataMap);
     }
 
     private void saveMessage(Integer type, String tplCode, String receiver, String content, Boolean sendResult) {

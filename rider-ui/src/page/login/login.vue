@@ -103,7 +103,6 @@
                     this.alertText = this.userInfo.message;
                     this.getCaptchaCode();
                 }else{
-console.info(this.userInfo)
                     this.RECORD_USERINFO(this.userInfo);
                     this.$router.go(-1);
 

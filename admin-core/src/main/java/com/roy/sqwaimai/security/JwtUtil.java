@@ -13,9 +13,6 @@ import com.roy.sqwaimai.utils.HttpKit;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
 
-/**
- * @author ：enilu
- */
 public class JwtUtil {
     // 过期时间60分钟
     private static final long EXPIRE_TIME = 60 * 60 * 1000;

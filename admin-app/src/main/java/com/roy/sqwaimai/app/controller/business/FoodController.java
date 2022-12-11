@@ -24,11 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created  on 2017/12/29 0029.
- *
- *@Author enilu
- */
 @RestController
 @RequestMapping("/shopping")
 public class FoodController extends BaseController {

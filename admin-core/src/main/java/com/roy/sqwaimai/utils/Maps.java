@@ -5,9 +5,6 @@ import java.util.HashMap;
 
 /**
  * Map 工具类
- *
- *@Author enilu
- *
  */
 public final class Maps {
 

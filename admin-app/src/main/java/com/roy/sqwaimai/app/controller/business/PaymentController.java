@@ -11,10 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.Map;
 
-/**
- * @author ：microapp.store
- * @date ：Created in 2019/10/24 15:58
- */
 @RestController
 @RequestMapping("/payapi/payment")
 public class PaymentController extends BaseController {

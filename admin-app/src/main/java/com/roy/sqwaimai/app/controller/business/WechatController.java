@@ -32,10 +32,6 @@ import java.util.Map;
 
 /**
  * 微信相关服务
- *
- *@Author enilu
- * @Date 2021/4/24 19:53
- * @Version 1.0
  */
 @RestController
 @RequestMapping("/wechat")

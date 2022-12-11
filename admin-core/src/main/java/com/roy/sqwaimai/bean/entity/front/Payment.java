@@ -7,10 +7,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 
-/**
- * @author ：enilu.cn
- * @date ：Created in 2019/10/18 22:54
- */
 @Document(collection = "payments")
 @Data
 public class Payment {

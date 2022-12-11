@@ -7,11 +7,6 @@ import com.roy.sqwaimai.service.BaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-/**
- * Created  on 2018/3/23 0023.
- *
- *@Author enilu
- */
 @Service
 public class UserService  extends BaseService<User,Long, UserRepository> {
     @Autowired

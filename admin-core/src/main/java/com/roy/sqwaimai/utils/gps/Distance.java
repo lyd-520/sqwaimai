@@ -2,8 +2,6 @@ package com.roy.sqwaimai.utils.gps;
 
 /**
  * 根据gps坐标计算距离
- * @author ：enilu
- * @date ：Created in 2019/9/16 19:38
  */
 
 public class Distance {

@@ -11,9 +11,6 @@ import javax.mail.internet.MimeMessage;
 
 /**
  * 默认的邮件发送服务类
- *
- * @author ：enilu
- * @date ：Created in 2019/6/11 15:19
  */
 @Service
 public class DefaultEmailSender implements EmailSender{
