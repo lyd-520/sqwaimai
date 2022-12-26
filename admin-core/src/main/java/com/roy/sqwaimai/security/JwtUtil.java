@@ -103,7 +103,7 @@ public class JwtUtil {
                     .withClaim("userId", user.getId())
                     .withClaim("userType", Constants.USER_TYPE_MGR)
                     .withClaim("password", user.getPassword())
-                    .withExpiresAt(date)
+//                    .withExpiresAt(date)
                     .sign(algorithm);
         } catch (UnsupportedEncodingException e) {
             return null;
@@ -126,7 +126,7 @@ public class JwtUtil {
                     .withClaim("userId", shop.getId())
                     .withClaim("userType", Constants.USER_TYPE_SHOP)
                     .withClaim("password", shop.getPassword())
-                    .withExpiresAt(date)
+//                    .withExpiresAt(date)
                     .sign(algorithm);
         } catch (UnsupportedEncodingException e) {
             return null;
