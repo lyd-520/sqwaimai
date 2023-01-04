@@ -31,6 +31,8 @@ public class WebListener implements CommandLineRunner {
             mongoRepository.clear("sesions");
             mongoRepository.clear("users");
             mongoRepository.clear("userinfos");
+            mongoRepository.clear("riders");
+            mongoRepository.clear("ridersinfo");
         }
     }
     @Override

@@ -151,9 +151,9 @@
             async outLogin(){
                 this.OUT_LOGIN();
                 this.waitingThing();
-                this.$router.go(-1);
                 removeStore('user_id')
                 await signout();
+                this.$router.push("/");
             },
             changeusername(){
                 this.showAlert = true;
@@ -166,7 +166,7 @@
                     let data = new FormData();
                     data.append('file', input.files[0]);
                     try{
-                        let response = await fetch('/rider/' + this.userInfo.rider_id + '/avatar', {
+                        let response = await fetch('/api/rider/' + this.userInfo.rider_id + '/avatar', {
                               method: 'POST',
                               credentials: 'include',
                               body: data

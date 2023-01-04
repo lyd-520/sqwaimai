@@ -5,6 +5,8 @@ import com.roy.sqwaimai.bean.core.ShiroUser;
 import com.roy.sqwaimai.bean.entity.front.Shop;
 import com.roy.sqwaimai.bean.entity.system.User;
 import com.roy.sqwaimai.bean.vo.front.Rets;
+import com.roy.sqwaimai.core.log.LogManager;
+import com.roy.sqwaimai.core.log.LogTaskFactory;
 import com.roy.sqwaimai.dao.MongoRepository;
 import com.roy.sqwaimai.security.AccountInfo;
 import com.roy.sqwaimai.security.JwtUtil;
@@ -59,7 +61,8 @@ public class AccountController extends BaseController{
     public Object login(
             @RequestParam("userType") String userType,
             @RequestParam("username") String userName,
-            @RequestParam("password") String password) {
+            @RequestParam("password") String password,
+            HttpServletRequest request) {
         try {
             logger.info("用户登录:" + userName + ",密码:" + password);
             String token = null;
@@ -75,6 +78,7 @@ public class AccountController extends BaseController{
                     return Rets.failure("输入的密码错误");
                 }
                 token = JwtUtil.sign(user);
+                LogManager.me().executeLog(LogTaskFactory.loginLog(user.getId(),request.getRemoteHost()));
             } else if (Constants.USER_TYPE_SHOP.equals(userType)) {
 
                 Shop shop = mongoRepository.findOne(Shop.class, Maps.newHashMap("name", userName, "password", password));
@@ -88,12 +92,13 @@ public class AccountController extends BaseController{
                     return Rets.failure("账号或密码错误");
                 }
                 token = JwtUtil.sign(shop);
+                LogManager.me().executeLog(LogTaskFactory.loginLog(shop.getId(),request.getRemoteHost()));
             }
+
 
             Map<String, String> result = new HashMap<>(1);
             logger.info("token:{}", token);
             result.put("token", token);
-
             return Rets.success(result);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -110,6 +115,10 @@ public class AccountController extends BaseController{
     @RequestMapping(value = "/logout", method = RequestMethod.POST)
     public Object logout(HttpServletRequest request) {
         String token = this.getToken(request);
+        if(null != request.getSession().getAttribute("currentuser")){
+            Long userId = Long.parseLong(((Map) request.getSession().getAttribute("currentuser")).get("userId").toString());
+            LogManager.me().executeLog(LogTaskFactory.exitLog(userId,request.getRemoteHost()));
+        }
         accountService.logout(token);
         return Rets.success();
     }

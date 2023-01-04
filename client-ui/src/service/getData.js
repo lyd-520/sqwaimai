@@ -5,7 +5,7 @@ import {getStore} from '../config/mUtils'
  * 获取首页默认地址
  */
 
-export const cityGuess = () => fetch('/v1/cities', {
+export const cityGuess = () => fetch('/api/cities', {
   type: 'guess'
 });
 
@@ -14,7 +14,7 @@ export const cityGuess = () => fetch('/v1/cities', {
  * 获取首页热门城市
  */
 
-export const hotcity = () => fetch('/v1/cities', {
+export const hotcity = () => fetch('/api/cities', {
   type: 'hot'
 });
 
@@ -23,7 +23,7 @@ export const hotcity = () => fetch('/v1/cities', {
  * 获取首页所有城市
  */
 
-export const groupcity = () => fetch('/v1/cities', {
+export const groupcity = () => fetch('/api/cities', {
   type: 'group'
 });
 
@@ -32,14 +32,14 @@ export const groupcity = () => fetch('/v1/cities', {
  * 获取当前所在城市
  */
 
-export const currentcity = number => fetch('/v1/cities/' + number);
+export const currentcity = number => fetch('/api/cities/' + number);
 
 
 /**
  * 获取搜索地址
  */
 
-export const searchplace = (cityid, value) => fetch('/v1/pois', {
+export const searchplace = (cityid, value) => fetch('/api/pois', {
   type: 'search',
   city_id: cityid,
   keyword: value
@@ -50,7 +50,7 @@ export const searchplace = (cityid, value) => fetch('/v1/pois', {
  * 获取msite页面地址信息
  */
 
-export const msiteAddress = geohash => fetch('/v1/position/pois', {
+export const msiteAddress = geohash => fetch('/position/pois', {
   geohash
 });
 
@@ -59,7 +59,7 @@ export const msiteAddress = geohash => fetch('/v1/position/pois', {
  * 获取msite页面食品分类列表
  */
 
-export const msiteFoodTypes = geohash => fetch('/v2/index_entry', {
+export const msiteFoodTypes = geohash => fetch('/api/entry/index_entry', {
   geohash,
   group_type: '1'
 });
@@ -81,14 +81,14 @@ export const shopList = (latitude, longitude, offset, restaurant_category_id = '
     longitude,
     offset,
     limit: '20',
-    'extras': 'activities',
-    keyword: '',
+    // 'extras': 'activities',
+    // keyword: '',
     restaurant_category_id,
-    'restaurant_category_ids': restaurant_category_ids,
+    // 'restaurant_category_ids': restaurant_category_ids,
     order_by,
-    'delivery_mode': delivery_mode + supportStr
+    // 'delivery_mode': delivery_mode + supportStr
   };
-  return fetch('/shopping/restaurants', data);
+  return fetch('/api/shop/restaurants', data);
 };
 
 
@@ -96,7 +96,7 @@ export const shopList = (latitude, longitude, offset, restaurant_category_id = '
  * 获取search页面搜索结果
  */
 
-export const searchRestaurant = (geohash, keyword) => fetch('/v4/restaurants', {
+export const searchRestaurant = (geohash, keyword) => fetch('/api/shop/searchShop', {
   'extras': 'restaurant_activity',
   geohash,
   keyword,
@@ -108,17 +108,13 @@ export const searchRestaurant = (geohash, keyword) => fetch('/v4/restaurants', {
  * 获取food页面的 category 种类列表
  */
 
-export const foodCategory = (latitude, longitude) => fetch('/shopping/v2/restaurant/category', {
-  latitude,
-  longitude
-});
-
+export const foodCategory = (latitude, longitude) => fetch('/api/shop/listcategory', {});
 
 /**
  * 获取food页面的配送方式
  */
 
-export const foodDelivery = (latitude, longitude) => fetch('/shopping/v1/restaurants/delivery_modes', {
+export const foodDelivery = (latitude, longitude) => fetch('/api/delivery/delivery_modes', {
   latitude,
   longitude,
   kw: ''
@@ -129,7 +125,7 @@ export const foodDelivery = (latitude, longitude) => fetch('/shopping/v1/restaur
  * 获取food页面的商家属性活动列表
  */
 
-export const foodActivity = (latitude, longitude) => fetch('/shopping/v1/restaurants/activity_attributes', {
+export const foodActivity = (latitude, longitude) => fetch('/api/activity/nearbyactivities', {
   latitude,
   longitude,
   kw: ''
@@ -140,7 +136,7 @@ export const foodActivity = (latitude, longitude) => fetch('/shopping/v1/restaur
  * 获取shop页面商铺详情
  */
 
-export const shopDetails = (shopid, latitude, longitude) => fetch('/shopping/restaurant/' + shopid, {
+export const shopDetails = (shopid, latitude, longitude) => fetch('/api/shop/queryshop/' + shopid, {
   latitude,
   longitude: longitude + '&extras=activities&extras=album&extras=license&extras=identification&extras=statistics'
 });
@@ -150,7 +146,7 @@ export const shopDetails = (shopid, latitude, longitude) => fetch('/shopping/res
  * 获取shop页面菜单列表
  */
 
-export const foodMenu = restaurant_id => fetch('/shopping/v2/menu', {
+export const foodMenu = restaurant_id => fetch('/api/shop/getmenu', {
   restaurant_id
 });
 
@@ -159,7 +155,7 @@ export const foodMenu = restaurant_id => fetch('/shopping/v2/menu', {
  * 获取商铺评价列表
  */
 
-export const getRatingList = (shopid, offset, tag_name = '') => fetch('/ugc/v2/restaurants/' + shopid + '/ratings', {
+export const getRatingList = (shopid, offset, tag_name = '') => fetch('/api/ratings/restaurants/' + shopid +'/ratings', {
   has_content: true,
   offset,
   limit: 10,
@@ -171,32 +167,21 @@ export const getRatingList = (shopid, offset, tag_name = '') => fetch('/ugc/v2/r
  * 获取商铺评价分数
  */
 
-export const ratingScores = shopid => fetch('/ugc/v2/restaurants/' + shopid + '/ratings/scores');
+export const ratingScores = shopid => fetch('/api/ratings/restaurants/' + shopid + '/scores');
 
 
 /**
  * 获取商铺评价分类
  */
 
-export const ratingTags = shopid => fetch('/ugc/v2/restaurants/' + shopid + '/ratings/tags');
-
-
-/**
- * 获取短信验证码
- */
-
-export const mobileCode = phone => fetch('/v4/mobile/verify_code/send', {
-  mobile: phone,
-  scene: 'login',
-  type: 'sms'
-}, 'POST');
+export const ratingTags = shopid => fetch('/api/ratings/restaurants/' + shopid + '/tags');
 
 
 /**
  * 获取图片验证码
  */
 
-export const getcaptchas = () => fetch('/v1/captchas', {}, 'POST');
+export const getcaptchas = () => fetch('/api/captchas/getcaptchas', {}, 'POST');
 
 
 /**
@@ -208,26 +193,11 @@ export const checkExsis = (checkNumber, type) => fetch('/v1/users/exists', {
   type
 });
 
-
-/**
- * 发送帐号
- */
-
-export const sendMobile = (sendData, captcha_code, type, password) => fetch('/v1/mobile/verify_code/send', {
-  action: "send",
-  captcha_code,
-  [type]: sendData,
-  type: "sms",
-  way: type,
-  password,
-}, 'POST');
-
-
 /**
  * 确认订单
  */
 
-export const checkout = (geohash, entities, shopid) => fetch('/v1/carts/checkout', {
+export const checkout = (geohash, entities, shopid) => fetch('/api/carts/checkorder', {
   come_from: "web",
   geohash,
   entities,
@@ -239,25 +209,15 @@ export const checkout = (geohash, entities, shopid) => fetch('/v1/carts/checkout
  * 获取快速备注列表
  */
 
-export const getRemark = (id, sig) => fetch('/v1/carts/' + id + '/remarks', {
+export const getRemark = (id, sig) => fetch('/api/carts/' + id + '/remarks', {
   sig
 });
-
-
-/**
- * 获取地址列表
- */
-
-export const getAddress = (id, sig) => fetch('/v1/carts/' + id + '/addresses', {
-  sig
-});
-
 
 /**
  * 搜索地址
  */
 
-export const searchNearby = keyword => fetch('/v1/pois', {
+export const searchNearby = keyword => fetch('/api/pois', {
   type: 'nearby',
   keyword
 });
@@ -267,7 +227,7 @@ export const searchNearby = keyword => fetch('/v1/pois', {
  * 添加地址
  */
 
-export const postAddAddress = (userId, address, address_detail, geohash, name, phone, phone_bk, poi_type, sex, tag, tag_type) => fetch('/v1/users/' + userId + '/addresses', {
+export const postAddAddress = (userId, address, address_detail, geohash, name, phone, phone_bk, poi_type, sex, tag, tag_type) => fetch('/api/address/saveUserAddress/' + userId, {
   address,
   address_detail,
   geohash,
@@ -285,7 +245,7 @@ export const postAddAddress = (userId, address, address_detail, geohash, name, p
  * 下订单
  */
 
-export const placeOrders = (user_id, cart_id, address_id, description, entities, geohash, sig) => fetch('/v1/users/' + user_id + '/carts/' + cart_id + '/orders', {
+export const placeOrders = (user_id, cart_id, address_id, description, entities, geohash, sig) => fetch('/api/orders/cartorder/' + user_id + '/' + cart_id, {
   address_id,
   come_from: "mobile_web",
   deliver_time: "",
@@ -321,7 +281,7 @@ export const validateOrders = ({
                                  sig,
                                  validation_code,
                                  validation_token
-                               }) => fetch('/v1/users/' + user_id + '/carts/' + cart_id + '/orders', {
+                               }) => fetch('/api/orders/cartorder/' + user_id + '/' + cart_id, {
   address_id,
   come_from: "mobile_web",
   deliver_time: "",
@@ -359,7 +319,7 @@ export const payOrder = (merchantOrderNo) => fetch('/payapi/payment/payOrder', {
  * 获取服务中心信息
  */
 
-export const getService = () => fetch('/v3/profile/explain');
+export const getService = () => fetch('/api/profile/explain');
 
 
 /**
@@ -401,7 +361,7 @@ export const exChangeHongbao = (id, exchange_code, captcha_code) => fetch('/v1/u
  * 获取用户信息
  */
 
-export const getUser = () => fetch('/v1/users', {user_id: getStore('user_id')});
+export const getUser = () => fetch('/api/users/getUserById', {user_id: getStore('user_id')});
 
 
 /**
@@ -419,37 +379,38 @@ var sendLogin = (code, mobile, validate_token) => fetch('/v1/login/app_mobile', 
  * 获取订单列表
  */
 
-export const getOrderList = (user_id, offset) => fetch('/bos/v2/users/' + user_id + '/orders', {
+export const getOrderList = (user_id, offset,orderStatus) => fetch('/api/orders/userorders/' + user_id, {
   limit: 10,
   offset,
   sort:'status_code',
   order:'asc',
-  t: new Date().getTime()
+  t: new Date().getTime(),
+  orderStatus
 });
 
-export const finishOrder = (user_id, orderid) => fetch('/bos/v1/users/' + user_id + '/orders/' + orderid + '/finish');
+export const finishOrder = (user_id, orderid) => fetch('/api/orders/finishuserorder/' + user_id + '/' + orderid);
 
-export const cancelOrder = (user_id, orderid) => fetch('/bos/v1/users/' + user_id + '/orders/' + orderid + '/cancel');
+export const cancelOrder = (user_id, orderid) => fetch('/api/orders/canceluserorder/' + user_id + '/' + orderid);
 
 
 /**
  * 获取订单详情
  */
 
-export const getOrderDetail = (user_id, orderid) => fetch('/bos/v1/users/' + user_id + '/orders/' + orderid + '/snapshot');
+export const getOrderDetail = (user_id, orderid) => fetch('/api/orders/snapshotuserorder/' + user_id + '/' + orderid);
 
 
 /**
  *个人中心里编辑地址
  */
 
-export const getAddressList = (user_id) => fetch('/v1/users/' + user_id + '/addresses')
+export const getAddressList = (user_id) => fetch('/api/address/queryUserAddress/' + user_id)
 
 /**
  *个人中心里搜索地址
  */
 
-export const getSearchAddress = (keyword) => fetch('v1/pois', {
+export const getSearchAddress = (keyword) => fetch('/api/pois', {
   keyword: keyword,
   type: 'nearby'
 })
@@ -458,25 +419,25 @@ export const getSearchAddress = (keyword) => fetch('v1/pois', {
  * 删除地址
  */
 
-export const deleteAddress = (userid, addressid) => fetch('/v1/users/' + userid + '/addresses/' + addressid, {}, 'DELETE')
+export const deleteAddress = (userid, addressid) => fetch('/api/address/deleteuseraddress/' + userid + '/' + addressid, {}, 'DELETE')
 
 
 /**
  * 账号密码登录
  */
-export const accountLogin = (username, password, captchaCode, captchCodeId) => fetch('/v1/users/v2/login', {username, password, captchaCode, captchCodeId}, 'POST');
+export const accountLogin = (username, password, captchaCode, captchCodeId) => fetch('/api/users/login', {username, password, captchaCode, captchCodeId}, 'POST');
 
 
 /**
  * 退出登录
  */
-export const signout = () => fetch('/v1/users/v2/signout');
+export const signout = () => fetch('/api/users/signout');
 
 
 /**
  * 改密码
  */
-export const changePassword = (username, oldpassWord, newpassword, confirmpassword, captcha_code) => fetch('/v1/users/v2/changepassword', {
+export const changePassword = (username, oldpassWord, newpassword, confirmpassword, captcha_code) => fetch('/api/users/changepassword', {
   username,
   oldpassWord,
   newpassword,

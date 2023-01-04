@@ -9,7 +9,10 @@ import com.roy.sqwaimai.bean.vo.front.Rets;
 import com.roy.sqwaimai.dao.MongoRepository;
 import com.roy.sqwaimai.security.AccountInfo;
 import com.roy.sqwaimai.security.JwtUtil;
+import com.roy.sqwaimai.service.front.FrontRiderService;
 import com.roy.sqwaimai.service.front.IdsService;
+import com.roy.sqwaimai.service.front.OrderService;
+import com.roy.sqwaimai.service.front.ShopService;
 import com.roy.sqwaimai.utils.*;
 import com.roy.sqwaimai.utils.factory.Page;
 import org.nutz.lang.Strings;
@@ -17,101 +20,84 @@ import org.nutz.mapl.Mapl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Semaphore;
 
 @RestController
+@RequestMapping(value = "/api/orders")
 public class OrderController extends BaseController {
-    @Autowired
-    private MongoRepository mongoRepository;
-    @Autowired
-    private IdsService idsService;
+    @Resource
+    private OrderService orderService;
+    @Resource
+    private ShopService shopService;
+    @Resource
+    private FrontRiderService frontRiderService;
 
-    @RequestMapping(value = "/bos/v2/users/{user_id}/orders", method = RequestMethod.GET)
+    @RequestMapping(value = "/userorders/{user_id}", method = RequestMethod.GET)
     public Object orders(@PathVariable("user_id") Long userId, @RequestParam("limit") Integer limit,
                          @RequestParam("offset") Integer offset) {
         Page<Order> page = new PageFactory<Order>().defaultPage();
-        page = mongoRepository.queryPage(page, Order.class, Maps.newHashMap("user_id", userId));
+        HttpServletRequest request = HttpKit.getRequest();
+        //每页多少条数据
+        int orderStatus = Integer.valueOf(request.getParameter("orderStatus"));
+
+        page = orderService.queryPageUserOrder(page,userId,orderStatus);
+
         return Rets.success(page);
     }
 
-    @RequestMapping(value = "/bos/orders/count", method = RequestMethod.GET)
-    public Object count(@RequestParam("restaurant_id") String restaurantId) {
-        long count = 0;
-        if (Strings.isBlank(restaurantId) && Strings.equals("undefined", restaurantId)) {
-            count = mongoRepository.count(Order.class, Maps.newHashMap("restaurant_id", Long.valueOf(restaurantId)));
-        } else {
-            count = mongoRepository.count(Order.class);
-        }
-        return Rets.success("count", count);
-    }
-
-    @RequestMapping(value = "/bos/orders", method = RequestMethod.GET)
+    @RequestMapping(value = "/getlist", method = RequestMethod.GET)
     public Object list(@RequestParam(value = "restaurant_id", required = false) Long restaurantId,
                        @RequestParam(value = "id", required = false) Long orderId) {
         Page<Order> page = new PageFactory<Order>().defaultPage();
-        Map<String, Object> params = Maps.newHashMap();
-        AccountInfo accountInfo = JwtUtil.getAccountInfo();
-        if (Constants.USER_TYPE_MGR.equals(accountInfo.getUserType())) {
-            if (restaurantId != null) {
-                params.put("restaurant_id", restaurantId);
-            }
-            if (orderId != null) {
-                params.put("id", orderId);
-            }
-        } else if (Constants.USER_TYPE_SHOP.equals(accountInfo.getUserType())) {
-            params.put("restaurant_id", accountInfo.getUserId());
-        }
-        page = mongoRepository.queryPage(page, Order.class, params);
+        page = orderService.queryPageOrder(page,restaurantId,orderId);
         return Rets.success(page);
     }
 
-    @RequestMapping(value = "/bos/getOrder")
+    @RequestMapping(value = "/getOrder")
     public Object getOrder(
             @RequestParam(value = "orderid", required = false) Long orderid) {
-        Order order = mongoRepository.findOne(Order.class, orderid);
-        OrderBasket basket = order.getBasket();
-        List<List<OrderItem>>  groups = basket.getGroup();
-        List<Map> orderItems = Lists.newArrayList();
-        for(int i=0;i<groups.size();i++){
-
-            List<OrderItem> list = groups.get(i);
-            for(OrderItem orderItem:list){
-                Map item = Maps.newHashMap();
-                Food food = mongoRepository.findOne(Food.class,Maps.newHashMap("item_id",orderItem.getId()));
-                if(food!=null) {
-                    item.put("foodName",  orderItem.getName() );
-                    item.put("image_path", food.getImage_path());
-                }else{
-                    item.put("foodName",orderItem.getName());
-                }
-                item.put("price",orderItem.getPrice());
-                item.put("quantity",orderItem.getQuantity());
-                item.put("spec",orderItem.getName());
-                item.put("packingFee",orderItem.getPacking_fee()==null?0:orderItem.getPacking_fee());
-                item.put("totalPrice",orderItem.getPrice().intValue()*orderItem.getQuantity().intValue()+(orderItem.getPacking_fee()==null?0:orderItem.getPacking_fee()));
-                orderItems.add(item);
-            }
-        }
-
-        Address address = mongoRepository.findOne(Address.class,order.getAddress_id());
-        FrontUser user = mongoRepository.findOne(FrontUser.class,Maps.newHashMap("user_id",order.getUser_id()));
-        Map ret = Maps.newHashMap(
-                "order",order,
-                "address",address,
-                "user",user,
-                "orderItems",orderItems
-        );
-        return Rets.success(ret);
+        Map orderInfo = orderService.getFullOrderInfo(orderid);
+        return Rets.success(orderInfo);
     }
 
-    @RequestMapping(value = "/rider/getOrder")
+    @RequestMapping(value = "/getOrderById")
     public Object riderGetOrder(
             @RequestParam(value = "orderid", required = false) Long orderid) {
-        Order order = mongoRepository.findOne(Order.class, orderid);
+        Order order = orderService.getOrder(orderid);
         return Rets.success(order);
+    }
+    //骑手抢单。并发设计，防止多个骑手抢同一个单
+    private Semaphore semaphore = new Semaphore(1);
+    @RequestMapping(value = "/ridercheckOrder", method = RequestMethod.POST)
+    public Object checkOrder(@RequestParam("userid") long userid,
+                             @RequestParam("orderid") long orderid){
+        try{
+            //并发锁，防止高并发时，多个骑手同时抢同一个订单。
+            //更好的方式使用Redis锁订单ID，这样就只需要防止同一个订单的竞争，而不用锁整个抢单。
+            semaphore.acquire();
+            Object result = frontRiderService.checkOrder(orderid, userid);
+            semaphore.release();
+            return result;
+        } catch (InterruptedException e) {
+            return Rets.failure("订单获取失败，请重试");
+        }
+    }
+
+    //订单送达
+    @RequestMapping(value= "/ridersendorder",method = RequestMethod.POST)
+    public Object sendOrder(@RequestParam("userid") long userid,
+                            @RequestParam("orderid") long orderid){
+        //更新订单  订单状态，送达时间
+        Order order = orderService.sendOrder(orderid);
+        //更新骑手 更新派送订单 更新结算
+        FrontRiderInfo frontRiderInfo = frontRiderService.orderSended(order,userid);
+        return Rets.success(frontRiderInfo);
     }
 
     /**
@@ -120,14 +106,11 @@ public class OrderController extends BaseController {
      * @param status
      * @return
      */
-    @RequestMapping(value = "/bos/updateOrderStatus", method = RequestMethod.POST)
+    @RequestMapping(value = "/updateOrderStatus", method = RequestMethod.POST)
     public Object updateOrderStatus(
             @RequestParam(value = "id", required = false) Long orderId,
             @RequestParam(value = "status", required = false) Integer status) {
-        Order order = mongoRepository.findOne(Order.class, orderId);
-        order.setStatus_code(status);
-        order.setStatus_title(Order.getStatusCodeStr(status));
-        mongoRepository.update(order);
+        Order order = orderService.updateOrderStatus(orderId,status);
         return Rets.success(order);
     }
 
@@ -138,32 +121,18 @@ public class OrderController extends BaseController {
      * @param orderId
      * @return
      */
-    @RequestMapping(value = "/bos/v1/users/{user_id}/orders/{orderId}/finish", method = RequestMethod.GET)
+    @RequestMapping(value = "/finishuserorder/{user_id}/{orderId}", method = RequestMethod.GET)
     public Object finishorder(@PathVariable("user_id") Long userId,
                               @PathVariable("orderId") Long orderId) {
-
-
-        Order order = mongoRepository.findOne(Order.class, orderId);
+//        Order order = mongoRepository.findOne(Order.class, orderId);
+        Order order = orderService.getOrder(orderId);
         if(order.getUser_id().intValue()!=userId.intValue()){
             return Rets.failure("无权操作该订单");
         }
-        order.setStatus_code(Order.STATUS_FINISHED);
-        order.setStatus_title(Order.getStatusCodeStr(Order.STATUS_FINISHED));
-        mongoRepository.update(order);
-
+        orderService.finishOrder(order);
         //订单金额加入到商铺未结算金额
-        Shop shop = mongoRepository.findOne(Shop.class,order.getRestaurant_id());
-        Map updateMap = Maps.newHashMap();
-        String unliquidatedAmount = shop.getUnliquidatedAmount();
-        if(StringUtils.isEmpty(unliquidatedAmount)){
-            unliquidatedAmount = "0";
-        }
-        unliquidatedAmount = new BigDecimal(unliquidatedAmount).add(new BigDecimal(order.getTotal_amount())).intValue()+"";
-        updateMap.put("unliquidatedAmount",unliquidatedAmount);
-        mongoRepository.update(shop.getId(),"shops",updateMap);
+        shopService.addAvailable(order);
         return Rets.success(order);
-
-
     }
 
     /**
@@ -173,87 +142,34 @@ public class OrderController extends BaseController {
      * @param orderId
      * @return
      */
-    @RequestMapping(value = "/bos/v1/users/{user_id}/orders/{orderId}/cancel", method = RequestMethod.GET)
+    @RequestMapping(value = "/canceluserorder/{user_id}/{orderId}", method = RequestMethod.GET)
     public Object cancelOrder(@PathVariable("user_id") Long userId,
                               @PathVariable("orderId") Long orderId) {
-
-
-        Order order = mongoRepository.findOne(Order.class, orderId);
+//        Order order = mongoRepository.findOne(Order.class, orderId);
+        Order order = orderService.getOrder(orderId);
         if(order.getUser_id().intValue()!=userId.intValue()){
             return Rets.failure("无权操作该订单");
         }
-        order.setStatus_code(Order.STATUS_CANCEL);
-        order.setStatus_title(Order.getStatusCodeStr(Order.STATUS_CANCEL));
-        mongoRepository.update(order);
+        orderService.cancelOrder(order);
         return Rets.success(order);
     }
 
-    @RequestMapping(value = "/bos/v1/users/{user_id}/orders/{orderId}/snapshot", method = RequestMethod.GET)
+    @RequestMapping(value = "/snapshotuserorder/{user_id}/{orderId}", method = RequestMethod.GET)
     public Object snapshotOrder(@PathVariable("user_id") Long userId,
                               @PathVariable("orderId") Long orderId) {
-
-
-        Order order = mongoRepository.findOne(Order.class, orderId);
+//        Order order = mongoRepository.findOne(Order.class, orderId);
+        Order order = orderService.getOrder(orderId);
         if(order.getUser_id().intValue()!=userId.intValue()){
             return Rets.failure("无权操作该订单");
         }
         return Rets.success(order);
     }
 
-    @PostMapping(value = "/v1/users/{userId}/carts/{cartId}/orders")
+    @PostMapping(value = "/cartorder/{userId}/{cartId}")
     public Object save(@PathVariable("userId") Long userId, @PathVariable("cartId") Long cartId) {
         OrderVo orderVo = getRequestPayload(OrderVo.class);
-        //获取购物车信息
-        Carts cart = mongoRepository.findOne(Carts.class, cartId);
-        Date createTime = new Date();
-        Shop shop = mongoRepository.findOne(Shop.class, cart.getCart().getRestaurant_id());
-        Order order = new Order();
-        order.setId(idsService.getId(Ids.ORDER_ID));
-        order.setRestaurant_id(shop.getId());
-        order.setRestaurant_name(shop.getName());
-        order.setRestaurant_image_url(shop.getImage_path());
-        OrderShopAddress orderShopAddress = new OrderShopAddress();
-        orderShopAddress.setId(shop.getId());
-        orderShopAddress.setName(shop.getName());
-        orderShopAddress.setImage_url(shop.getImage_path());
-        orderShopAddress.setLatitude(shop.getLatitude());
-        orderShopAddress.setLongitude(shop.getLongitude());
-        order.setOrderShopAddress(orderShopAddress);
-
-        order.setFormatted_create_at(DateUtil.format(createTime, "yyyy-MM-dd HH:mm"));
-        order.setOrder_time(createTime.getTime());
-        order.setTime_pass(900);
-        OrderBasket basket = order.getBasket();
-        basket.setGroup(cart.getCart().getGroups());
-        if (!cart.getCart().getExtra().isEmpty()) {
-            cart.getCart().getExtra().get(0);
-            OrderFee orderFee = (OrderFee) Mapl.maplistToObj(cart.getCart().getExtra().get(0), OrderFee.class);
-            basket.setDeliver_fee(orderFee);
-            basket.setPacking_fee(Maps.newHashMap("price", cart.getCart().getDeliver_amount()));
-        }
-        order.setBasket(basket);
-        order.setStatus_code(Order.STATUS_INIT);
-        order.setStatus_title(Order.getStatusCodeStr(Order.STATUS_INIT));
-        order.setTotal_amount(Double.valueOf(cart.getCart().getTotal()).intValue());
-        order.setTotal_quantity(Integer.valueOf(basket.getGroup().get(0).size()));
-        order.setUnique_id(order.getId());
-        order.setUser_id(userId);
-
-        order.setAddress_id(Long.valueOf(orderVo.getAddress_id()));
-        Address address = mongoRepository.findOne(Address.class,"id", Long.valueOf(orderVo.getAddress_id()));
-        OrderAddress orderAddress = new OrderAddress();
-        orderAddress.setId( address.getId());
-        orderAddress.setAddress(address.getAddress());
-        orderAddress.setPhone(address.getPhone());
-        orderAddress.setBakupphone(address.getPhone_bk());
-        orderAddress.setName(address.getName());
-        orderAddress.setSt_geohash(address.getSt_geohash());
-        orderAddress.setUser_id(address.getUser_id());
-        orderAddress.setCity_id(address.getCity_id());
-        orderAddress.setSex(address.getSex());
-        order.setOrder_address(orderAddress);
-        mongoRepository.save(order);
+        //从购物车生成订单
+        Order order = orderService.generateOrder(userId,cartId,orderVo);
         return Rets.success(order);
     }
-
 }

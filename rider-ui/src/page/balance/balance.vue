@@ -36,7 +36,7 @@
     import alertTip from 'src/components/common/alertTip'
     import confirmTip from 'src/components/common/confirmTip'
     import { clearBalance } from 'src/service/getData'
-    
+
     export default {
       data(){
             return{
@@ -76,14 +76,6 @@
                 this.$router.push("/")
             },
             async goconfirm(){
-//                 let param = new FormData()
-//                 param.append('userid',this.userInfo.rider_id)
-//                 let res = await fetch('/rider/clearbalance',{
-//                               method: 'POST',
-//                               credentials: 'include',
-//                               body: param
-//                             })
-// console.info(res)
                 let res = await clearBalance(this.userInfo.rider_id)
                 if(res.error){
                     this.confirmText=""
@@ -95,7 +87,7 @@
                     this.$router.push("/")
                 }
             },
-            goreject(){        
+            goreject(){
                 this.showConfirm=false;
                 this.confirmText=""
             },
@@ -106,10 +98,10 @@
         }
     }
 </script>
-  
+
 <style lang="scss" scoped>
     @import 'src/style/mixin';
-  
+
     .page{
         padding-top: 1.95rem;
         p, span{

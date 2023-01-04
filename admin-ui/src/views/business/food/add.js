@@ -124,7 +124,7 @@ export default {
       console.log(this.categoryForm)
       this.$refs[formName].validate(async(valid) => {
         if (valid) {
-          console.log(2,this.categoryForm)
+          // console.log(2,this.categoryForm)
           const params = {
             name: this.categoryForm.name,
             description: this.categoryForm.description,

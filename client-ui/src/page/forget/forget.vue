@@ -4,8 +4,6 @@
         <form class="restForm">
             <section class="input_container phone_number">
                 <input type="text" placeholder="账号" name="phone" maxlength="11" v-model="phoneNumber" @input="inputPhone">
-                <!-- <button @click.prevent="getVerifyCode" :class="{right_phone_number:rightPhoneNumber}" v-show="!computedTime">获取验证码</button>
-                <button  @click.prevent v-show="computedTime">已发送({{computedTime}}s)</button> -->
             </section>
              <section class="input_container">
                 <input type="text" placeholder="旧密码" name="oldPassWord" v-model="oldPassWord">
@@ -35,7 +33,7 @@
 <script>
     import headTop from 'src/components/header/head'
     import alertTip from 'src/components/common/alertTip'
-    import {mobileCode, checkExsis, sendMobile, getcaptchas, changePassword} from 'src/service/getData'
+    import {getcaptchas} from 'src/service/getData'
 
     export default {
         data(){
@@ -45,13 +43,12 @@
                 newPassWord: null, //新密码
                 rightPhoneNumber: false, //输入的手机号码是否符合要求
                 confirmPassWord: null, //确认密码
-                captchaCodeImg: null, //验证码地址
-                mobileCode: null, //短信验证码
+                captchaCodeImg: null, //验证码图片
+                mobileCode: null, //验证码
                 computedTime: 0, //倒数记时
                 showAlert: false, //显示提示组件
                 alertText: null, //提示的内容
                 accountType: 'mobile',//注册方式
-                captchaCodeImg: null,
             }
         },
         components: {
@@ -68,39 +65,6 @@
                     this.rightPhoneNumber = true;
                 }else{
                     this.rightPhoneNumber = false;
-                }
-            },
-            //获取验证吗
-            async getVerifyCode(){
-                if (this.rightPhoneNumber) {
-                    this.computedTime = 30;
-                    //倒计时
-                    this.timer = setInterval(() => {
-                        this.computedTime --;
-                        if (this.computedTime == 0) {
-                            clearInterval(this.timer)
-                        }
-                    }, 1000)
-                    //判断用户是否存在
-                    let res = await checkExsis(this.phoneNumber, this.accountType);
-                    //判断返回的信息是否正确，用户是否注册
-                    if (res.message) {
-                        this.showAlert = true;
-                        this.alertText = res.message;
-                        return
-                    }else if(!res.is_exists) {
-                        this.showAlert = true;
-                        this.alertText = '您输入的手机号尚未绑定';
-                        return
-                    }
-                    //获取验证信息
-                    let getCode = await mobileCode(this.phoneNumber);
-                    if (getCode.message) {
-                        this.showAlert = true;
-                        this.alertText = getCode.message;
-                        return
-                    }
-                    this.validate_token = getCode.validate_token;
                 }
             },
              async getCaptchaCode(){
@@ -142,7 +106,7 @@
                 param.append("newpassword",this.newPassWord)
                 param.append("confirmpassword",this.confirmPassWord)
                 param.append("captcha_code",this.captcha_code)
-                let res = await fetch('/v1/users/v2/changepassword', {
+                let res = await fetch('/api/users/changepassword', {
                               method: 'POST',
                               credentials: 'include',
                               body: param
@@ -160,7 +124,7 @@
             },
             closeTip(){
                 this.showAlert = false;
-            }   
+            }
         }
     }
 

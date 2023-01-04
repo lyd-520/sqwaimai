@@ -5,7 +5,7 @@ import request from '@/utils/request'
  */
 export function searchplace(cityid, value) {
   return request({
-    url: '/v1/pois',
+    url: '/pois',
     method: 'get',
     params: {
       type: 'search',
@@ -21,7 +21,7 @@ export function searchplace(cityid, value) {
 
 export function foodCategory(params) {
   return request({
-    url: '/shopping/v2/restaurant/category',
+    url: '/api/shop/listcategory',
     method: 'get'
   })
 }
@@ -32,7 +32,7 @@ export function foodCategory(params) {
 
 export function getResturants(params) {
   return request({
-    url: '/shopping/listShop',
+    url: '/api/shop/listShop',
     method: 'get',
     params
   })
@@ -43,7 +43,7 @@ export function getResturants(params) {
  */
 export function getResturantsCount(params) {
   return request({
-    url: '/shopping/restaurants/count',
+    url: '/api/shop/count',
     method: 'get'
   })
 }
@@ -54,7 +54,7 @@ export function getResturantsCount(params) {
 
 export function addShop(params) {
   return request({
-    url: '/shopping/addShop',
+    url: '/api/shop/addShop',
     method: 'post',
     params
   })
@@ -66,7 +66,7 @@ export function addShop(params) {
 
 export function updateResturant(params) {
   return request({
-    url: '/shopping/updateshop',
+    url: '/api/shop/updateshop',
     method: 'post',
     params
   })
@@ -78,7 +78,7 @@ export function updateResturant(params) {
  */
 export function check(params) {
   return request({
-    url: '/shopping/check',
+    url: '/api/shop/checkout',
     method: 'post',
     params
   })
@@ -89,7 +89,7 @@ export function check(params) {
  */
 export function auditResturant(params) {
   return request({
-    url: '/shopping/auditShop',
+    url: '/api/shop/auditShop',
     method: 'post',
     params
   })
@@ -101,7 +101,7 @@ export function auditResturant(params) {
  */
 export function stopResturant(params) {
   return request({
-    url: '/shopping/stopShop',
+    url: '/api/shop/stopShop',
     method: 'post',
     params
   })
@@ -112,7 +112,7 @@ export function stopResturant(params) {
 
 export function deleteResturant(id) {
   return request({
-    url: '/shopping/restaurants/' + id,
+    url: '/shop/deleteshop/' + id,
     method: 'delete'
   })
 }
@@ -123,7 +123,7 @@ export function deleteResturant(id) {
 
 export function getResturantDetail(id) {
   return request({
-    url: '/shopping/restaurant/' + id,
+    url: '/api/shop/queryshop/' + id,
     method: 'get'
   })
 }
@@ -134,7 +134,7 @@ export function getResturantDetail(id) {
 
 export function getMenu(params) {
   return request({
-    url: '/shopping/v2/menu/',
+    url: '/api/shop/getmenu/',
     method: 'get',
     params
   })
@@ -146,7 +146,7 @@ export function getMenu(params) {
 
 export function getMenuById(category_id) {
   return request({
-    url: '/shopping/v2/menu/' + category_id,
+    url: '/api/shop/getmenu/' + category_id,
     method: 'get'
   })
 }
@@ -157,7 +157,7 @@ export function getMenuById(category_id) {
 
 export function getCategory(restaurant_id) {
   return request({
-    url: '/shopping/getcategory/' + restaurant_id,
+    url: '/api/shop/getcategory/' + restaurant_id,
     method: 'get'
   })
 }
@@ -168,7 +168,7 @@ export function getCategory(restaurant_id) {
 
 export function addCategory(params) {
   return request({
-    url: '/shopping/addcategory',
+    url: '/api/shop/addcategory',
     method: 'post',
     params
   })

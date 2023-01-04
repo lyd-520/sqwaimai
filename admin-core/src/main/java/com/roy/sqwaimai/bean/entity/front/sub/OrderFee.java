@@ -8,5 +8,5 @@ public class OrderFee {
     private String name;
     private Double price;
     private Double quantity;
-
+    private Double delevery;
 }

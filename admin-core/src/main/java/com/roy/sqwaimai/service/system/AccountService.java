@@ -11,8 +11,6 @@ public class AccountService {
     @Autowired
     private UserService userService;
 
-
-
     public void logout(String token) {
         tokenCache.remove(token);
     }

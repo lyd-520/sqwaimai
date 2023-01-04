@@ -58,7 +58,7 @@
 <script>
     import headTop from 'src/components/header/head'
     import {mapState, mapMutations} from 'vuex'
-    import {getAddress, getUser, postAddAddress} from 'src/service/getData'
+    import {postAddAddress} from 'src/service/getData'
     import alertTip from 'src/components/common/alertTip'
 
     export default {

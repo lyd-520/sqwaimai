@@ -92,7 +92,7 @@ public class CfgController extends BaseController {
         return Rets.success();
     }
     @RequestMapping(method = RequestMethod.DELETE)
-    @BussinessLog(value = "删除参数", key = "id",     dict= com.roy.sqwaimai.bean.dictmap.CfgDict.class)
+    @BussinessLog(value = "删除参数", key = "id", dict= com.roy.sqwaimai.bean.dictmap.CfgDict.class)
     @RequiresPermissions(value = {Permission.CFG_DEL})
     public Object remove(@RequestParam Long id){
         logger.info("id:{}",id);

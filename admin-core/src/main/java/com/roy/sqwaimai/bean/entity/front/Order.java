@@ -29,7 +29,7 @@ public class Order extends BaseMongoEntity {
     private String _id;
     private Long id;
     private Integer total_amount;
-    private Integer total_quantity;
+    private int total_quantity;
     private Long unique_id;
     private Long user_id;
     private Long address_id;

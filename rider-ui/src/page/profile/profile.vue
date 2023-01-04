@@ -150,6 +150,14 @@ export default {
             this.guessCityid = res.id;
         })
     },
+    activated(){
+        this.initData();
+        // 获取当前城市
+        cityGuess().then(res => {
+            this.guessCity = res.name;
+            this.guessCityid = res.id;
+        })
+    },
     mixins: [getImgPath],
     components:{
         headTop,
@@ -243,6 +251,11 @@ export default {
         },
         closeTip(){
             this.showAlert = false;
+        }
+    },
+    watch: {
+        userInfo: function (value){
+            this.initData()
         }
     }
 }

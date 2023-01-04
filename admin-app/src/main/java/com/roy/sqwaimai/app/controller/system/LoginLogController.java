@@ -40,7 +40,6 @@ public class LoginLogController extends BaseController {
         Page pageResult = loginlogService.queryPage(page);
         pageResult.setRecords((List<LoginLog>) new LogWarpper(BeanUtil.objectsToMaps(pageResult.getRecords())).warp());
         return Rets.success(pageResult);
-
     }
 
 

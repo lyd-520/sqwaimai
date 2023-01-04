@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
  * 邀约信息管理
  */
 @RestController
-@RequestMapping("/contacts")
+@RequestMapping("/api/contacts")
 public class ContactsController extends BaseController {
     @Autowired
     private ContactsService contactsService;

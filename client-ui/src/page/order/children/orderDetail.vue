@@ -20,7 +20,7 @@
                         </svg>
                     </router-link>
                     <ul class="food_list_ul">
-                        <li v-for="item in orderDetail.basket.group[0]">
+                        <li v-for="item in orderDetail.basket.items">
                             <p class="food_name ellipsis">{{item.name}}</p>
                             <div class="quantity_price">
                                 <span>X{{item.quantity}}</span>
@@ -30,7 +30,7 @@
                     </ul>
                     <div class="deliver_fee">
                         <span>配送费</span>
-                        <span>{{orderDetail.basket.deliver_fee&&orderDetail.basket.deliver_fee.price || 0}}</span>   
+                        <span>{{orderDetail.basket.orderFee.delevery || 0}}</span>   
                     </div>
                     <div class="pay_ment">实付{{orderDetail.total_amount.toFixed(2)}}</div>
                 </section>

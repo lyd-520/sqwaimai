@@ -1,6 +1,5 @@
 package com.roy.sqwaimai.bean.core;
 
-import com.roy.sqwaimai.bean.dictmap.SystemDict;
 import com.roy.sqwaimai.bean.dictmap.base.AbstractDictMap;
 
 import java.lang.annotation.*;

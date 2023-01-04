@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function getAddressById(id) {
   return request({
-    url: '/address/'+id,
+    url: '/api/address/getaddressbyid/'+id,
     method: 'get'
   })
 }

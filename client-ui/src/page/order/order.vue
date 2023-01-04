@@ -6,36 +6,47 @@
     		<div class="swiper-container">
 		        <div class="swiper-wrapper">
 		            <div class="swiper-slide order_types_container">
-                  <div class="link_to_order">
+                  <div class="link_to_order" @click="queryOrder(-1)">
                     <figure>
                       <figcaption>全部订单</figcaption>
                     </figure>
                   </div>
-                  <div class="link_to_order">
+                  <div class="link_to_order" @click="queryOrder(0)">
                     <figure>
                       <figcaption>待付款</figcaption>
                     </figure>
                   </div>
-                  <div class="link_to_order">
+                  <div class="link_to_order" @click="queryOrder(1)">
+                    <figure>
+                      <figcaption>待配送</figcaption>
+                    </figure>
+                  </div>
+                  <div class="link_to_order" @click="queryOrder(2)">
                     <figure>
                       <figcaption>派送中</figcaption>
                     </figure>
                   </div>
-                  <div class="link_to_order">
+                  <div class="link_to_order" @click="queryOrder(3)">
                     <figure>
                       <figcaption>待接收</figcaption>
                     </figure>
                   </div>
-                  <div class="link_to_order">
+                  <div class="link_to_order"  @click="queryOrder(4)">
                     <figure>
-                      <figcaption>接收完成</figcaption>
+                      <figcaption>待确认</figcaption>
+                    </figure>
+                  </div>
+                  <div class="link_to_order"  @click="queryOrder(5)">
+                    <figure>
+                      <figcaption>已完成</figcaption>
                     </figure>
                   </div>
 		            </div>
 		        </div>
 		    </div>
     	</nav>
-    <ul class="order_list_ul" v-load-more="loaderMore">
+    <!-- <ul class="order_list_ul" v-load-more="loaderMore"> -->
+    <ul class="order_list_ul">
       <li class="order_list_li" v-for="item in orderList" :key="item.id">
         <img :src="imgBaseUrl + item.restaurant_image_url" class="restaurant_image">
         <section class="order_item_right">
@@ -55,7 +66,7 @@
               </p>
             </header>
             <section class="order_basket">
-              <p class="order_name ellipsis">{{item.basket.group[0][0].name}}{{item.basket.group[0].length > 1 ? ' 等' + item.basket.group[0].length + '件商品' : ''}}</p>
+              <p class="order_name ellipsis">{{item.basket.items[0].name}}{{item.basket.items.length > 1 ? ' 等' + item.basket.items.length + '件商品' : ''}}</p>
               <p class="order_amount">¥{{item.total_amount.toFixed(2)}}</p>
             </section>
           </section>
@@ -72,7 +83,7 @@
         </section>
       </li>
       <li>          
-          <p>===========</p>
+          <p>没有更多订单</p>
         </li>
     </ul>
     <foot-guide></foot-guide>
@@ -91,7 +102,6 @@
   import headTop from 'src/components/header/head'
   import computeTime from 'src/components/common/computeTime'
   import loading from 'src/components/common/loading'
-  import {getImgPath} from 'src/components/common/mixin'
   import footGuide from 'src/components/footer/footGuide'
   import {getOrderList,finishOrder,cancelOrder} from 'src/service/getData'
   import {loadMore} from 'src/components/common/mixin'
@@ -130,7 +140,7 @@
       //初始化获取信息
       async initData() {
         if (this.userInfo && this.userInfo.user_id) {
-          let response = await getOrderList(this.userInfo.user_id, this.offset);
+          let response = await getOrderList(this.userInfo.user_id, this.offset,-1);
           let res = response.records
           this.orderList = [...res];
           this.hideLoading();
@@ -138,9 +148,15 @@
           this.hideLoading();
         }
       },
+      async queryOrder(orderStatus){
+        this.showLoading=true
+        let response = await getOrderList(this.userInfo.user_id, this.offset,orderStatus);
+        let res = response.records
+        this.orderList = [...res];
+        this.hideLoading();
+      },
       //加载更多
       async loaderMore() {
-console.info("loadMore")
         if (this.preventRepeat) {
           return
         }
@@ -148,7 +164,7 @@ console.info("loadMore")
         this.showLoading = true;
         this.offset += 10;
         //获取信息
-        let res = await getOrderList(this.userInfo.user_id, this.offset);
+        let res = await getOrderList(this.userInfo.user_id, this.offset,-1);
         this.orderList = [...this.orderList, ...res];
         this.hideLoading();
         if (res.length < 10) {
@@ -168,7 +184,6 @@ console.info("loadMore")
       },
       handleFinishOrder(orderId) {
         finishOrder(this.userInfo.user_id,orderId).then(res => {
-          console.info(res)
          for(var i in this.orderList){
            const order = this.orderList[i]
            if(orderId == order.id){

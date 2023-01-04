@@ -3,7 +3,7 @@ import {mapState, mapMutations} from 'vuex'
 import headTop from 'src/components/header/head'
 import alertTip from 'src/components/common/alertTip'
 import loading from 'src/components/common/loading'
-import {checkout, getAddress, placeOrders, getAddressList} from 'src/service/getData'
+import {checkout, placeOrders, getAddressList} from 'src/service/getData'
 import {imgBaseUrl} from 'src/config/env'
 
 export default {
@@ -77,24 +77,21 @@ export default {
         Object.values(categoryItem).forEach(itemValue=> {
           Object.values(itemValue).forEach(item => {
             newArr.push({
-              attrs: [],
-              extra: {},
               id: item.id,
               name: item.name,
               packing_fee: item.packing_fee,
               price: item.price,
               quantity: item.num,
               sku_id: item.sku_id,
-              specs: [item.specs],
+              specs: item.specs,
               stock: item.stock,
             })
           })
         })
       })
       //检验订单是否满足条件
-
-      this.checkoutData = await checkout(this.geohash, [newArr], this.shopId);
-      this.SAVE_CART_ID_SIG({cart_id: this.checkoutData.cart.id, sig:  this.checkoutData.sig})
+      this.checkoutData = await checkout(this.geohash, newArr, this.shopId);
+      this.SAVE_CART_ID_SIG({cart_id: this.checkoutData.cartInfo.id, sig:  this.checkoutData.sig})
       this.initAddress();
       this.showLoading = false;
     },
@@ -138,26 +135,25 @@ export default {
         this.alertText = '请添加一个收货地址';
         return
       }
+      console.info(this.userInfo)
+      console.info(this.checkoutData)
+      console.info(this.choosedAddress)
+      console.info(this.remarklist)
+
       //保存订单
       this.SAVE_ORDER_PARAM({
         user_id: this.userInfo.user_id,
-        cart_id: this.checkoutData.cart.id,
+        cart_id: this.checkoutData.cartInfo.id,
         address_id: this.choosedAddress.id,
         description: this.remarklist,
-        entities: this.checkoutData.cart.groups,
+        items: this.checkoutData.cartInfo.items,
         geohash: this.geohash,
         sig: this.checkoutData.sig,
       });
       //发送订单信息
-      let orderRes = await placeOrders(this.userInfo.user_id, this.checkoutData.cart.id, this.choosedAddress.id, this.remarklist, this.checkoutData.cart.groups, this.geohash, this.checkoutData.sig);
-      //第一次下单的手机号需要进行验证，否则直接下单成功
-      if (orderRes.need_validation) {
-        this.NEED_VALIDATION(orderRes);
-        this.$router.push('/confirmOrder/userValidation');
-      }else{
-        this.ORDER_SUCCESS(orderRes);
-        this.$router.push('/confirmOrder/payment');
-      }
+      let orderRes = await placeOrders(this.userInfo.user_id, this.checkoutData.cartInfo.id, this.choosedAddress.id, this.remarklist, this.checkoutData.cartInfo.groups, this.geohash, this.checkoutData.sig);
+      this.ORDER_SUCCESS(orderRes);
+      this.$router.push('/confirmOrder/payment');
     },
   },
   watch: {

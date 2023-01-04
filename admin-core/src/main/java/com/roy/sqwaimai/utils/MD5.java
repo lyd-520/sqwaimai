@@ -179,13 +179,6 @@ public class MD5 {
                 md5StrBuff.append(Integer.toHexString(0xFF & byteArray[i]));
             }
         }
-
         return md5StrBuff.toString();
-    }
-
-    public static void main(String[] args) {
-//        System.out.println(MD5.md5("client", "8pgby"));
-        String newPassword = MD5.getMD5String(MD5.getMD5String("123456").substring(2, 7) + MD5.getMD5String("123456"));
-        System.out.println(newPassword);
     }
 }

@@ -2,7 +2,7 @@
     <div class="confirmOrderContainer">
         <section v-if="!showLoading">
             <head-top head-title="确认订单" goBack="true" signin-up='confirmOrder'></head-top>
-            <router-link :to='{path: "/confirmOrder/chooseAddress", query: {id: checkoutData.cart.id, sig: checkoutData.sig}}' class="address_container">
+            <router-link :to='{path: "/confirmOrder/chooseAddress", query: {id: checkoutData.cartInfo.id, sig: checkoutData.sig}}' class="address_container">
                 <div class="address_empty_left">
                     <svg class="location_icon">
                         <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#location"></use>
@@ -28,7 +28,7 @@
                 <p class="deliver_text">送达时间</p>
                 <section class="deliver_time">
                     <p>尽快送达 | 预计 {{checkoutData.delivery_reach_time}}</p>
-                    <p v-if="checkoutData.cart.is_deliver_by_fengniao">蜂鸟专送</p>
+                    <p v-if="checkoutData.cartInfo.is_deliver_by_fengniao">蜂鸟专送</p>
                 </section>
             </section>
             <section class="pay_way container_style">
@@ -41,18 +41,18 @@
                         </svg>
                     </div>
                 </header>
-                <section class="hongbo">
+                <!-- <section class="hongbo">
                     <span>红包</span>
                     <span>暂时只在饿了么 APP 中支持</span>
-                </section>
+                </section> -->
             </section>
             <section class="food_list">
-                <header v-if="checkoutData.cart.restaurant_info">
-                    <img :src="imgBaseUrl + checkoutData.cart.restaurant_info.image_path">
-                    <span>{{checkoutData.cart.restaurant_info.name}}</span>
+                <header v-if="checkoutData.cartInfo.shop_info">
+                    <img :src="imgBaseUrl + checkoutData.cartInfo.shop_info.image_path">
+                    <span>{{checkoutData.cartInfo.shop_info.name}}</span>
                 </header>
-                <ul class="food_list_ul" v-if="checkoutData.cart.groups">
-                    <li v-for="item in checkoutData.cart.groups[0]" :key="item.id" class="food_item_style">
+                <ul class="food_list_ul" v-if="checkoutData.cartInfo.items">
+                    <li v-for="item in checkoutData.cartInfo.items" :key="item.id+item.name" class="food_item_style">
                         <p class="food_name ellipsis">{{item.name}}</p>
                         <div class="num_price">
                             <span>x {{item.quantity}}</span>
@@ -60,29 +60,29 @@
                         </div>
                     </li>
                 </ul>
-                <div class="food_item_style" v-if="checkoutData.cart.extra">
-                    <p class="food_name ellipsis">{{checkoutData.cart.extra[0].name}}</p>
+                <div class="food_item_style" v-if="checkoutData.cartInfo.extra">
+                    <p class="food_name ellipsis">{{checkoutData.cartInfo.extra[0].name}}</p>
                     <div class="num_price">
                         <span></span>
-                        <span>¥ {{checkoutData.cart.extra[0].price}}</span>
+                        <span>¥ {{checkoutData.cartInfo.extra[0].price}}</span>
                     </div>
                 </div>
                 <div class="food_item_style">
                     <p class="food_name ellipsis">配送费</p>
                     <div class="num_price">
                         <span></span>
-                        <span>¥ {{checkoutData.cart.deliver_amount || 0}}</span>
+                        <span>¥ {{checkoutData.cartInfo.deliver_amount || 0}}</span>
                     </div>
                 </div>
                 <div class="food_item_style total_price">
-                    <p class="food_name ellipsis">订单 ¥{{checkoutData.cart.total}}</p>
+                    <p class="food_name ellipsis">订单 ¥{{checkoutData.cartInfo.total}}</p>
                     <div class="num_price">
-                        <span>待支付 ¥{{checkoutData.cart.total}}</span>
+                        <span>待支付 ¥{{checkoutData.cartInfo.total}}</span>
                     </div>
                 </div>
             </section>
             <section class="pay_way container_style">
-                <router-link :to='{path: "/confirmOrder/remark", query: {id: checkoutData.cart.id, sig: checkoutData.sig}}' class="header_style">
+                <router-link :to='{path: "/confirmOrder/remark", query: {id: checkoutData.cartInfo.id, sig: checkoutData.sig}}' class="header_style">
                     <span>订单备注</span>
                     <div class="more_type">
                         <span class="ellipsis">{{remarkText||inputText? remarklist: '口味、偏好等'}}</span>
@@ -102,7 +102,7 @@
                 </router-link>
             </section>
             <section class="confrim_order">
-                <p>待支付 ¥{{checkoutData.cart.total}}</p>
+                <p>待支付 ¥{{checkoutData.cartInfo.total}}</p>
                 <p @click="confrimOrder">确认下单</p>
             </section>
             <transition name="fade">

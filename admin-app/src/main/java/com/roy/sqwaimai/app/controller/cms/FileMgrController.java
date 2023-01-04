@@ -25,8 +25,7 @@ public class FileMgrController extends BaseController {
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @RequiresPermissions(value = {Permission.FILE})
-    public Object list(@RequestParam(required = false) String originalFileName
-    ) {
+    public Object list(@RequestParam(required = false) String originalFileName) {
         Page<FileInfo> page = new PageFactory<FileInfo>().defaultPage();
         if (StringUtils.isNotEmpty(originalFileName)) {
             page.addFilter(SearchFilter.build("originalFileName", SearchFilter.Operator.LIKE, originalFileName));

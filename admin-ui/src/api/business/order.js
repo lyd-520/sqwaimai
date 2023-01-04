@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function getList(params) {
   return request({
-    url: '/bos/orders',
+    url: '/api/orders/getlist',
     method: 'get',
     params
   })
@@ -10,7 +10,7 @@ export function getList(params) {
 
 export function updateOrderStatus(params) {
   return request({
-    url: '/bos/updateOrderStatus',
+    url: '/api/orders/updateOrderStatus',
     method: 'post',
     params
   })
@@ -18,7 +18,7 @@ export function updateOrderStatus(params) {
 
 export function getOrder(params) {
   return request({
-    url: '/bos/getOrder',
+    url: '/api/orders/getOrder',
     method: 'get',
     params
   })

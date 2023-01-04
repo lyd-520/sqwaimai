@@ -11,7 +11,7 @@
 				<span class="title_text ellipsis">{{msiteTitle}}</span>
 			</router-link>
     	</head-top>
-    	<nav class="msite_nav">
+    	<!-- <nav class="msite_nav">
     		<div class="swiper-container" v-if="foodTypes.length">
 		        <div class="swiper-wrapper">
 		            <div class="swiper-slide food_types_container" v-for="(item, index) in foodTypes" :key="index">
@@ -26,7 +26,7 @@
 		        <div class="swiper-pagination"></div>
 		    </div>
 		    <img src="../../images/fl.svg" class="fl_back animation_opactiy" v-else>
-    	</nav>
+    	</nav> -->
     	<div class="shop_list_container">
 	    	<header class="shop_header">
 	    		<svg class="shop_icon">

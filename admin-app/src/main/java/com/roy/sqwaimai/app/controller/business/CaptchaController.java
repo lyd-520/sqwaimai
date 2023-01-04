@@ -21,13 +21,14 @@ import java.util.Map;
 import java.util.UUID;
 
 @RestController
+@RequestMapping(value="/api/captchas")
 public class CaptchaController extends BaseController {
 
     private static Logger logger = LoggerFactory.getLogger(CaptchaController.class);
     @Autowired
     private TokenCache tokenCache;
 
-    @RequestMapping(value = "/v1/captchas", method = RequestMethod.POST)
+    @RequestMapping(value = "/getcaptchas", method = RequestMethod.POST)
     public Object get() throws IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         Map<String, Object> map = CaptchaCode.getImageCode(60, 20, outputStream);

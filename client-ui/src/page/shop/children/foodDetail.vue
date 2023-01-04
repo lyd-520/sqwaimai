@@ -22,9 +22,9 @@
                 <p>
                     <span>评论数 {{rating_count}}</span>
                     <span>好评率 {{satisfy_rate}}%</span>
-                </p>    
+                </p>
             </section>
-            <!-- <buy-cart :shopId='shopId'  :foods='foods' @moveInCart="$emit('moveInCart')"></buy-cart> -->
+            <!-- <buy-cartInfo :shopId='shopId'  :foods='foods' @moveInCart="$emit('moveInCart')"></buy-cartInfo> -->
         </section>
     </div>
 </template>
@@ -69,14 +69,14 @@
         },
         props:[],
         methods: {
-            
+
         }
     }
 </script>
-	
+
 <style lang="scss" scoped>
     @import 'src/style/mixin';
-	
+
 	.rating_page{
 		position: absolute;
 		top: 0;

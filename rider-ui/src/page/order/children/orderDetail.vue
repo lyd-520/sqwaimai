@@ -19,7 +19,7 @@
                         </svg>
                     </div>
                     <ul class="food_list_ul">
-                        <li v-for="item in orderData.basket.group[0]">
+                        <li v-for="item in orderData.basket.items">
                             <p class="food_name ellipsis">{{item.name}}</p>
                             <div class="quantity_price">
                                 <span>X{{item.quantity}}</span>
@@ -28,7 +28,7 @@
                     </ul>
                     <div class="deliver_fee">
                         <span>配送费</span>
-                        <span>{{orderData.basket.deliver_fee&&orderData.basket.deliver_fee.price || 0}}</span>   
+                        <span>{{orderData.basket.orderFee.delevery || 0}}</span>   
                     </div>
                 </section>
                 <section class="order_detail_style">

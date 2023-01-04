@@ -1,6 +1,9 @@
 package com.roy.sqwaimai.bean.vo.business;
 
+import com.roy.sqwaimai.bean.entity.front.sub.OrderItem;
 import lombok.Data;
+
+import java.util.List;
 
 /**
  * 订单信息
@@ -14,5 +17,6 @@ public class OrderVo {
     private String geohash;
     private Long paymethod_id;
     private String sig;
+    private List<OrderItem> items;
 
 }

@@ -54,8 +54,4 @@ public class TaskUtils {
 		}
 		return false;
 	}
-
-	public static void main(String[] args) {
-		System.out.println(isValidExpression("0 0/1 * * * ?"));
-	}
 }

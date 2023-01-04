@@ -43,7 +43,8 @@
                         <span>1个月</span>
                         <span> ¥20</span>
                     </div>
-                    <div class="apply_vip_buy_right" @click="buyCart">购买</div>
+                    <!-- <div class="apply_vip_buy_right" @click="buyCart">购买</div> -->
+                    <div class="apply_vip_buy_right">购买</div>
                 </section>
             </section>
             <router-link to="/vipcard/useCart" class="header_style common_style">

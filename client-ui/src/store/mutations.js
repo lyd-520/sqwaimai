@@ -64,10 +64,11 @@ export default {
 		let shop = cart[shopid] = (cart[shopid] || {});
 		let category = shop[category_id] = (shop[category_id] || {});
 		let item = category[item_id] = (category[item_id] || {});
-		if (item[food_id]) {
-			item[food_id]['num']++;
+		let key = food_id+"-"+specs
+		if (item[key]) {
+			item[key]['num']++;
 		} else {
-			item[food_id] = {
+			item[key] = {
 					"num" : 1,
 					"id" : food_id,
 					"name" : name,

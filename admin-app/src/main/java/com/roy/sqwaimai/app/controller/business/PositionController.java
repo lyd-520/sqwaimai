@@ -21,7 +21,7 @@ public class PositionController extends BaseController {
     @Autowired
     private PositionService positionService;
 
-    @RequestMapping(value = "/v1/cities",method = RequestMethod.GET)
+    @RequestMapping(value = "/api/cities",method = RequestMethod.GET)
     public Object cities(@RequestParam("type") String type, HttpServletRequest request) {
         Map cities = mongoRepository.findOne("cities");
         Map data = (Map) cities.get("data");
@@ -54,12 +54,12 @@ public class PositionController extends BaseController {
         return Rets.failure();
 
     }
-    @RequestMapping(value = "/v1/cities/{id}",method = RequestMethod.GET)
+    @RequestMapping(value = "/api/cities/{id}",method = RequestMethod.GET)
     public Object getCity(@PathVariable("id") Integer id){
         return Rets.success(positionService.findById(id));
     }
 
-    @RequestMapping(value = "/v1/pois",method = RequestMethod.GET)
+    @RequestMapping(value = "/api/pois",method = RequestMethod.GET)
     public Object getPoiByCityAndKeyword(@RequestParam(value = "type",defaultValue = "search") String type,
                                          @RequestParam(value = "city_id",required = false) Integer cityId,
                                          @RequestParam(value = "keyword") String keyword){
@@ -75,9 +75,8 @@ public class PositionController extends BaseController {
 
     }
 
-    @RequestMapping(value = "/v1/position/pois",method = RequestMethod.GET)
+    @RequestMapping(value = "/position/pois",method = RequestMethod.GET)
     public Object getPoiByGeoHash(@RequestParam("geohash") String geoHash){
-        System.out.println("geohash:"+geoHash);
         return Rets.success(positionService.pois(geoHash));
     }
 }

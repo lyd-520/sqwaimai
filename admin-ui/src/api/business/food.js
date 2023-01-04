@@ -6,7 +6,7 @@ import request from '@/utils/request'
 
 export function addFood(params) {
   return request({
-    url: '/shopping/addfood',
+    url: '/api/food/addfood',
     method: 'post',
     params
   })
@@ -17,7 +17,7 @@ export function addFood(params) {
 
 export function getFoods(params) {
   return request({
-    url: '/shopping/v2/foods',
+    url: '/api/food/listfoods',
     method: 'get',
     params
   })
@@ -29,7 +29,7 @@ export function getFoods(params) {
 
 export function updateFood(params) {
   return request({
-    url: '/shopping/v2/updatefood',
+    url: '/api/food/updatefood',
     method: 'post',
     params
   })
@@ -41,7 +41,7 @@ export function updateFood(params) {
 
 export function deleteFood(id) {
   return request({
-    url: '/shopping/v2/food/' + id,
+    url: '/api/food/queryfood/' + id,
     method: 'delete'
   })
 }
@@ -52,7 +52,7 @@ export function deleteFood(id) {
  */
 export function auditFood(params) {
   return request({
-    url: '/shopping/auditFood',
+    url: '/api/food/auditFood',
     method: 'post',
     params
   })

@@ -13,12 +13,12 @@ public class OrderItem {
     private Long id;
     private String name;
     private Double price;
-    private Double quantity;
+    private int quantity;
 
-    private List specs;
-    private List attrs;
+    private String specs;
     private List new_specs;
-    private Integer packing_fee;
+    private Double packing_fee;
+    private int stock;
 
 
     @JSONField(name="_id")

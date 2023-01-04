@@ -128,6 +128,7 @@
                                                 <span>{{foods.specfoods[0].price}}</span>
                                                 <span v-if="foods.specifications.length">起</span>
                                             </section>
+                                            {{ foods }}
                                             <buy-cart :shopId='shopId' :foods='foods' @moveInCart="listenInCart" @showChooseList="showChooseList" @showReduceTip="showReduceTip" @showMoveDot="showMoveDotFun"></buy-cart>
                                         </footer>
                                     </section>
@@ -142,7 +143,7 @@
                                     {{totalNum}}
                                 </span>
                                 <svg class="cart_icon">
-                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#cart-icon"></use>
+                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#cartInfo-icon"></use>
                                 </svg>
                             </div>
                             <div class="cart_num">
@@ -155,13 +156,13 @@
                             <router-link :to="{path:'/confirmOrder', query:{geohash, shopId}}" class="gotopay_button_style" v-else >去结算</router-link>
                         </section>
                     </section>
-                    <transition name="toggle-cart">
+                    <transition name="toggle-cartInfo">
                         <section class="cart_food_list" v-show="showCartList&&cartFoodList.length">
                             <header>
                                 <h4>购物车</h4>
                                 <div @click="clearCart">
                                     <svg>
-                                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#cart-remove"></use>
+                                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#cartInfo-remove"></use>
                                     </svg>
                                     <span class="clear_cart">清空</span>
                                 </div>
@@ -180,12 +181,12 @@
                                         <section class="cart_list_control">
                                             <span @click="removeOutCart(item.category_id, item.item_id, item.food_id, item.name, item.price, item.specs)">
                                                 <svg>
-                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#cart-minus"></use>
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#cartInfo-minus"></use>
                                                 </svg>
                                             </span>
                                             <span class="cart_num">{{item.num}}</span>
                                             <svg class="cart_add" @click="addToCart(item.category_id, item.item_id, item.food_id, item.name, item.price, item.specs)">
-                                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#cart-add"></use>
+                                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#cartInfo-add"></use>
                                             </svg>
                                         </section>
                                     </li>
@@ -269,15 +270,16 @@
                 <div class="specs_list" v-if="showSpecs">
                     <header class="specs_list_header">
                         <h4 class="ellipsis">{{choosedFoods.name}}</h4>
-                        <svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" version="1.1"class="specs_cancel" @click="showChooseList">
+                        <svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" version="1.1" class="specs_cancel" @click="showChooseList">
                             <line x1="0" y1="0" x2="16" y2="16"  stroke="#666" stroke-width="1.2"/>
                             <line x1="0" y1="16" x2="16" y2="0"  stroke="#666" stroke-width="1.2"/>
                         </svg>
                     </header>
                     <section class="specs_details">
-                        <h5 class="specs_details_title">{{choosedFoods.specifications[0].name}}</h5>
+                        <!-- <h5 class="specs_details_title">{{choosedFoods.specifications[0].name}}</h5> -->
+                        <h5 class="specs_details_title">选择规格</h5>
                         <ul>
-                            <li v-for="(item, itemIndex) in choosedFoods.specifications[0].values" :class="{specs_activity: itemIndex == specsIndex}" @click="chooseSpecs(itemIndex)">
+                            <li v-for="(item, itemIndex) in choosedFoods.specifications" :class="{specs_activity: itemIndex == specsIndex}" @click="chooseSpecs(itemIndex)">
                                 {{item}}
                             </li>
                         </ul>
@@ -286,24 +288,24 @@
                         <div class="specs_price">
                             <span>¥ </span>
                             <span>{{choosedFoods.specfoods[specsIndex].price}}</span>
+                            <!-- <span>{{choosedFoods.specfoods[specsIndex].price }}</span> -->
                         </div>
-                        <div class="specs_addto_cart" @click="addSpecs(choosedFoods.category_id, choosedFoods.item_id, choosedFoods.specfoods[specsIndex].food_id, choosedFoods.specfoods[specsIndex].name, choosedFoods.specfoods[specsIndex].price, choosedFoods.specifications[0].values[specsIndex], choosedFoods.specfoods[specsIndex].packing_fee, choosedFoods.specfoods[specsIndex].sku_id, choosedFoods.specfoods[specsIndex].stock)">加入购物车</div>
+                        <div class="specs_addto_cart" @click="addSpecs(choosedFoods.category_id, choosedFoods.item_id, choosedFoods.specfoods[specsIndex].food_id, choosedFoods.specfoods[specsIndex].name, choosedFoods.specfoods[specsIndex].price, choosedFoods.specifications[specsIndex], choosedFoods.specfoods[specsIndex].packing_fee, choosedFoods.specfoods[specsIndex].sku_id, choosedFoods.specfoods[specsIndex].stock)">加入购物车</div>
                     </footer>
                 </div>
             </transition>
         </section>
         <transition name="fade">
-            <p class="show_delete_tip" v-if="showDeleteTip">多规格商品只能去购物车删除哦</p>
+            <p class="show_delete_tip" v-if="showDeleteTip">商品数量请到购物车中调整</p>
         </transition>
         <transition
-        appear
-        @after-appear = 'afterEnter'
-        @before-appear="beforeEnter"
-        v-for="(item,index) in showMoveDot"
-        >
+            appear
+            @after-appear = 'afterEnter'
+            @before-appear="beforeEnter"
+            v-for="(item,index) in showMoveDot">
             <span class="move_dot" v-if="item">
                 <svg class="move_liner">
-                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#cart-add"></use>
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#cartInfo-add"></use>
                 </svg>
             </span>
         </transition>

@@ -34,10 +34,12 @@
                         <span class="info-data-top"><b>{{parseInt(balance).toFixed(2)}}</b>元</span>
                         <span class="info-data-bottom">我的余额</span>
                     </router-link>
-                    <router-link to="/benefit" tag="li" class="info-data-link">
+                    <!-- <router-link to="/benefit" tag="li" class="info-data-link"> -->
+                    <div class="info-data-link" tag="li">
                         <span class="info-data-top"><b>{{count}}</b>个</span>
                         <span class="info-data-bottom">我的优惠</span>
-                    </router-link>
+                    </div>
+                    <!-- </router-link> -->
                     <router-link to="/points" tag="li" class="info-data-link">
                         <span class="info-data-top"><b>{{pointNumber}}</b>分</span>
                         <span class="info-data-bottom">我的积分</span>
@@ -62,7 +64,7 @@
                     </div>
                 </router-link>
                 <!-- 积分商城 -->
-                <a href='https://home.m.duiba.com.cn/#/chome/index' class="myorder">
+                <a href='javascript:void(0)' class="myorder">
                     <aside>
                         <svg fill="#fc7b53">
                             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#point"></use>
@@ -77,7 +79,7 @@
                         </span>
                     </div>
                 </a>
-                <!-- 饿了么会员卡 -->
+                <!-- 会员卡 -->
                 <router-link to='/vipcard' class="myorder">
                     <aside>
                         <svg fill="#ffc636">
@@ -85,7 +87,7 @@
                         </svg>
                     </aside>
                     <div class="myorder-div">
-                        <span>饿了么会员卡</span>
+                        <span>会员卡</span>
                         <span class="myorder-divsvg">
                             <svg fill="#bbb">
                                 <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-right"></use>
@@ -112,7 +114,7 @@
                     </div>
                 </router-link>
                 <!-- 下载饿了么APP -->
-                <router-link to='/download' class="myorder">
+                <!-- <router-link to='/download' class="myorder">
                     <aside>
                         <svg fill="#3cabff">
                             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#download"></use>
@@ -126,7 +128,7 @@
                             </svg>
                         </span>
                     </div>
-                </router-link>
+                </router-link> -->
             </section>
         </section>
         <foot-guide></foot-guide>
@@ -178,7 +180,6 @@ export default {
             }else{
                 path = this.getImgPath(this.avatar)
             }
-            console.info(path)
             this.SAVE_AVANDER(path);
             return path;
         }

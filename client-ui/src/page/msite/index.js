@@ -2,7 +2,8 @@ import {mapMutations} from 'vuex'
 import headTop from 'src/components/header/head'
 import footGuide from 'src/components/footer/footGuide'
 import shopList from 'src/components/common/shoplist'
-import {msiteAddress, msiteFoodTypes, cityGuess} from 'src/service/getData'
+import {msiteFoodTypes, cityGuess} from 'src/service/getData'
+import {imgBaseUrl} from 'src/config/env'
 import 'src/plugins/swiper.min.js'
 import 'src/style/swiper.min.css'
 
@@ -13,7 +14,7 @@ export default {
       msiteTitle: '请选择地址...', // msite页面头部标题
       foodTypes: [], // 食品分类列表
       hasGetData: false, //是否已经获取地理位置数据，成功之后再获取商铺列表信息
-      imgBaseUrl: 'https://fuss10.elemecdn.com', //图片域名地址
+      imgBaseUrl, //图片域名地址
     }
   },
   async beforeMount() {
@@ -25,7 +26,6 @@ export default {
       this.geohash = this.$route.query.geohash
       address = this.$route.query.address
     }
-    // console.log('geohash',this.geohash)
     //保存geohash 到vuex
     this.SAVE_GEOHASH(this.geohash);
     //获取位置信息

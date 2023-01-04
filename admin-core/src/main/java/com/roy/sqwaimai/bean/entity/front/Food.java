@@ -68,7 +68,7 @@ public class Food extends BaseMongoEntity{
     /**
      * 食品规格名称列表
      */
-    private List specifications;
+    private List<String> specifications;
     private String server_utc;
     private boolean is_essential;
     private List attributes;

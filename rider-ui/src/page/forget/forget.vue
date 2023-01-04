@@ -96,19 +96,6 @@
     console.info(changePassword)
                 // 发送重置信息
                 let res = await changePassword(this.phoneNumber, this.oldPassWord, this.newPassWord, this.confirmPassWord, this.captcha_code,this.captchCodeId);
-                // (username, oldpassWord, newpassword, confirmpassword, captcha_code)
-                // let param = new FormData()
-                // param.append("username",this.phoneNumber)
-                // param.append("oldpassWord",this.oldPassWord)
-                // param.append("newpassword",this.newPassWord)
-                // param.append("confirmpassword",this.confirmPassWord)
-                // param.append("captcha_code",this.captcha_code)
-
-                // let res = await fetch('/rider/changepassword', {
-                //               method: 'POST',
-                //               credentials: 'include',
-                //               body: param
-                //             })
 
                 if (res.message) {
                     this.showAlert = true;
@@ -122,7 +109,7 @@
             },
             closeTip(){
                 this.showAlert = false;
-            }   
+            }
         }
     }
 

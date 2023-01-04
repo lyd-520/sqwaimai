@@ -69,8 +69,6 @@ public class ConstantFactory implements IConstantFactory {
             set(CacheKey.SYS_USER_NAME + userId, val);
             return val;
         }
-
-
         return "--";
     }
 
