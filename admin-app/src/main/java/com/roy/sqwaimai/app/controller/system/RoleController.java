@@ -24,7 +24,6 @@ import com.roy.sqwaimai.utils.Maps;
 import com.roy.sqwaimai.utils.ToolUtil;
 import com.roy.sqwaimai.warpper.RoleWarpper;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.nutz.json.Json;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +47,6 @@ public class RoleController extends BaseController {
     @RequestMapping(value = "/list",method = RequestMethod.GET)
     @RequiresPermissions(value = {Permission.ROLE})
     public Object list(String name){
-        logger.info("========="+ Json.toJson(roleService.get(3L)));
         List roles = null;
         if(Strings.isNullOrEmpty(name)) {
             roles =  roleService.queryAll();

@@ -1,5 +1,6 @@
 package com.roy.sqwaimai.service.front;
 
+import com.alibaba.fastjson.JSON;
 import com.roy.sqwaimai.bean.AppConfiguration;
 import com.roy.sqwaimai.bean.constant.cache.Cache;
 import com.roy.sqwaimai.bean.vo.business.City;
@@ -7,7 +8,6 @@ import com.roy.sqwaimai.bean.vo.business.CityInfo;
 import com.roy.sqwaimai.dao.MongoRepository;
 import com.roy.sqwaimai.utils.HttpClients;
 import com.roy.sqwaimai.utils.Maps;
-import org.nutz.json.Json;
 import org.nutz.mapl.Mapl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +19,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
-
 
 @Service
 public class PositionService {
@@ -55,7 +54,7 @@ public class PositionService {
         Map result = null;
         try {
             String str = HttpClients.get(appConfiguration.getQqApiUrl() + "location/v1/ip", map);
-            result = (Map) Json.fromJson(str);
+            result = JSON.parseObject(str);
         } catch (Exception e) {
             logger.error("获取地理位置异常", e);
         }
@@ -63,7 +62,7 @@ public class PositionService {
             try {
                 map.put("key", appConfiguration.getTencentKey2());
                 String str = HttpClients.get(appConfiguration.getQqApiUrl() + "location/v1/ip", map);
-                result = (Map) Json.fromJson(str);
+                result = JSON.parseObject(str);
             } catch (Exception e) {
                 logger.error("获取地理位置异常", e);
             }
@@ -72,7 +71,7 @@ public class PositionService {
             try {
                 map.put("key", appConfiguration.getTencentKey3());
                 String str = HttpClients.get(appConfiguration.getQqApiUrl() + "location/v1/ip", map);
-                result = (Map) Json.fromJson(str);
+                result = JSON.parseObject(str);;
             } catch (Exception e) {
                 logger.error("获取地理位置异常", e);
             }
@@ -113,7 +112,7 @@ public class PositionService {
         params.put("page_size", "10");
         try {
             String str = HttpClients.get(appConfiguration.getQqApiUrl() + "place/v1/search", params);
-            Map result = (Map) Json.fromJson(str);
+            Map result = JSON.parseObject(str);;
             if (Integer.valueOf(result.get("status").toString()).intValue() == 0) {
                 return (List) result.get("data");
             }
@@ -174,7 +173,7 @@ public class PositionService {
         Map result = Maps.newHashMap();
         try {
             String str = HttpClients.get(appConfiguration.getQqApiUrl() + "geocoder/v1", map);
-            Map response = (Map) Json.fromJson(str);
+            Map response = JSON.parseObject(str);
             if ("0".equals(response.get("status").toString())) {
                 result.put("address", Mapl.cell(response,"result.address"));
                 result.put("city", Mapl.cell(response, "result.address_component.city"));
@@ -204,7 +203,7 @@ public class PositionService {
             //routematrix/v2/driving 开车
             //routematrix/v2/walking 步行
             String str = HttpClients.get(appConfiguration.getBaiduApiUrl() + "routematrix/v2/riding", params);
-            Map response = (Map) Json.fromJson(str);
+            Map response = JSON.parseObject(str);;
             if("0".equals(response.get("status").toString())){
               Map result =  Maps.newHashMap(
                       "distance",Mapl.cell(response,"result[0].distance.text"),

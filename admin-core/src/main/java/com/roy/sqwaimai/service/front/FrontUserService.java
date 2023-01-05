@@ -39,7 +39,7 @@ public class FrontUserService extends MongoService {
 
     public Object findUserInfo(Long userId){
         Map user = mongoRepository.findOne("users", "user_id", userId);
-        Map userInfo = mongoRepository.findOne("userinfos", "user_id", Long.valueOf(user.get("user_id").toString()));
+        Map userInfo = mongoRepository.findOne("userinfos", "user_id", userId);
         return Mapl.merge(user, userInfo);
     }
 

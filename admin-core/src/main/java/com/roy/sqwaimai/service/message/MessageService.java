@@ -113,11 +113,7 @@ public class MessageService extends BaseService<Message,Long, MessageRepository>
         message.setCreateTime(new Date());
         message.setContent(content);
         messageRepository.save(message);
-
     }
-
-
-
 
     private boolean sendSmsMessage( String receiver, String content,  MessageTemplate messageTemplate,String... args) throws Exception {
         String tplCode = getTpl(messageTemplate);

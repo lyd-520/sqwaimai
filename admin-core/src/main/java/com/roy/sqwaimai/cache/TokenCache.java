@@ -17,21 +17,21 @@ public   class TokenCache {
     public void put(String key,Object value){
         ehcacheDao.hset(EhcacheDao.SESSION,key,value);
     }
-     public <T> T get(String key,Class<T> klass){
+    public <T> T get(String key,Class<T> klass){
          return ehcacheDao.hget(EhcacheDao.SESSION, key,klass);
      }
-    public   void put(String token, Long idUser) {
+    public void put(String token, Long idUser) {
         ehcacheDao.hset(EhcacheDao.SESSION,token, idUser);
     }
 
-    public   Long getToken(String token) {
+    public Long getToken(String token) {
         return ehcacheDao.hget(EhcacheDao.SESSION,token,Long.class);
     }
     public Long getIdUser(){
         return ehcacheDao.hget(EhcacheDao.SESSION, HttpKit.getToken(),Long.class );
     }
 
-    public   void remove(String token) {
+    public void remove(String token) {
         ehcacheDao.hdel(EhcacheDao.SESSION,token+"user");
     }
 

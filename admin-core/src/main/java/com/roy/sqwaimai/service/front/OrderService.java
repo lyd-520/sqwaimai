@@ -14,7 +14,6 @@ import com.roy.sqwaimai.utils.Lists;
 import com.roy.sqwaimai.utils.Maps;
 import com.roy.sqwaimai.utils.factory.Page;
 import com.roy.sqwaimai.utils.gps.Distance;
-import org.nutz.mapl.Mapl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.GeoResult;
 import org.springframework.data.geo.GeoResults;
@@ -147,16 +146,9 @@ public class OrderService extends MongoService {
         OrderBasket basket = order.getBasket();
         basket.setItems(cart.getCartInfo().getItems());
         if (!cart.getCartInfo().getExtra().isEmpty()) {
-//            OrderFee orderFee = (OrderFee) Mapl.maplistToObj(cart.getCartInfo().getExtra().get(0), OrderFee.class);
-//            OrderFee orderFee = cart.getCartInfo().getExtra().get(0);
-//            ExtraFee extraFee = cart.getCartInfo().getExtra().get(0);
-
-//            orderFee.setDelevery(cart.getCartInfo().getDeliver_amount());
-
             OrderFee orderFee = basket.getOrderFee();
             orderFee.setDelevery(cart.getCartInfo().getDeliver_amount());
             basket.setOrderFee(orderFee);
-//            basket.setDeliver_fee(cart.getCart().getDeliver_amount());
         }
         order.setBasket(basket);
         order.setStatus_code(Order.STATUS_INIT);
