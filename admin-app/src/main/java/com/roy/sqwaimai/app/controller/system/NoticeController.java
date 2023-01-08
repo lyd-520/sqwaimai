@@ -3,7 +3,7 @@ package com.roy.sqwaimai.app.controller.system;
 import com.google.common.base.Strings;
 import com.roy.sqwaimai.app.controller.BaseController;
 import com.roy.sqwaimai.bean.entity.system.Notice;
-import com.roy.sqwaimai.bean.vo.front.Rets;
+import com.roy.sqwaimai.core.entity.vo.front.Rets;
 import com.roy.sqwaimai.service.system.NoticeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;

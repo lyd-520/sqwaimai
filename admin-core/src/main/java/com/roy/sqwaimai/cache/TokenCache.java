@@ -24,13 +24,6 @@ public   class TokenCache {
         ehcacheDao.hset(EhcacheDao.SESSION,token, idUser);
     }
 
-    public Long getToken(String token) {
-        return ehcacheDao.hget(EhcacheDao.SESSION,token,Long.class);
-    }
-    public Long getIdUser(){
-        return ehcacheDao.hget(EhcacheDao.SESSION, HttpKit.getToken(),Long.class );
-    }
-
     public void remove(String token) {
         ehcacheDao.hdel(EhcacheDao.SESSION,token+"user");
     }

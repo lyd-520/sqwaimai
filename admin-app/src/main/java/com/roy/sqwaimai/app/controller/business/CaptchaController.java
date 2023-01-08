@@ -1,7 +1,7 @@
 package com.roy.sqwaimai.app.controller.business;
 
 import com.roy.sqwaimai.app.controller.BaseController;
-import com.roy.sqwaimai.bean.vo.front.Rets;
+import com.roy.sqwaimai.core.entity.vo.front.Rets;
 import com.roy.sqwaimai.cache.TokenCache;
 import com.roy.sqwaimai.utils.CaptchaCode;
 import com.roy.sqwaimai.utils.Maps;

@@ -1,41 +1,33 @@
 package com.roy.sqwaimai.app.controller.business;
 
 import com.roy.sqwaimai.app.controller.BaseController;
-import com.roy.sqwaimai.bean.constant.factory.PageFactory;
-import com.roy.sqwaimai.bean.entity.front.*;
-import com.roy.sqwaimai.bean.entity.front.sub.*;
-import com.roy.sqwaimai.bean.vo.business.OrderVo;
-import com.roy.sqwaimai.bean.vo.front.Rets;
-import com.roy.sqwaimai.dao.MongoRepository;
-import com.roy.sqwaimai.security.AccountInfo;
+import com.roy.sqwaimai.core.entity.vo.front.Rets;
+import com.roy.sqwaimai.core.entity.FrontRiderInfo;
+import com.roy.sqwaimai.core.entity.Order;
+import com.roy.sqwaimai.core.entity.sys.AccountInfo;
+import com.roy.sqwaimai.core.entity.vo.OrderVo;
+import com.roy.sqwaimai.core.query.Page;
+import com.roy.sqwaimai.core.service.FrontRiderService;
+import com.roy.sqwaimai.core.service.OrderService;
+import com.roy.sqwaimai.core.service.ShopService;
 import com.roy.sqwaimai.security.JwtUtil;
-import com.roy.sqwaimai.service.front.FrontRiderService;
-import com.roy.sqwaimai.service.front.IdsService;
-import com.roy.sqwaimai.service.front.OrderService;
-import com.roy.sqwaimai.service.front.ShopService;
-import com.roy.sqwaimai.utils.*;
-import com.roy.sqwaimai.utils.factory.Page;
-import org.nutz.lang.Strings;
-import org.nutz.mapl.Mapl;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.roy.sqwaimai.utils.HttpKit;
+import com.roy.sqwaimai.utils.PageFactory;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
 
 @RestController
 @RequestMapping(value = "/api/orders")
 public class OrderController extends BaseController {
-    @Resource
+    @DubboReference
     private OrderService orderService;
-    @Resource
+    @DubboReference
     private ShopService shopService;
-    @Resource
+    @DubboReference
     private FrontRiderService frontRiderService;
 
     @RequestMapping(value = "/userorders/{user_id}", method = RequestMethod.GET)
@@ -45,7 +37,6 @@ public class OrderController extends BaseController {
         HttpServletRequest request = HttpKit.getRequest();
         //每页多少条数据
         int orderStatus = Integer.valueOf(request.getParameter("orderStatus"));
-
         page = orderService.queryPageUserOrder(page,userId,orderStatus);
 
         return Rets.success(page);
@@ -55,7 +46,8 @@ public class OrderController extends BaseController {
     public Object list(@RequestParam(value = "restaurant_id", required = false) Long restaurantId,
                        @RequestParam(value = "id", required = false) Long orderId) {
         Page<Order> page = new PageFactory<Order>().defaultPage();
-        page = orderService.queryPageOrder(page,restaurantId,orderId);
+        AccountInfo accountInfo = JwtUtil.getAccountInfo();
+        page = orderService.queryPageOrder(page,restaurantId,orderId,accountInfo);
         return Rets.success(page);
     }
 

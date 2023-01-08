@@ -11,7 +11,7 @@ import com.roy.sqwaimai.bean.entity.system.User;
 import com.roy.sqwaimai.bean.enumeration.BizExceptionEnum;
 import com.roy.sqwaimai.bean.enumeration.Permission;
 import com.roy.sqwaimai.bean.exception.ApplicationException;
-import com.roy.sqwaimai.bean.vo.front.Rets;
+import com.roy.sqwaimai.core.entity.vo.front.Rets;
 import com.roy.sqwaimai.bean.vo.node.Node;
 import com.roy.sqwaimai.bean.vo.node.ZTreeNode;
 import com.roy.sqwaimai.service.system.LogObjectHolder;

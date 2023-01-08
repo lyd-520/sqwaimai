@@ -1,34 +1,29 @@
 package com.roy.sqwaimai.app.controller.business;
 
 import com.roy.sqwaimai.app.controller.BaseController;
-import com.roy.sqwaimai.bean.constant.factory.PageFactory;
-import com.roy.sqwaimai.bean.entity.front.*;
-import com.roy.sqwaimai.bean.vo.business.CityInfo;
-import com.roy.sqwaimai.bean.vo.business.LoginVo;
-import com.roy.sqwaimai.bean.vo.front.Rets;
+import com.roy.sqwaimai.core.entity.vo.front.Rets;
 import com.roy.sqwaimai.cache.TokenCache;
-import com.roy.sqwaimai.dao.MongoRepository;
-import com.roy.sqwaimai.service.front.IdsService;
-import com.roy.sqwaimai.service.front.OrderService;
-import com.roy.sqwaimai.service.front.PositionService;
-import com.roy.sqwaimai.service.front.RiderService;
-import com.roy.sqwaimai.service.system.CfgService;
+import com.roy.sqwaimai.core.entity.FrontRider;
+import com.roy.sqwaimai.core.entity.FrontRiderInfo;
+import com.roy.sqwaimai.core.entity.Order;
+import com.roy.sqwaimai.core.entity.vo.LoginVo;
+import com.roy.sqwaimai.core.query.Page;
+import com.roy.sqwaimai.core.service.OrderService;
+import com.roy.sqwaimai.core.service.RiderService;
 import com.roy.sqwaimai.service.system.FileService;
-import com.roy.sqwaimai.utils.*;
-import com.roy.sqwaimai.utils.factory.Page;
-import com.roy.sqwaimai.utils.gps.Distance;
+import com.roy.sqwaimai.core.util.CryptUtils;
+import com.roy.sqwaimai.utils.Maps;
+import com.roy.sqwaimai.utils.PageFactory;
+import com.roy.sqwaimai.utils.StringUtils;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.nutz.lang.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.geo.GeoResult;
-import org.springframework.data.geo.GeoResults;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
-import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -40,9 +35,9 @@ public class RiderController extends BaseController {
     private TokenCache tokenCache;
     @Resource
     private FileService fileService;
-    @Resource
+    @DubboReference
     private RiderService riderService;
-    @Resource
+    @DubboReference
     private OrderService orderService;
 
 
@@ -84,7 +79,7 @@ public class RiderController extends BaseController {
             result.put("status",2);
             return result;
         }
-        String image_path = fileService.saveAvatar(userId,file);
+        String image_path = fileService.saveAvatar(file);
         if(StringUtils.isNotEmpty(image_path)){
             result.put("status",1);
             result.put("image_path",file.getOriginalFilename());
@@ -169,8 +164,8 @@ public class RiderController extends BaseController {
             Page<Order> page = new PageFactory<Order>().defaultPage();
             return Rets.success(orderService.queryPagePaidOrder(page));
         }else{
-            Page page = orderService.queryNearByOrder(longitude,latitude,limit);
-            return Rets.success(page);
+            Page<Map> page = new PageFactory<Map>().defaultPage();
+            return Rets.success(orderService.queryNearByOrder(longitude,latitude,limit,page));
         }
     }
 

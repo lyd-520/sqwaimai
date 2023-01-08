@@ -1,7 +1,6 @@
 package com.roy.sqwaimai.service.system;
 
 import com.roy.sqwaimai.bean.entity.system.Dict;
-import com.roy.sqwaimai.cache.DictCache;
 import com.roy.sqwaimai.dao.system.DictRepository;
 import com.roy.sqwaimai.service.BaseService;
 import com.roy.sqwaimai.utils.factory.MutiStrFactory;
@@ -23,8 +22,6 @@ public class DictService extends BaseService<Dict,Long, DictRepository> {
     private Logger logger = LoggerFactory.getLogger(DictService.class);
     @Resource
     DictRepository dictRepository;
-    @Autowired
-    private DictCache dictCache;
 
     public void addDict(String dictName, String dictValues) {
         //判断有没有该字典
@@ -57,7 +54,6 @@ public class DictService extends BaseService<Dict,Long, DictRepository> {
             }
             this.dictRepository.save(itemDict);
         }
-        dictCache.cache();
     }
 
     public void editDict(Long dictId, String dictName, String dicts) {
@@ -66,8 +62,6 @@ public class DictService extends BaseService<Dict,Long, DictRepository> {
 
         //重新添加新的字典
         this.addDict(dictName,dicts);
-
-        dictCache.cache();
     }
 
     public void delteDict(Long dictId) {
@@ -76,8 +70,6 @@ public class DictService extends BaseService<Dict,Long, DictRepository> {
         dictRepository.deleteAll(subList);
         //删除这个词典
         dictRepository.deleteById(dictId);
-
-        dictCache.cache();
     }
     @Override
     public Dict get(Long id) {

@@ -1,7 +1,7 @@
 package com.roy.sqwaimai.app.config;
 
 import com.roy.sqwaimai.app.interceptor.JwtFilter;
-import com.roy.sqwaimai.security.ApiRealm;
+import com.roy.sqwaimai.app.security.ApiRealm;
 import com.roy.sqwaimai.utils.Maps;
 import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
 import org.apache.shiro.mgt.DefaultSubjectDAO;

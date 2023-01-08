@@ -1,7 +1,6 @@
 package com.roy.sqwaimai.cache.impl;
 
 import com.roy.sqwaimai.bean.entity.system.Cfg;
-import com.roy.sqwaimai.cache.CacheDao;
 import com.roy.sqwaimai.cache.ConfigCache;
 import com.roy.sqwaimai.dao.system.CfgRepository;
 import com.roy.sqwaimai.utils.StringUtils;
@@ -10,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -20,49 +20,34 @@ public class ConfigCacheImpl implements ConfigCache {
     private static  final Logger logger = LoggerFactory.getLogger(ConfigCacheImpl.class);
     @Autowired
     private CfgRepository cfgRepository;
-    @Autowired
-    private CacheDao cacheDao;
+
+    @Resource
+    private RedisCacheDao redisCacheDao;
 
     @Override
-    public Object get(String key) {
-        return (String) cacheDao.hget(EhcacheDao.CONSTANT,key);
-    }
-
-    @Override
-    public String get(String key, boolean local) {
-        String ret = null;
-        if(local) {
-             ret = (String) get(key);
-        }else{
-            ret = cfgRepository.findByCfgName(key).getCfgValue();
-            set(key,ret);
-        }
-        return ret;
+    public String get(String key) {
+        Object result = redisCacheDao.hget(RedisCacheDao.CONFIG_HASH_KEY, key);
+        return result.toString();
     }
 
     @Override
     public String get(String key, String def) {
-        String ret = (String) get(key);
+        String ret = get(key);
         if(StringUtils.isEmpty(ret)){
-            return ret;
+            return def;
         }
         return ret;
     }
 
-
     @Override
-    public void set(String key, Object val) {
-        cacheDao.hset(EhcacheDao.CONSTANT,key,val);
-    }
-
-    @Override
-    public void del(String key, String val) {
-        cacheDao.hdel(EhcacheDao.CONSTANT,val);
+    public void set(String key, String val) {
+        redisCacheDao.hset(RedisCacheDao.CONFIG_HASH_KEY,key,val);
     }
 
     @Override
     public void cache() {
         logger.info("reset config cache");
+        redisCacheDao.deleteConfig();
         List<Cfg> list = cfgRepository.findAll();
         if (list != null && !list.isEmpty()) {
             for (Cfg cfg : list) {

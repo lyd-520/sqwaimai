@@ -7,5 +7,7 @@
     <file url="file://$PROJECT_DIR$/admin-core/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/busi-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/busi-service/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/service-core/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/service-core/src/main/resources" charset="UTF-8" />
   </component>
 </project>

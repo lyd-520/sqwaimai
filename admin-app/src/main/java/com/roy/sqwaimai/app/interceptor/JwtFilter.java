@@ -1,7 +1,7 @@
 package com.roy.sqwaimai.app.interceptor;
 
+import com.roy.sqwaimai.core.util.Constants;
 import com.roy.sqwaimai.security.JwtToken;
-import com.roy.sqwaimai.utils.Constants;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

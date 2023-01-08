@@ -5,9 +5,10 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.roy.sqwaimai.bean.entity.front.Shop;
 import com.roy.sqwaimai.bean.entity.system.User;
-import com.roy.sqwaimai.utils.Constants;
+import com.roy.sqwaimai.core.entity.Shop;
+import com.roy.sqwaimai.core.entity.sys.AccountInfo;
+import com.roy.sqwaimai.core.util.Constants;
 import com.roy.sqwaimai.utils.HttpKit;
 
 import java.io.UnsupportedEncodingException;

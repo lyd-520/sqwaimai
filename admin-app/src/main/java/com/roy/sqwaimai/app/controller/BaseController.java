@@ -2,19 +2,16 @@ package com.roy.sqwaimai.app.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.google.common.base.Strings;
 import com.roy.sqwaimai.app.utils.ApiConstants;
-import com.roy.sqwaimai.bean.enumeration.ConfigKeyEnum;
 import com.roy.sqwaimai.cache.ConfigCache;
+import com.roy.sqwaimai.core.enums.ConfigKeyEnum;
+import com.roy.sqwaimai.core.util.Constants;
 import com.roy.sqwaimai.security.JwtUtil;
-import com.roy.sqwaimai.utils.Constants;
 import com.roy.sqwaimai.utils.HttpKit;
 import com.roy.sqwaimai.utils.StringUtils;
 import org.nutz.json.Json;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -31,7 +28,7 @@ import java.util.Map;
  * 基础controller
  */
 public class BaseController {
-    private static Logger logger = LoggerFactory.getLogger(BaseController.class);
+    private static final Logger logger = LoggerFactory.getLogger(BaseController.class);
 
     @Resource
     private ConfigCache configCache;

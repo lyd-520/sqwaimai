@@ -2,16 +2,16 @@ package com.roy.sqwaimai.security;
 
 import com.roy.sqwaimai.bean.constant.state.ManagerStatus;
 import com.roy.sqwaimai.bean.core.ShiroUser;
-import com.roy.sqwaimai.bean.entity.front.Shop;
 import com.roy.sqwaimai.bean.entity.system.Role;
 import com.roy.sqwaimai.bean.entity.system.User;
 import com.roy.sqwaimai.bean.vo.SpringContextHolder;
 import com.roy.sqwaimai.cache.TokenCache;
+import com.roy.sqwaimai.core.entity.Shop;
+import com.roy.sqwaimai.core.util.Constants;
 import com.roy.sqwaimai.dao.system.MenuRepository;
 import com.roy.sqwaimai.dao.system.RoleRepository;
 import com.roy.sqwaimai.dao.system.UserRepository;
 import com.roy.sqwaimai.service.system.impl.ConstantFactory;
-import com.roy.sqwaimai.utils.Constants;
 import com.roy.sqwaimai.utils.Convert;
 import com.roy.sqwaimai.utils.HttpKit;
 import org.apache.shiro.authc.CredentialsException;
@@ -78,9 +78,9 @@ public class ShiroFactroy     {
         shiroUser.setName(user.getName());        // 用户名称
         shiroUser.setPassword(user.getPassword());
         Long[] roleArray = Convert.toLongArray(",", user.getRoleid());
-        List<Long> roleList = new ArrayList<Long>();
-        List<String> roleNameList = new ArrayList<String>();
-        List<String> roleCodeList = new ArrayList<String>();
+        List<Long> roleList = new ArrayList<>();
+        List<String> roleNameList = new ArrayList<>();
+        List<String> roleCodeList = new ArrayList<>();
         Set<String> permissions = new HashSet<String>();
         Set<String> resUrls = new HashSet<>();
         for (Long roleId : roleArray) {
@@ -114,10 +114,10 @@ public class ShiroFactroy     {
         shiroUser.setName(shop.getName());        // 用户名称
         shiroUser.setPassword(shop.getPassword());
         Long[] roleArray = new Long[]{Constants.ROLE_ID_SHOP};
-        List<Long> roleList = new ArrayList<Long>();
-        List<String> roleNameList = new ArrayList<String>();
-        List<String> roleCodeList = new ArrayList<String>();
-        Set<String> permissions = new HashSet<String>();
+        List<Long> roleList = new ArrayList<>();
+        List<String> roleNameList = new ArrayList<>();
+        List<String> roleCodeList = new ArrayList<>();
+        Set<String> permissions = new HashSet<>();
         Set<String> resUrls = new HashSet<>();
         for (Long roleId : roleArray) {
             roleList.add(roleId);

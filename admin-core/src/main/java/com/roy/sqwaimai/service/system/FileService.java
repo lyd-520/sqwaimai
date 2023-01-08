@@ -3,8 +3,8 @@ package com.roy.sqwaimai.service.system;
 import com.roy.sqwaimai.bean.constant.cache.Cache;
 import com.roy.sqwaimai.bean.constant.cache.CacheKey;
 import com.roy.sqwaimai.bean.entity.system.FileInfo;
-import com.roy.sqwaimai.bean.enumeration.ConfigKeyEnum;
 import com.roy.sqwaimai.cache.ConfigCache;
+import com.roy.sqwaimai.core.enums.ConfigKeyEnum;
 import com.roy.sqwaimai.dao.system.FileInfoRepository;
 import com.roy.sqwaimai.security.JwtUtil;
 import com.roy.sqwaimai.service.BaseService;
@@ -133,7 +133,7 @@ public class FileService extends BaseService<FileInfo,Long, FileInfoRepository> 
         return fileInfo;
     }
 
-    public String saveAvatar(Long userId, MultipartFile file) {
+    public String saveAvatar(MultipartFile file) {
         if(!file.isEmpty()){
             //存文件
             String imagePath = configCache.get(ConfigKeyEnum.SYSTEM_FILE_UPLOAD_PATH.getValue()) + File.separator + file.getOriginalFilename();
@@ -150,7 +150,6 @@ public class FileService extends BaseService<FileInfo,Long, FileInfoRepository> 
                 fileInfo.setRealFileName(targetFile.getName());
                 fileInfoRepository.save(fileInfo);
 
-                //存Mongo
 
                 return imagePath;
             } catch (IOException e) {

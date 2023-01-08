@@ -14,14 +14,9 @@ INSERT INTO `t_message_template` VALUES (3, NULL, NULL, NULL, NULL, 'EMAIL_HTML_
 -- ----------------------------
 -- Records of t_sys_cfg
 -- ----------------------------
-INSERT INTO `t_sys_cfg` VALUES (1, NULL, NULL, -1, '2021-05-14 17:00:00', 'update by 2021-05-14 17:00:00', 'system.app.name', 'flash-waimai');
+INSERT INTO `t_sys_cfg` VALUES (1, NULL, NULL, -1, '2021-05-14 17:00:00', 'update by 2021-05-14 17:00:00', 'system.app.name', 'sqwaimai');
 INSERT INTO `t_sys_cfg` VALUES (2, NULL, NULL, 1, '2019-04-15 21:36:17', '系统默认上传文件路径', 'system.file.upload.path', 'E:\\a-work\\waimaiProj\\upload\\');
-INSERT INTO `t_sys_cfg` VALUES (3, NULL, NULL, 1, '2019-04-15 21:36:17', '腾讯sms接口appid', 'api.tencent.sms.appid', '1400219425');
-INSERT INTO `t_sys_cfg` VALUES (4, NULL, NULL, 1, '2019-04-15 21:36:17', '腾讯sms接口appkey', 'api.tencent.sms.appkey', '5f71ed5325f3b292946530a1773e997a');
-INSERT INTO `t_sys_cfg` VALUES (5, NULL, NULL, 1, '2019-04-15 21:36:17', '腾讯sms接口签名参数', 'api.tencent.sms.sign', '需要去申请咯');
 INSERT INTO `t_sys_cfg` VALUES (6, NULL, NULL, 1, '2022-12-09 21:18:58', '平台盈利额', 'system.platform.total.amount', '29.00');
-INSERT INTO `t_sys_cfg` VALUES (7, NULL, NULL, 1, '2021-05-13 22:59:20', '小程序appid', 'api.tencent.mini.program.appid', 'wx234234234234234');
-INSERT INTO `t_sys_cfg` VALUES (8, NULL, NULL, 1, '2021-05-13 22:59:20', '小程序appsecret', 'api.tencent.mini.program.secret', '234234234234');
 INSERT INTO `t_sys_cfg` VALUES (9, 1, '2022-11-29 17:37:12', 1, '2022-11-29 17:37:28', '服务城市', 'system.server.ip', '175.13.249.136');
 INSERT INTO `t_sys_cfg` VALUES (10, NULL, NULL, NULL, '2022-11-30 17:53:39', '饭店搜索精度(米)', 'system.search.range', '500');
 

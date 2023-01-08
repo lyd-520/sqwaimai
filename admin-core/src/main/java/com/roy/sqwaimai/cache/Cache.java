@@ -25,7 +25,7 @@ public interface Cache {
 	 * @param key
 	 * @param val
 	 */
-	void set(String key, Object val);
+	void set(String key, String val);
 
 
 }

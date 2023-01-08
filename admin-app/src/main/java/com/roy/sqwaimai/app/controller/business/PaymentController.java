@@ -1,21 +1,19 @@
 package com.roy.sqwaimai.app.controller.business;
 
 import com.roy.sqwaimai.app.controller.BaseController;
-import com.roy.sqwaimai.bean.vo.front.Rets;
-import com.roy.sqwaimai.dao.MongoRepository;
-import com.roy.sqwaimai.service.front.PaymentService;
+import com.roy.sqwaimai.core.entity.vo.front.Rets;
+import com.roy.sqwaimai.core.service.PaymentService;
 import com.roy.sqwaimai.utils.Maps;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/payapi/payment")
 public class PaymentController extends BaseController {
 
-    @Resource
+    @DubboReference
     private PaymentService paymentService;
 
     @RequestMapping(value = "/queryOrder",method = RequestMethod.GET)

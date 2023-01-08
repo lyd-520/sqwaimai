@@ -38,7 +38,7 @@ public class TaskService extends BaseService<Task,Long, TaskRepository> {
 		return task;
 	}
 
-@Override
+	@Override
 	public Task update(Task record) {
 		logger.info("更新定时任务{}", record.getName());
 		taskRepository.save(record);
@@ -57,7 +57,6 @@ public class TaskService extends BaseService<Task,Long, TaskRepository> {
 	public void simpleUpdate(Task task){
 		taskRepository.save(task);
 	}
-
 
 	public Task disable(Long id) {
 		Task task = get(id);

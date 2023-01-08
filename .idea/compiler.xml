@@ -8,12 +8,13 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="admin-app" />
+        <module name="service-core" />
         <module name="admin-core" />
+        <module name="busi-service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="admin-generator" target="1.8" />
-      <module name="busi-service" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

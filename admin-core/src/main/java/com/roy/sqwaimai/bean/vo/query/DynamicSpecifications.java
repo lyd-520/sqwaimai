@@ -1,5 +1,6 @@
 package com.roy.sqwaimai.bean.vo.query;
 
+import com.roy.sqwaimai.core.query.SearchFilter;
 import com.roy.sqwaimai.utils.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;

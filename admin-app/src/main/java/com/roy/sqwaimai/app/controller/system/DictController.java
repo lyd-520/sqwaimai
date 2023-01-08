@@ -7,7 +7,7 @@ import com.roy.sqwaimai.bean.entity.system.Dict;
 import com.roy.sqwaimai.bean.enumeration.BizExceptionEnum;
 import com.roy.sqwaimai.bean.enumeration.Permission;
 import com.roy.sqwaimai.bean.exception.ApplicationException;
-import com.roy.sqwaimai.bean.vo.front.Rets;
+import com.roy.sqwaimai.core.entity.vo.front.Rets;
 import com.roy.sqwaimai.service.system.DictService;
 import com.roy.sqwaimai.utils.BeanUtil;
 import com.roy.sqwaimai.utils.StringUtils;

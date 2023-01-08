@@ -1,8 +1,8 @@
 package com.roy.sqwaimai.service.system;
 
 import com.roy.sqwaimai.bean.entity.system.Cfg;
-import com.roy.sqwaimai.bean.vo.query.SearchFilter;
 import com.roy.sqwaimai.cache.ConfigCache;
+import com.roy.sqwaimai.core.query.SearchFilter;
 import com.roy.sqwaimai.dao.system.CfgRepository;
 import com.roy.sqwaimai.service.BaseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +33,6 @@ public class CfgService extends BaseService<Cfg, Long, CfgRepository> {
     /**
      * 根据参数名获取参数值
      * 系统获取参数值统一使用该方法
-     * 如果参数无法做到后台管理系统和用户端系统同步，这里建议直接从数据库获取
-     * todo 建议生产中使用redis来统一管理该参数，这里从redis缓存中获取
      * @param cfgName
      * @return
      */

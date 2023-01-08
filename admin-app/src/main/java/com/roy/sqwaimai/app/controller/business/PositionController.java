@@ -2,12 +2,11 @@ package com.roy.sqwaimai.app.controller.business;
 
 import com.google.common.base.Strings;
 import com.roy.sqwaimai.app.controller.BaseController;
-import com.roy.sqwaimai.bean.vo.business.City;
-import com.roy.sqwaimai.bean.vo.business.CityInfo;
-import com.roy.sqwaimai.bean.vo.front.Rets;
-import com.roy.sqwaimai.dao.MongoRepository;
-import com.roy.sqwaimai.service.front.PositionService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.roy.sqwaimai.core.entity.vo.front.Rets;
+import com.roy.sqwaimai.core.entity.vo.City;
+import com.roy.sqwaimai.core.entity.vo.CityInfo;
+import com.roy.sqwaimai.core.service.PositionService;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,14 +15,13 @@ import java.util.Map;
 @RestController
 public class PositionController extends BaseController {
 
-    @Autowired
-    private MongoRepository mongoRepository;
-    @Autowired
+    @DubboReference
     private PositionService positionService;
 
     @RequestMapping(value = "/api/cities",method = RequestMethod.GET)
     public Object cities(@RequestParam("type") String type, HttpServletRequest request) {
-        Map cities = mongoRepository.findOne("cities");
+//        Map cities = mongoRepository.findOne("cities");
+        Map cities = positionService.findCities();
         Map data = (Map) cities.get("data");
         switch (type){
             case "guess":

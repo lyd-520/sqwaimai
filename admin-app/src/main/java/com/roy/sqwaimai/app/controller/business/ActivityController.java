@@ -1,18 +1,14 @@
 package com.roy.sqwaimai.app.controller.business;
 
 import com.roy.sqwaimai.app.controller.BaseController;
-import com.roy.sqwaimai.bean.entity.front.Activity;
-import com.roy.sqwaimai.bean.vo.front.Rets;
-import com.roy.sqwaimai.dao.MongoRepository;
-import com.roy.sqwaimai.service.front.ActivityService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.roy.sqwaimai.core.entity.vo.front.Rets;
+import com.roy.sqwaimai.core.service.ActivityService;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.web.bind.annotation.*;
-
-import javax.annotation.Resource;
 
 @RestController
 public class ActivityController extends BaseController {
-    @Resource
+    @DubboReference
     private ActivityService activityService;
 
     @RequestMapping(value = "/api/activity/nearbyactivities",method = RequestMethod.GET)

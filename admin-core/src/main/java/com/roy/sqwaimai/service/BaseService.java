@@ -2,10 +2,10 @@ package com.roy.sqwaimai.service;
 
 import com.roy.sqwaimai.bean.constant.cache.Cache;
 import com.roy.sqwaimai.bean.vo.query.DynamicSpecifications;
-import com.roy.sqwaimai.bean.vo.query.SearchFilter;
+import com.roy.sqwaimai.core.query.Page;
+import com.roy.sqwaimai.core.query.SearchFilter;
 import com.roy.sqwaimai.dao.BaseRepository;
 import com.roy.sqwaimai.utils.Lists;
-import com.roy.sqwaimai.utils.factory.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -13,7 +13,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Serializable;
 import java.util.Iterator;

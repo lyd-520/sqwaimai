@@ -1,7 +1,7 @@
 package com.roy.sqwaimai.core.factory;
 
 import com.roy.sqwaimai.bean.dictmap.base.AbstractDictMap;
-import com.roy.sqwaimai.utils.DateUtil;
+import com.roy.sqwaimai.core.util.DateUtil;
 import com.roy.sqwaimai.utils.StringUtils;
 import org.nutz.lang.Mirror;
 import org.slf4j.Logger;

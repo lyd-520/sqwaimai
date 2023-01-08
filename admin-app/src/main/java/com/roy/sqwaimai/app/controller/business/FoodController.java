@@ -1,45 +1,38 @@
 package com.roy.sqwaimai.app.controller.business;
 
 import com.roy.sqwaimai.app.controller.BaseController;
-import com.roy.sqwaimai.bean.constant.factory.PageFactory;
-import com.roy.sqwaimai.bean.entity.front.*;
-import com.roy.sqwaimai.bean.vo.business.FoodVo;
-import com.roy.sqwaimai.bean.vo.business.SpecVo;
-import com.roy.sqwaimai.bean.vo.front.Rets;
-import com.roy.sqwaimai.dao.MongoRepository;
-import com.roy.sqwaimai.security.AccountInfo;
+import com.roy.sqwaimai.core.entity.vo.front.Rets;
+import com.roy.sqwaimai.core.entity.Food;
+import com.roy.sqwaimai.core.entity.sys.AccountInfo;
+import com.roy.sqwaimai.core.entity.vo.FoodVo;
+import com.roy.sqwaimai.core.query.Page;
+import com.roy.sqwaimai.core.service.FoodService;
+import com.roy.sqwaimai.core.service.FrontMenuService;
 import com.roy.sqwaimai.security.JwtUtil;
-import com.roy.sqwaimai.service.front.FoodService;
-import com.roy.sqwaimai.service.front.IdsService;
-import com.roy.sqwaimai.service.front.FrontMenuService;
-import com.roy.sqwaimai.utils.*;
-import com.roy.sqwaimai.utils.factory.Page;
-import org.nutz.json.Json;
+import com.roy.sqwaimai.utils.PageFactory;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import javax.validation.Valid;
-import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/food")
 public class FoodController extends BaseController {
 
-    @Resource
+    @DubboReference
     private FoodService foodService;
 
-    @Resource
+    @DubboReference
     private FrontMenuService frontMenuService;
 
     private Logger logger = LoggerFactory.getLogger(FoodController.class);
 
     @RequestMapping(value = "/addfood", method = RequestMethod.POST)
     public Object add(@Valid @ModelAttribute FoodVo foodVo) {
-        foodService.addFood(foodVo);
+        AccountInfo accountInfo = JwtUtil.getAccountInfo();
+        foodService.addFood(foodVo,accountInfo);
         return Rets.success();
     }
 
@@ -48,7 +41,8 @@ public class FoodController extends BaseController {
                        @RequestParam(value = "name", required = false) String name,
                        @RequestParam(value = "restaurant_id", required = false) Long restaurantId) {
         Page<Food> page = new PageFactory<Food>().defaultPage();
-        foodService.listPagedFood(page,state,name,restaurantId);
+        AccountInfo accountInfo = JwtUtil.getAccountInfo();
+        foodService.listPagedFood(page,state,name,restaurantId,accountInfo);
         return Rets.success(page);
     }
 
@@ -60,8 +54,9 @@ public class FoodController extends BaseController {
 
     @RequestMapping(value = "/updatefood", method = RequestMethod.POST)
     public Object update(@ModelAttribute @Valid FoodVo food) {
+        AccountInfo accountInfo = JwtUtil.getAccountInfo();
         //更新食品信息
-        foodService.updateFood(food);
+        foodService.updateFood(food,accountInfo);
         //更新菜单 修改食品时删除菜单，食品审批通过时添加菜单。
         frontMenuService.deleteMenuFood(food.getId());
         return Rets.success();

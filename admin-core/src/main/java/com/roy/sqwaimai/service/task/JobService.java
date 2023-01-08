@@ -5,7 +5,7 @@ import com.roy.sqwaimai.bean.entity.system.Task;
 import com.roy.sqwaimai.bean.exception.ApplicationException;
 import com.roy.sqwaimai.bean.exception.ApplicationExceptionEnum;
 import com.roy.sqwaimai.bean.vo.QuartzJob;
-import com.roy.sqwaimai.bean.vo.query.SearchFilter;
+import com.roy.sqwaimai.core.query.SearchFilter;
 import org.apache.commons.lang3.StringUtils;
 import org.quartz.*;
 import org.slf4j.Logger;
@@ -25,8 +25,6 @@ public class JobService {
     private static final Logger logger = LoggerFactory.getLogger(JobService.class);
     @Autowired
     private Scheduler scheduler;
-    @Autowired
-    private TaskService taskService;
 
     /**
      * 获取单个任务
@@ -57,16 +55,6 @@ public class JobService {
             }
         }
         return job;
-    }
-
-
-    public List<QuartzJob> getTaskList() {
-        List<Task> tasks = taskService.queryAll(SearchFilter.build("disabled", SearchFilter.Operator.EQ,false));
-        List<QuartzJob> jobs = new ArrayList<>();
-        for (Task task : tasks) {
-            jobs.add(getJob(task));
-        }
-        return jobs;
     }
 
     public QuartzJob getJob(Task task) {

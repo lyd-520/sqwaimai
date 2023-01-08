@@ -1,6 +1,6 @@
 package com.roy.sqwaimai.app.config;
 
-import com.roy.sqwaimai.utils.Constants;
+import com.roy.sqwaimai.core.util.Constants;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;

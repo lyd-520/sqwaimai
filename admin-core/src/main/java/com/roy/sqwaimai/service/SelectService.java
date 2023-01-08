@@ -1,7 +1,7 @@
 package com.roy.sqwaimai.service;
 
-import com.roy.sqwaimai.bean.vo.query.SearchFilter;
-import com.roy.sqwaimai.utils.factory.Page;
+import com.roy.sqwaimai.core.query.Page;
+import com.roy.sqwaimai.core.query.SearchFilter;
 import org.springframework.data.domain.Sort;
 
 import java.util.List;

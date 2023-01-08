@@ -2,19 +2,24 @@ package com.roy.sqwaimai.app.controller;
 
 import com.roy.sqwaimai.app.utils.ApiConstants;
 import com.roy.sqwaimai.bean.core.ShiroUser;
-import com.roy.sqwaimai.bean.entity.front.Shop;
 import com.roy.sqwaimai.bean.entity.system.User;
-import com.roy.sqwaimai.bean.vo.front.Rets;
+import com.roy.sqwaimai.core.entity.Shop;
+import com.roy.sqwaimai.core.entity.sys.AccountInfo;
+import com.roy.sqwaimai.core.entity.vo.front.Rets;
 import com.roy.sqwaimai.core.log.LogManager;
 import com.roy.sqwaimai.core.log.LogTaskFactory;
-import com.roy.sqwaimai.dao.MongoRepository;
-import com.roy.sqwaimai.security.AccountInfo;
+import com.roy.sqwaimai.core.service.ShopService;
+import com.roy.sqwaimai.core.util.Constants;
+import com.roy.sqwaimai.core.util.MD5;
 import com.roy.sqwaimai.security.JwtUtil;
 import com.roy.sqwaimai.security.ShiroFactroy;
 import com.roy.sqwaimai.service.system.AccountService;
 import com.roy.sqwaimai.service.system.MenuService;
 import com.roy.sqwaimai.service.system.UserService;
-import com.roy.sqwaimai.utils.*;
+import com.roy.sqwaimai.utils.HttpKit;
+import com.roy.sqwaimai.utils.Maps;
+import com.roy.sqwaimai.utils.StringUtils;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.nutz.mapl.Mapl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,9 +48,8 @@ public class AccountController extends BaseController{
     private AccountService accountService;
     @Autowired
     private MenuService menuService;
-    @Autowired
-    private MongoRepository mongoRepository;
-
+    @DubboReference
+    private ShopService shopService;
 
     /**
      * 用户登录<br>
@@ -80,8 +84,7 @@ public class AccountController extends BaseController{
                 token = JwtUtil.sign(user);
                 LogManager.me().executeLog(LogTaskFactory.loginLog(user.getId(),request.getRemoteHost()));
             } else if (Constants.USER_TYPE_SHOP.equals(userType)) {
-
-                Shop shop = mongoRepository.findOne(Shop.class, Maps.newHashMap("name", userName, "password", password));
+                Shop shop = shopService.findOneByName(userName,password);
                 if(shop==null){
                     return Rets.failure("没有改账号");
                 }
@@ -138,7 +141,7 @@ public class AccountController extends BaseController{
                 shiroUser = ShiroFactroy.me().shiroUser(user);
                 profile = (Map) Mapl.toMaplist(user);
             } else {
-                Shop shop = mongoRepository.findOne(Shop.class, Maps.newHashMap("name", accountInfo.getUsername(), "password", accountInfo.getPassword()));
+                Shop shop = shopService.findOneByName(accountInfo.getUsername(),accountInfo.getPassword());
                 shiroUser = ShiroFactroy.me().shiroUser(shop);
                 profile = (Map) Mapl.toMaplist(shop);
 
@@ -180,7 +183,8 @@ public class AccountController extends BaseController{
                 user.setPassword(MD5.md5(password, user.getSalt()));
                 userService.update(user);
             }else if(Constants.USER_TYPE_SHOP.equals(accountInfo.getUserType())){
-                Shop shop = mongoRepository.findOne(Shop.class, Maps.newHashMap("name", accountInfo.getUsername(), "password", oldPassword));
+//                Shop shop = mongoRepository.findOne(Shop.class, Maps.newHashMap("name", accountInfo.getUsername(), "password", oldPassword));
+                Shop shop = shopService.findOneByName(accountInfo.getUsername(),oldPassword);
                 if(shop==null){
                     return Rets.failure("旧密码输入错误");
                 }
@@ -188,7 +192,8 @@ public class AccountController extends BaseController{
                     //基本不会出现这种情况
                     return Rets.failure("不允许该操作");
                 }
-                mongoRepository.update(accountInfo.getUserId(),"shops",Maps.newHashMap("password",password));
+                shopService.updateShopPassword(accountInfo.getUserId(),password);
+//                mongoRepository.update(accountInfo.getUserId(),"shops",Maps.newHashMap("password",password));
             }
             return Rets.success();
         } catch (Exception e) {

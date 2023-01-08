@@ -1,16 +1,16 @@
 package com.roy.sqwaimai.app.controller.message;
 
-import com.roy.sqwaimai.bean.constant.factory.PageFactory;
 import com.roy.sqwaimai.bean.core.BussinessLog;
 import com.roy.sqwaimai.bean.dictmap.CommonDict;
 import com.roy.sqwaimai.bean.entity.message.MessageTemplate;
 import com.roy.sqwaimai.bean.enumeration.BizExceptionEnum;
 import com.roy.sqwaimai.bean.enumeration.Permission;
 import com.roy.sqwaimai.bean.exception.ApplicationException;
-import com.roy.sqwaimai.bean.vo.front.Rets;
+import com.roy.sqwaimai.core.entity.vo.front.Rets;
+import com.roy.sqwaimai.core.query.Page;
 import com.roy.sqwaimai.service.message.MessagetemplateService;
+import com.roy.sqwaimai.utils.PageFactory;
 import com.roy.sqwaimai.utils.ToolUtil;
-import com.roy.sqwaimai.utils.factory.Page;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ModelAttribute;

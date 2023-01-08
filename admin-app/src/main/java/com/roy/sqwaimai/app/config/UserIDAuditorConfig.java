@@ -1,7 +1,7 @@
 package com.roy.sqwaimai.app.config;
 
+import com.roy.sqwaimai.core.util.Constants;
 import com.roy.sqwaimai.security.JwtUtil;
-import com.roy.sqwaimai.utils.Constants;
 import com.roy.sqwaimai.utils.HttpKit;
 import com.roy.sqwaimai.utils.StringUtils;
 import org.springframework.context.annotation.Configuration;

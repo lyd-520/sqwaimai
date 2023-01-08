@@ -1,38 +1,34 @@
 package com.roy.sqwaimai.app.controller.business;
 
 import com.roy.sqwaimai.app.controller.BaseController;
-import com.roy.sqwaimai.bean.entity.front.Address;
-import com.roy.sqwaimai.bean.entity.front.Ids;
 import com.roy.sqwaimai.bean.enumeration.BizExceptionEnum;
 import com.roy.sqwaimai.bean.exception.ApplicationException;
-import com.roy.sqwaimai.bean.vo.business.City;
-import com.roy.sqwaimai.bean.vo.front.Rets;
-import com.roy.sqwaimai.dao.MongoRepository;
-import com.roy.sqwaimai.service.front.AddressService;
-import com.roy.sqwaimai.service.front.IdsService;
-import com.roy.sqwaimai.service.front.PositionService;
-import com.roy.sqwaimai.utils.Maps;
+import com.roy.sqwaimai.core.entity.vo.front.Rets;
+import com.roy.sqwaimai.core.entity.Address;
+import com.roy.sqwaimai.core.entity.Ids;
+import com.roy.sqwaimai.core.entity.vo.City;
+import com.roy.sqwaimai.core.service.AddressService;
+import com.roy.sqwaimai.core.service.IdsService;
+import com.roy.sqwaimai.core.service.PositionService;
 import com.roy.sqwaimai.utils.ToolUtil;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
-
 @RestController
 @RequestMapping(value = "/api/address")
 public class AddressController extends BaseController {
     private Logger logger = LoggerFactory.getLogger(AddressController.class);
-    @Autowired
+    @DubboReference
     private IdsService idsService;
-    @Autowired
+    @DubboReference
     private PositionService positionService;
 
-    @Resource
+    @DubboReference
     private AddressService addressService;
 
     @RequestMapping(value = "/queryUserAddress/{user_id}",method = RequestMethod.GET)

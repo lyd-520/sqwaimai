@@ -15,6 +15,7 @@
  */
 package com.roy.sqwaimai.utils;
 
+import com.roy.sqwaimai.core.util.Constants;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 

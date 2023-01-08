@@ -1,47 +1,43 @@
 package com.roy.sqwaimai.app.controller.business;
 
 import com.roy.sqwaimai.app.controller.BaseController;
-import com.roy.sqwaimai.bean.constant.factory.PageFactory;
-import com.roy.sqwaimai.bean.entity.front.Ids;
-import com.roy.sqwaimai.bean.entity.front.Menu;
-import com.roy.sqwaimai.bean.entity.front.Ratings;
-import com.roy.sqwaimai.bean.entity.front.Shop;
 import com.roy.sqwaimai.bean.entity.system.Cfg;
-import com.roy.sqwaimai.bean.enumeration.ConfigKeyEnum;
-import com.roy.sqwaimai.bean.vo.business.CityInfo;
-import com.roy.sqwaimai.bean.vo.business.ShopVo;
-import com.roy.sqwaimai.bean.vo.front.Rets;
-import com.roy.sqwaimai.dao.MongoRepository;
-import com.roy.sqwaimai.security.AccountInfo;
+import com.roy.sqwaimai.core.entity.vo.front.Rets;
+import com.roy.sqwaimai.core.entity.Shop;
+import com.roy.sqwaimai.core.entity.ShopMenu;
+import com.roy.sqwaimai.core.entity.sys.AccountInfo;
+import com.roy.sqwaimai.core.entity.vo.ShopVo;
+import com.roy.sqwaimai.core.enums.ConfigKeyEnum;
+import com.roy.sqwaimai.core.query.Page;
+import com.roy.sqwaimai.core.service.CategoryService;
+import com.roy.sqwaimai.core.service.FrontMenuService;
+import com.roy.sqwaimai.core.service.RatingService;
+import com.roy.sqwaimai.core.service.ShopService;
 import com.roy.sqwaimai.security.JwtUtil;
-import com.roy.sqwaimai.service.front.*;
 import com.roy.sqwaimai.service.system.CfgService;
-import com.roy.sqwaimai.utils.*;
-import com.roy.sqwaimai.utils.factory.Page;
-import com.roy.sqwaimai.utils.gps.Distance;
-import org.nutz.json.Json;
-import org.nutz.lang.Strings;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.geo.GeoResult;
-import org.springframework.data.geo.GeoResults;
+import com.roy.sqwaimai.utils.PageFactory;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/shop")
 public class ShopController extends BaseController {
-    @Resource
+    @DubboReference
     private ShopService shopService;
-    @Resource
+    @DubboReference
     private RatingService ratingService;
-    @Resource
+    @DubboReference
     private FrontMenuService frontMenuService;
-    @Resource
+    @DubboReference
     private CategoryService categoryService;
+    @Resource
+    private CfgService cfgService;
 
     @RequestMapping(value = "/queryshop/{id}", method = RequestMethod.GET)
     public Object getShop(@PathVariable("id") Long id) {
@@ -62,7 +58,9 @@ public class ShopController extends BaseController {
             @RequestParam(value = "state", required = false) String state,
             @RequestParam(value = "restaurant_category_ids[]", required = false) Long[] categoryIds) {
         Page<Shop> page = new PageFactory<Shop>().defaultPage();
-        shopService.adminlistShop(page,name,state);
+        AccountInfo accountInfo = JwtUtil.getAccountInfo();
+
+        shopService.adminlistShop(page,name,state,accountInfo);
         return Rets.success(page);
     }
 
@@ -129,7 +127,8 @@ public class ShopController extends BaseController {
      */
     @RequestMapping(value = "/updateshop", method = RequestMethod.POST)
     public Object updateShop(@ModelAttribute @Valid Shop shop) {
-        shopService.updateShop(shop);
+        AccountInfo accountInfo = JwtUtil.getAccountInfo();
+        shopService.updateShop(shop,accountInfo);
         return Rets.success();
     }
 
@@ -141,7 +140,7 @@ public class ShopController extends BaseController {
     }
 
     @RequestMapping(value = "/addcategory", method = RequestMethod.POST)
-    public Object addCategory(@Valid @ModelAttribute Menu menu) {
+    public Object addCategory(@Valid @ModelAttribute ShopMenu menu) {
         frontMenuService.saveInitMenu(menu);
         return Rets.success();
     }
@@ -178,7 +177,12 @@ public class ShopController extends BaseController {
      */
     @RequestMapping(value = "/checkout", method = RequestMethod.POST)
     public Object check(@RequestParam("id") Long shopId) {
-        shopService.checnOutAvaiable(shopId);
+        //获取当次结算的平台抽成
+        BigDecimal platformAmount = shopService.checnOutAvaiable(shopId);
+        Cfg cfg = cfgService.getByCfgName(ConfigKeyEnum.SYSTEM_PLATFORM_TOTAL_AMOUNT.getValue());
+        cfg.setCfgValue(new BigDecimal(cfg.getCfgValue()).add(platformAmount).toPlainString());
+        //更新平台抽成 为什么要把平台抽成放到配置信息里？
+        cfgService.update(cfg);
         return Rets.success();
     }
 

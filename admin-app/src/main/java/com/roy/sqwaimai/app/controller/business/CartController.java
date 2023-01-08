@@ -1,32 +1,25 @@
 package com.roy.sqwaimai.app.controller.business;
 
 import com.roy.sqwaimai.app.controller.BaseController;
-import com.roy.sqwaimai.bean.entity.front.*;
-import com.roy.sqwaimai.bean.entity.front.sub.OrderItem;
-import com.roy.sqwaimai.bean.vo.front.Rets;
-import com.roy.sqwaimai.dao.MongoRepository;
-import com.roy.sqwaimai.service.front.CartService;
-import com.roy.sqwaimai.service.front.IdsService;
-import com.roy.sqwaimai.service.front.PositionService;
-import com.roy.sqwaimai.service.front.RemarkService;
+import com.roy.sqwaimai.core.entity.vo.front.Rets;
+import com.roy.sqwaimai.core.entity.Carts;
+import com.roy.sqwaimai.core.entity.sub.OrderItem;
+import com.roy.sqwaimai.core.service.CartService;
+import com.roy.sqwaimai.core.service.RemarkService;
 import com.roy.sqwaimai.utils.Lists;
-import com.roy.sqwaimai.utils.Maps;
-import org.nutz.json.Json;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping(value="/api/carts")
 public class CartController extends BaseController {
-    @Resource
+    @DubboReference
     private CartService cartService;
-    @Resource
+    @DubboReference
     private RemarkService remarkService;
 
     //确认订单

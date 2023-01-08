@@ -2,7 +2,7 @@ package com.roy.sqwaimai.warpper;
 
 import com.roy.sqwaimai.core.factory.Contrast;
 import com.roy.sqwaimai.service.system.impl.ConstantFactory;
-import com.roy.sqwaimai.utils.DateUtil;
+import com.roy.sqwaimai.core.util.DateUtil;
 import com.roy.sqwaimai.utils.ToolUtil;
 
 import java.util.Date;
