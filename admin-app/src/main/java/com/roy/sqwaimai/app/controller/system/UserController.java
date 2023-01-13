@@ -13,6 +13,7 @@ import com.roy.sqwaimai.bean.exception.ApplicationException;
 import com.roy.sqwaimai.core.entity.vo.front.Rets;
 import com.roy.sqwaimai.core.factory.UserFactory;
 import com.roy.sqwaimai.core.query.Page;
+import com.roy.sqwaimai.utils.PageFactory;
 import com.roy.sqwaimai.core.query.SearchFilter;
 import com.roy.sqwaimai.core.util.MD5;
 import com.roy.sqwaimai.service.system.UserService;

@@ -35,11 +35,11 @@
                         <span class="info-data-top"><b>{{order_count}}</b>个</span>
                         <span class="info-data-bottom">完成订单</span>
                     </router-link>
-                    <router-link to="/benefit" tag="li" class="info-data-link">
+                    <router-link to="/balance" tag="li" class="info-data-link">
                         <span class="info-data-top"><b>{{balance_amount}}</b>元</span>
                         <span class="info-data-bottom">总收益</span>
                     </router-link>
-                    <router-link to="/points" tag="li" class="info-data-link">
+                    <router-link to="/balance" tag="li" class="info-data-link">
                         <span class="info-data-top"><b>{{balance}}</b>元</span>
                         <span class="info-data-bottom">待结算</span>
                     </router-link>
@@ -68,7 +68,7 @@
                     </div>
                 </div>
                 <!-- <router-link to='/order' class="myorder" v-if="(this.userInfo.work_status == 0)">
-                    
+
                 </router-link> -->
                 <!-- 获取订单 -->
                 <!-- <router-link to='/order' class="myorder" v-if="this.userInfo"> -->

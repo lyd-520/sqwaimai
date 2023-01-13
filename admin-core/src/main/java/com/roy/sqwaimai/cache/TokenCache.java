@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
  * 用户登录时，生成的Token与用户ID的对应关系
  */
 @Service
-public   class TokenCache {
+public  class TokenCache {
 
     @Autowired
     private EhcacheDao ehcacheDao;

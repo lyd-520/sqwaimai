@@ -1,5 +1,7 @@
 package com.roy.sqwaimai.core.entity;
 
-public class BaseMongoEntity     {
+import java.io.Serializable;
+
+public class BaseMongoEntity  implements Serializable {
 
 }

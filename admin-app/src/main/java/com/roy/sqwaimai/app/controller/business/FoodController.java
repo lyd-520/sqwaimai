@@ -42,7 +42,7 @@ public class FoodController extends BaseController {
                        @RequestParam(value = "restaurant_id", required = false) Long restaurantId) {
         Page<Food> page = new PageFactory<Food>().defaultPage();
         AccountInfo accountInfo = JwtUtil.getAccountInfo();
-        foodService.listPagedFood(page,state,name,restaurantId,accountInfo);
+        page = foodService.listPagedFood(page,state,name,restaurantId,accountInfo);
         return Rets.success(page);
     }
 

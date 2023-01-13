@@ -4,10 +4,11 @@ import com.roy.sqwaimai.core.util.Lists;
 import com.roy.sqwaimai.core.util.StringUtils;
 import org.springframework.data.domain.Sort;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
-public class Page<T>  {
+public class Page<T>  implements Serializable {
 
     private Sort sort;
     /**

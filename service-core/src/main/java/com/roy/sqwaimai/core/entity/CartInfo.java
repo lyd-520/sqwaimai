@@ -4,13 +4,14 @@ import com.roy.sqwaimai.core.entity.sub.ExtraFee;
 import com.roy.sqwaimai.core.entity.sub.OrderItem;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * 购物车详细信息
  */
 @Data
-public class CartInfo {
+public class CartInfo implements Serializable {
     private Long id;
 //    private List groups;
     //商品信息

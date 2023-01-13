@@ -150,8 +150,8 @@ export const exChangeHongbao = (id, exchange_code, captcha_code) => fetch('/v1/u
 export const getOrderList = (user_id,latitude,longitude) => fetch('/api/rider/' + user_id + '/orders', {
   limit: 10,
   offset: 0,
-  sort: 'distance',
-  order: 'desc',
+  // sort: 'distance',
+  // order: 'desc',
   latitude,
   longitude,
   t: new Date().getTime()

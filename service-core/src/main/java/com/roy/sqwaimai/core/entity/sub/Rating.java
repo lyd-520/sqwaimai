@@ -3,10 +3,11 @@ package com.roy.sqwaimai.core.entity.sub;
 import com.roy.sqwaimai.core.util.Lists;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Data
-public class Rating {
+public class Rating implements Serializable {
     private String avatar="";
     private List highlights;
     private List<RatingItem> item_ratings = Lists.newArrayList(new RatingItem());

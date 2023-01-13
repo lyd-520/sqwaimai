@@ -13,6 +13,7 @@ import com.roy.sqwaimai.core.util.Lists;
 import com.roy.sqwaimai.core.util.Maps;
 import com.roy.sqwaimai.core.util.gps.Distance;
 import org.apache.dubbo.config.annotation.DubboService;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.geo.GeoResult;
 import org.springframework.data.geo.GeoResults;
 import org.springframework.stereotype.Service;
@@ -36,7 +37,11 @@ public class OrderServiceImpl extends MongoService implements OrderService {
         if(0 < orderStatus){
             params.put("status_code",orderStatus);
         }
-        return mongoRepository.queryPage(page, Order.class, params);
+        Sort sort = Sort.by(Sort.Direction.ASC, "status_code");
+        page.setSort(sort);
+        page = mongoRepository.queryPageOrdered(page, Order.class, params,"status_code");
+        page.setSort(null);
+        return page;
     }
 
     public Page<Order> queryPageOrder(Page<Order> page, Long restaurantId, Long orderId, AccountInfo accountInfo) {
@@ -173,13 +178,17 @@ public class OrderServiceImpl extends MongoService implements OrderService {
         return order;
     }
 
-    public Object queryPagePaidOrder(Page<Order> page) {
+    public Page<Order> queryPagePaidOrder() {
+        Page<Order> page = new Page<>();
+        page.setOffset(0);
+        page.setLimit(20);
         Map<String,Object> orderqueryParam = Maps.newHashMap();
         orderqueryParam.put("status_code",Order.STATUS_PAID);
         return mongoRepository.queryPage(page,Order.class,orderqueryParam);
     }
 
-    public Page queryNearByOrder(Double longitude, Double latitude, int limit,Page<Map> page) {
+    public Page<Map> queryNearByOrder(Double longitude, Double latitude, int limit) {
+        Page<Map> page = new Page<>();
         List<Map> queryOrders = Lists.newArrayList();
         //传了指定位置，先找附近的商店，作为订单的起点
         // 查找附近的商店

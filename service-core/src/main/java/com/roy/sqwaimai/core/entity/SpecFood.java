@@ -1,11 +1,12 @@
 package com.roy.sqwaimai.core.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * 食品规格
  */
-public class SpecFood {
+public class SpecFood implements Serializable {
     //原价
     private Double original_price;
     private Integer sku_id;

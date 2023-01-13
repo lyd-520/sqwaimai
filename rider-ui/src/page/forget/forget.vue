@@ -91,9 +91,6 @@
                     this.alertText = '请输验证码';
                     return
                 }
-    console.info(this.captcha_code)
-    console.info(this.captchCodeId)
-    console.info(changePassword)
                 // 发送重置信息
                 let res = await changePassword(this.phoneNumber, this.oldPassWord, this.newPassWord, this.confirmPassWord, this.captcha_code,this.captchCodeId);
 

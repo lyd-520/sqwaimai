@@ -150,6 +150,25 @@ public class MongoRepository {
         return page;
     }
 
+    public <T> Page<T> queryPageOrdered(Page<T> page, Class<T> klass, Map<String, Object> params,String sortKey) {
+        Pageable pageable;
+        Sort.Direction direction = Sort.Direction.DESC;
+        if(null != page.getSort()){
+            direction = page.getSort().getOrderFor(sortKey).getDirection();
+        }
+        pageable = PageRequest.of(page.getCurrent() - 1, page.getSize(), direction, sortKey);
+        Query query = new Query();
+        if (params != null && !params.isEmpty()) {
+            Criteria criteria = criteria(params);
+            query = Query.query(criteria);
+        }
+        List<T> list = mongoTemplate.find(query.with(pageable), klass);
+        Long count = count(klass, params);
+        page.setTotal(count.intValue());
+        page.setRecords(list);
+        return page;
+    }
+
     public <T> List<T> findAll(Class<T> klass) {
         return mongoTemplate.findAll(klass);
     }

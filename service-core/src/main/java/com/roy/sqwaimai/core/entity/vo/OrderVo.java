@@ -3,13 +3,14 @@ package com.roy.sqwaimai.core.entity.vo;
 import com.roy.sqwaimai.core.entity.sub.OrderItem;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * 订单信息
  */
 @Data
-public class OrderVo {
+public class OrderVo implements Serializable {
     private String address_id;
     private String come_from;
     private String deliver_time;

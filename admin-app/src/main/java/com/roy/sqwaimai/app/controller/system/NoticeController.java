@@ -7,6 +7,7 @@ import com.roy.sqwaimai.core.entity.vo.front.Rets;
 import com.roy.sqwaimai.service.system.NoticeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public class NoticeController extends BaseController {
     /**
      * 获取通知列表
      */
-    @RequestMapping(value = "/list")
+    @RequestMapping(value = "/list",method = RequestMethod.GET)
     public Object list(String condition) {
         List<Notice> list = null;
         if(Strings.isNullOrEmpty(condition)) {

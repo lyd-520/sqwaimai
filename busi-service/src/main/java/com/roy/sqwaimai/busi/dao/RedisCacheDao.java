@@ -1,6 +1,7 @@
 package com.roy.sqwaimai.busi.dao;
 
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -8,15 +9,11 @@ import java.io.Serializable;
 
 @Component
 public class RedisCacheDao {
-    public static  final String CONFIG_HASH_KEY = "config";
+    public static  final String CONFIG_HASH_KEY = "sqwaimaiconfig";
     @Resource
-    private RedisTemplate redisTemplate;
+    private StringRedisTemplate stringRedisTemplate;
 
-    public void hset(Serializable key, Serializable k, Object val) {
-        redisTemplate.opsForHash().put(key,k,val);
-    }
-
-    public Object hget(Serializable key, Serializable k) {
-        return redisTemplate.opsForHash().get(key, k);
+    public Object hget(String hashKey, Serializable k) {
+        return stringRedisTemplate.opsForHash().get(hashKey, k);
     }
 }

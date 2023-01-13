@@ -13,9 +13,9 @@ import java.util.Map;
 public interface ShopService{
     Object findOne(Long id);
 
-    void adminlistShop(Page<Shop> page, String name, String state,AccountInfo accountInfo);
+    Page<Shop> adminlistShop(Page<Shop> page, String name, String state,AccountInfo accountInfo);
 
-    void clientListShop(Page<Shop> page, String name, String latitude, String longitude, Long[] categoryIds) ;
+    Page<Shop> clientListShop(Page<Shop> page, String name, String latitude, String longitude, Long[] categoryIds) ;
 
     long countShop() ;
 

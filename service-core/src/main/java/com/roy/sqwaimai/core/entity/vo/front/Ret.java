@@ -3,9 +3,11 @@ package com.roy.sqwaimai.core.entity.vo.front;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
-public class Ret<T> {
+public class Ret<T> implements Serializable {
 
     private Integer code;
     private String msg;

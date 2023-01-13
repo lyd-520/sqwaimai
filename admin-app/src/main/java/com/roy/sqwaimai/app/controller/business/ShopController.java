@@ -60,7 +60,7 @@ public class ShopController extends BaseController {
         Page<Shop> page = new PageFactory<Shop>().defaultPage();
         AccountInfo accountInfo = JwtUtil.getAccountInfo();
 
-        shopService.adminlistShop(page,name,state,accountInfo);
+        page = shopService.adminlistShop(page,name,state,accountInfo);
         return Rets.success(page);
     }
 
@@ -79,7 +79,7 @@ public class ShopController extends BaseController {
                               @RequestParam(value = "name", required = false) String name,
                               @RequestParam(value = "restaurant_category_ids", required = false) Long[] categoryIds) {
         Page page = new PageFactory().defaultPage();
-        shopService.clientListShop(page,name,latitude,longitude,categoryIds);
+        page = shopService.clientListShop(page,name,latitude,longitude,categoryIds);
         return Rets.success(page);
     }
 

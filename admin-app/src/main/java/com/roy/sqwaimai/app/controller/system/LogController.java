@@ -28,7 +28,7 @@ public class LogController extends BaseController {
     /**
      * 查询操作日志列表
      */
-    @RequestMapping("/list")
+    @RequestMapping(value = "/list",method = RequestMethod.GET)
     @ResponseBody
     @RequiresPermissions(value = {Permission.LOG})
     public Object list(@RequestParam(required = false) String beginTime,
@@ -50,7 +50,7 @@ public class LogController extends BaseController {
     /**
      * 查询指定用户的操作日志列表
      */
-    @RequestMapping("/queryByUser")
+    @RequestMapping(value = "/queryByUser",method = RequestMethod.GET)
     @ResponseBody
     @RequiresPermissions(value = {Permission.LOG})
     public Object list() {

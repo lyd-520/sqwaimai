@@ -33,7 +33,7 @@
           </section>
           <div class="order_again">
             <span tag="span" class="finish" @click="gocheckOrder(item)">抢单</span>
-            <span tag="span" class="finish" @click="goshowDetail(item)">查看</span> 
+            <span tag="span" class="finish" @click="goshowDetail(item)">查看</span>
           </div>
         </section>
       </li>
@@ -113,11 +113,13 @@
         if(this.userInfo && this.userInfo.sending_order_id>0){
             this.showAlert=true
             this.alertText='骑手一次只能派送一个订单'
+            return false;
         }else{
           let res = await checkOrder(this.userInfo.rider_id,item.id)
           if(res.error){
             this.showAlert=true
             this.alertText=res.error
+            return false;
           }else{
             //返回用户信息
             this.RECORD_USERINFO(res)

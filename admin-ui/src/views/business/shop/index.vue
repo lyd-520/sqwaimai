@@ -53,9 +53,9 @@
                 <el-form-item label="分类">
                   <span>{{ props.row.category }}</span>
                 </el-form-item>
-                <el-form-item label="商铺地点">
-                  <span>{{ props.row.isInSchool =='1'?'校内':'校外' }}</span>
-                </el-form-item>
+<!--                <el-form-item label="商铺地点">-->
+<!--                  <span>{{ props.row.isInSchool =='1'?'校内':'校外' }}</span>-->
+<!--                </el-form-item>-->
                 <el-form-item label="审批状态">
                   <span>{{ props.row.stateStr }}</span>
                 </el-form-item>

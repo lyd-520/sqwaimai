@@ -5,7 +5,6 @@ import com.roy.sqwaimai.core.entity.vo.front.Rets;
 import com.roy.sqwaimai.cache.TokenCache;
 import com.roy.sqwaimai.core.entity.FrontRider;
 import com.roy.sqwaimai.core.entity.FrontRiderInfo;
-import com.roy.sqwaimai.core.entity.Order;
 import com.roy.sqwaimai.core.entity.vo.LoginVo;
 import com.roy.sqwaimai.core.query.Page;
 import com.roy.sqwaimai.core.service.OrderService;
@@ -13,7 +12,6 @@ import com.roy.sqwaimai.core.service.RiderService;
 import com.roy.sqwaimai.service.system.FileService;
 import com.roy.sqwaimai.core.util.CryptUtils;
 import com.roy.sqwaimai.utils.Maps;
-import com.roy.sqwaimai.utils.PageFactory;
 import com.roy.sqwaimai.utils.StringUtils;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.nutz.lang.Strings;
@@ -24,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.util.Comparator;
 import java.util.Map;
 
 @RestController
@@ -157,15 +156,14 @@ public class RiderController extends BaseController {
         }else if(FrontRiderInfo.STATUS_ONLINE != frontRiderInfo.getWork_status()){
             return "请先上线";
         }
-        
         //查询完成付款单的订单
         //没有指定位置，就随意查询未付款订单
         if(latitude<=0.00 || longitude <=0.00){
-            Page<Order> page = new PageFactory<Order>().defaultPage();
-            return Rets.success(orderService.queryPagePaidOrder(page));
+            return Rets.success(orderService.queryPagePaidOrder());
         }else{
-            Page<Map> page = new PageFactory<Map>().defaultPage();
-            return Rets.success(orderService.queryNearByOrder(longitude,latitude,limit,page));
+            Page<Map> page = orderService.queryNearByOrder(longitude,latitude,limit);
+            page.getRecords().sort((o1, o2) -> (int)o1.get("distance") - (int)o2.get("distance"));
+            return Rets.success(orderService.queryNearByOrder(longitude,latitude,limit));
         }
     }
 

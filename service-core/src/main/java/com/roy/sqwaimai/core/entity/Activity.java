@@ -5,7 +5,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "activities")
-public class Activity extends BaseMongoEntity {
+public class Activity extends BaseMongoEntity{
     @Id
     private String _id;
     private Long id;

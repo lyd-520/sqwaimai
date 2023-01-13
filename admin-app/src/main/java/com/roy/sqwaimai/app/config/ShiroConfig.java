@@ -60,13 +60,11 @@ public class ShiroConfig {
         filterRuleMap.put("/401", "anon");
         //swagger资源不拦截
         filterRuleMap.put("/swagger-ui/**", "anon");
-        filterRuleMap.put("/v2/**","anon");
+        filterRuleMap.put("/api/**","anon");
         filterRuleMap.put("/doc.html","anon");
         filterRuleMap.put("/webjars/**", "anon");
         filterRuleMap.put("/swagger-resources/**", "anon");
         filterRuleMap.put("/images/**", "anon");
-        filterRuleMap.put("/configuration/security", "anon");
-        filterRuleMap.put("/configuration/ui", "anon");
         //登录接口不拦截
         filterRuleMap.put("/account/login", "anon");
         //获取用户状态接口

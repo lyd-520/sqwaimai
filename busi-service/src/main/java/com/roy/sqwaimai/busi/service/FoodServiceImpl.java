@@ -14,12 +14,11 @@ import com.roy.sqwaimai.core.util.Constants;
 import com.roy.sqwaimai.core.util.Lists;
 import com.roy.sqwaimai.core.util.Maps;
 import com.roy.sqwaimai.core.util.StringUtils;
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.dubbo.config.annotation.DubboService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 
@@ -76,13 +75,7 @@ public class FoodServiceImpl extends MongoService implements FoodService {
 
     public void addFood(FoodVo foodVo, AccountInfo accountInfo) {
         Food food = new Food();
-        try {
-            BeanUtils.copyProperties(food,foodVo);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
+        BeanUtils.copyProperties(foodVo,food);
         food.setRestaurant_id(foodVo.getIdShop());
         List<SpecVo> specVoList = JSONArray.parseArray(foodVo.getSpecsJson(),SpecVo.class);
         List<SpecFood> specList = Lists.newArrayList();
@@ -146,7 +139,7 @@ public class FoodServiceImpl extends MongoService implements FoodService {
         food.setTips(ratingCount.intValue() + "评价 月售" + monthSales.intValue() + "份");
     }
 
-    public void listPagedFood(Page<Food> page, String state, String name, Long restaurantId,AccountInfo accountInfo) {
+    public Page<Food> listPagedFood(Page<Food> page, String state, String name, Long restaurantId,AccountInfo accountInfo) {
         Map params = Maps.newHashMap();
         Map<Long, Shop> shopNameMap = Maps.newHashMap();
 
@@ -173,6 +166,7 @@ public class FoodServiceImpl extends MongoService implements FoodService {
             foods.get(i).setShopName(shop.getName());
             foods.get(i).setShopAddress(shop.getAddress());
         }
+        return page;
     }
 
     private Shop getShopName(Map<Long, Shop> shopNameMap,Long shopId){

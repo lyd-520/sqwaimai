@@ -4,9 +4,6 @@ import com.alibaba.fastjson.annotation.JSONField;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-/**
- * Created by zt on 2017/12/29 0029.
- */
 @Document(collection = "admins")
 public class Admin extends BaseMongoEntity {
     @Id

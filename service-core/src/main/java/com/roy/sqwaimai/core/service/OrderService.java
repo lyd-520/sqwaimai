@@ -26,7 +26,7 @@ public interface OrderService{
 
     Order generateOrder(Long userId, Long cartId, OrderVo orderVo);
 
-    Object queryPagePaidOrder(Page<Order> page);
+    Page<Order> queryPagePaidOrder();
 
-    Page queryNearByOrder(Double longitude, Double latitude, int limit,Page<Map> page);
+    Page<Map> queryNearByOrder(Double longitude, Double latitude, int limit);
 }

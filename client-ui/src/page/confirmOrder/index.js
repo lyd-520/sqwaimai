@@ -32,8 +32,8 @@ export default {
     this.shopCart = this.cartList[this.shopId];
   },
   mounted(){
+    this.initData();
     if (this.geohash) {
-      this.initData();
       this.SAVE_GEOHASH(this.geohash);
     }
     if (!(this.userInfo && this.userInfo.user_id)) {
@@ -135,10 +135,6 @@ export default {
         this.alertText = '请添加一个收货地址';
         return
       }
-      console.info(this.userInfo)
-      console.info(this.checkoutData)
-      console.info(this.choosedAddress)
-      console.info(this.remarklist)
 
       //保存订单
       this.SAVE_ORDER_PARAM({

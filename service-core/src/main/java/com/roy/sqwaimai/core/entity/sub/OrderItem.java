@@ -4,10 +4,11 @@ import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Data
-public class OrderItem {
+public class OrderItem implements Serializable {
     @Id
     private String _id;
     private Long id;

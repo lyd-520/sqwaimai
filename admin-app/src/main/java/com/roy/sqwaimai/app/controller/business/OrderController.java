@@ -14,6 +14,7 @@ import com.roy.sqwaimai.security.JwtUtil;
 import com.roy.sqwaimai.utils.HttpKit;
 import com.roy.sqwaimai.utils.PageFactory;
 import org.apache.dubbo.config.annotation.DubboReference;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,54 +32,44 @@ public class OrderController extends BaseController {
     private FrontRiderService frontRiderService;
 
     @RequestMapping(value = "/userorders/{user_id}", method = RequestMethod.GET)
-    public Object orders(@PathVariable("user_id") Long userId, @RequestParam("limit") Integer limit,
-                         @RequestParam("offset") Integer offset) {
+    public Object orders(@PathVariable("user_id") Long userId,@RequestParam(value = "orderStatus",required = false) int orderStatus) {
         Page<Order> page = new PageFactory<Order>().defaultPage();
-        HttpServletRequest request = HttpKit.getRequest();
-        //每页多少条数据
-        int orderStatus = Integer.valueOf(request.getParameter("orderStatus"));
         page = orderService.queryPageUserOrder(page,userId,orderStatus);
 
         return Rets.success(page);
     }
 
     @RequestMapping(value = "/getlist", method = RequestMethod.GET)
-    public Object list(@RequestParam(value = "restaurant_id", required = false) Long restaurantId,
-                       @RequestParam(value = "id", required = false) Long orderId) {
+    public Object list(@PathVariable(value = "restaurant_id", required = false) Long restaurantId,
+                       @PathVariable(value = "id", required = false) Long orderId) {
         Page<Order> page = new PageFactory<Order>().defaultPage();
         AccountInfo accountInfo = JwtUtil.getAccountInfo();
         page = orderService.queryPageOrder(page,restaurantId,orderId,accountInfo);
         return Rets.success(page);
     }
 
-    @RequestMapping(value = "/getOrder")
+    @RequestMapping(value = "/getOrder",method = RequestMethod.GET)
     public Object getOrder(
             @RequestParam(value = "orderid", required = false) Long orderid) {
         Map orderInfo = orderService.getFullOrderInfo(orderid);
         return Rets.success(orderInfo);
     }
 
-    @RequestMapping(value = "/getOrderById")
+    @RequestMapping(value = "/getOrderById",method = RequestMethod.GET)
     public Object riderGetOrder(
             @RequestParam(value = "orderid", required = false) Long orderid) {
         Order order = orderService.getOrder(orderid);
         return Rets.success(order);
     }
     //骑手抢单。并发设计，防止多个骑手抢同一个单
-    private Semaphore semaphore = new Semaphore(1);
     @RequestMapping(value = "/ridercheckOrder", method = RequestMethod.POST)
     public Object checkOrder(@RequestParam("userid") long userid,
                              @RequestParam("orderid") long orderid){
-        try{
-            //并发锁，防止高并发时，多个骑手同时抢同一个订单。
-            //更好的方式使用Redis锁订单ID，这样就只需要防止同一个订单的竞争，而不用锁整个抢单。
-            semaphore.acquire();
-            Object result = frontRiderService.checkOrder(orderid, userid);
-            semaphore.release();
-            return result;
-        } catch (InterruptedException e) {
-            return Rets.failure("订单获取失败，请重试");
+        Object result = frontRiderService.checkOrder(orderid, userid);
+        if(result instanceof FrontRiderInfo){
+            return Rets.success(result);
         }
+        return result;
     }
 
     //订单送达

@@ -34,7 +34,7 @@ public class TaskController extends BaseController {
     /**
      * 获取定时任务管理列表
      */
-    @RequestMapping(value = "/list")
+    @RequestMapping(value = "/list",method = RequestMethod.GET)
     @RequiresPermissions(value = {Permission.TASK})
     public Object list(String name) {
         if(StringUtils.isNullOrEmpty(name)) {
@@ -94,7 +94,7 @@ public class TaskController extends BaseController {
     }
 
 
-    @RequestMapping(value="/logList")
+    @RequestMapping(value="/logList",method = RequestMethod.GET)
     @RequiresPermissions(value = {Permission.TASK})
     public Object logList(@RequestParam  Long taskId) {
         Page<TaskLog> page = new PageFactory<TaskLog>().defaultPage();

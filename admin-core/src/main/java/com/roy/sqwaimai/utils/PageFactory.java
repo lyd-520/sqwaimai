@@ -15,16 +15,23 @@ public class PageFactory<T> {
     public Page<T> defaultPage() {
         HttpServletRequest request = HttpKit.getRequest();
         //每页多少条数据
-        int limit = Integer.valueOf(request.getParameter("limit"));
+        String limitstr = request.getParameter("limit");
+
+        int limit;
+        if(StringUtils.isEmpty(limitstr)){
+            limit=20;
+        }else{
+            limit = Integer.valueOf(limitstr);
+        }
         String pageNum = request.getParameter("page");
         //每页的偏移量(本页当前有多少条)
         int offset = 0;
         if (StringUtils.isNotEmpty(pageNum)) {
             offset = (Integer.valueOf(pageNum) - 1) * limit;
         } else {
-
-            offset = Integer.valueOf(request.getParameter("offset"));
+            offset = 0;
         }
+        //基于Dubbo服务调用时，不能传Sort。
         //排序字段名称
         String sortName = request.getParameter("sort");
         //asc或desc(升序或降序)

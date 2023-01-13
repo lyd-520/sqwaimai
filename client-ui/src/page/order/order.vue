@@ -82,7 +82,7 @@
           </div>
         </section>
       </li>
-      <li>          
+      <li>
           <p>没有更多订单</p>
         </li>
     </ul>
@@ -184,24 +184,26 @@
       },
       handleFinishOrder(orderId) {
         finishOrder(this.userInfo.user_id,orderId).then(res => {
-         for(var i in this.orderList){
-           const order = this.orderList[i]
-           if(orderId == order.id){
-             this.orderList[i] = res
-           }
-         }
+         // for(var i in this.orderList){
+         //   const order = this.orderList[i]
+         //   if(orderId == order.id){
+         //     this.orderList[i] = res
+         //   }
+         // }
+          this.initData()
         })
       },
       handleCancelOrder(orderId){
         cancelOrder(this.userInfo.user_id,orderId).then(res => {
-          for(const i in this.orderList){
-            const order = this.orderList[i]
-            if(orderId == order.id){
-              // order.status_title='已取消'
-              // order.status_code=-1
-              this.orderList[i] = res
-            }
-          }
+          // for(const i in this.orderList){
+          //   const order = this.orderList[i]
+          //   if(orderId == order.id){
+          //     // order.status_title='已取消'
+          //     // order.status_code=-1
+          //     this.orderList[i] = res
+          //   }
+          // }
+            this.initData()
         })
       }
     },

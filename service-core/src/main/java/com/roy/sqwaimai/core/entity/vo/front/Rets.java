@@ -2,9 +2,10 @@ package com.roy.sqwaimai.core.entity.vo.front;
 
 import com.roy.sqwaimai.core.util.Maps;
 
+import java.io.Serializable;
 import java.util.Map;
 
-public class Rets {
+public class Rets implements Serializable {
 
     public static final Integer SUCCESS = 20000;
     public static final Integer FAILURE = 9999;

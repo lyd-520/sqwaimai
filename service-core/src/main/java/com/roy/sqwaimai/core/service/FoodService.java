@@ -18,5 +18,5 @@ public interface FoodService{
 
     void addFood(FoodVo foodVo, AccountInfo accountInfo);
 
-    void listPagedFood(Page<Food> page, String state, String name, Long restaurantId,AccountInfo accountInfo);
+    Page<Food> listPagedFood(Page<Food> page, String state, String name, Long restaurantId,AccountInfo accountInfo);
 }

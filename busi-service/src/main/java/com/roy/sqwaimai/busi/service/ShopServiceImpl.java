@@ -8,15 +8,12 @@ import com.roy.sqwaimai.core.entity.vo.CityInfo;
 import com.roy.sqwaimai.core.entity.vo.ShopVo;
 import com.roy.sqwaimai.core.query.Page;
 import com.roy.sqwaimai.core.service.ShopService;
-import com.roy.sqwaimai.core.util.Constants;
-import com.roy.sqwaimai.core.util.Lists;
-import com.roy.sqwaimai.core.util.Maps;
-import com.roy.sqwaimai.core.util.StringUtils;
+import com.roy.sqwaimai.core.util.*;
 import com.roy.sqwaimai.core.util.gps.Distance;
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.nutz.json.Json;
 import org.nutz.lang.Strings;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.GeoResult;
 import org.springframework.data.geo.GeoResults;
@@ -38,7 +35,7 @@ public class ShopServiceImpl extends MongoService implements ShopService {
         return mongoRepository.findOne(id, "shops");
     }
 
-    public void adminlistShop(Page<Shop> page, String name, String state,AccountInfo accountInfo) {
+    public Page<Shop> adminlistShop(Page<Shop> page, String name, String state,AccountInfo accountInfo) {
         if (Constants.USER_TYPE_SHOP.equals(accountInfo.getUserType())) {
             page = mongoRepository.queryPage(page, Shop.class, Maps.newHashMap("id", accountInfo.getUserId()));
         }else {
@@ -56,9 +53,10 @@ public class ShopServiceImpl extends MongoService implements ShopService {
             shop.setPassword(null);
         }
         page.setRecords(list);
+        return page;
     }
 
-    public void clientListShop(Page<Shop> page, String name, String latitude, String longitude, Long[] categoryIds) {
+    public Page<Shop> clientListShop(Page<Shop> page, String name, String latitude, String longitude, Long[] categoryIds) {
         Map<String, Object> params = Maps.newHashMap();
         if (StringUtils.isNotEmpty(name)) {
             params.put("name", name);
@@ -67,7 +65,7 @@ public class ShopServiceImpl extends MongoService implements ShopService {
 
         if (StringUtils.isEmpty(latitude) || "undefined".equals(latitude)
                 || StringUtils.isEmpty(longitude) || "undefined".equals(longitude)) {
-            mongoRepository.queryPage(page, Shop.class, params);
+            return mongoRepository.queryPage(page, Shop.class, params);
         } else {
             //查询指定经纬度范围内的餐厅
             if (categoryIds != null && categoryIds.length > 0) {
@@ -95,6 +93,7 @@ public class ShopServiceImpl extends MongoService implements ShopService {
                 page.setTotal(list.size());
                 page.setRecords(list);
             }
+            return page;
         }
     }
 
@@ -145,13 +144,7 @@ public class ShopServiceImpl extends MongoService implements ShopService {
 
     public Shop addShop(ShopVo shopVo, String ip) {
         Shop shop = new Shop();
-        try {
-            BeanUtils.copyProperties(shopVo, shop);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
+        BeanUtils.copyProperties(shopVo, shop);
         shop.setId(idsService.getId(Ids.RESTAURANT_ID));
         shop.setDisabled(1);
         List activities = Json.fromJson(List.class, shopVo.getActivitiesJson());

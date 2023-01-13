@@ -2,7 +2,9 @@ package com.roy.sqwaimai.core.entity.sys;
 
 import com.roy.sqwaimai.core.util.Constants;
 
-public class AccountInfo {
+import java.io.Serializable;
+
+public class AccountInfo implements Serializable {
     private String username;
     private Long userId;
     private String userType;
