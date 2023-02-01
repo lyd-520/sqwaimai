@@ -61,15 +61,24 @@ public class OrderController extends BaseController {
         Order order = orderService.getOrder(orderid);
         return Rets.success(order);
     }
+    private Semaphore semaphore = new Semaphore(1);
     //骑手抢单。并发设计，防止多个骑手抢同一个单
     @RequestMapping(value = "/ridercheckOrder", method = RequestMethod.POST)
     public Object checkOrder(@RequestParam("userid") long userid,
                              @RequestParam("orderid") long orderid){
-        Object result = frontRiderService.checkOrder(orderid, userid);
-        if(result instanceof FrontRiderInfo){
-            return Rets.success(result);
-        }
-        return result;
+//        try{
+//            semaphore.acquire();
+            Object result = frontRiderService.checkOrder(orderid, userid);
+            if(result instanceof FrontRiderInfo){
+                return Rets.success(result);
+            }
+            return result;
+//        }catch (Exception e){
+//            return Rets.failure("订单获取失败，请重试");
+//        }finally {
+//            semaphore.release();
+//        }
+
     }
 
     //订单送达

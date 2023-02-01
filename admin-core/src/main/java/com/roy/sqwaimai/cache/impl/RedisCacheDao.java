@@ -1,6 +1,5 @@
 package com.roy.sqwaimai.cache.impl;
 
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 

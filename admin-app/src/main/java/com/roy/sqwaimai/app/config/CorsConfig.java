@@ -16,7 +16,6 @@ public class CorsConfig {
         corsConfiguration.addAllowedOriginPattern("*");
         //  跨域的请求头
         corsConfiguration.addAllowedHeader("*");
-        //  跨域的请求方法
         corsConfiguration.addAllowedMethod("GET");
         corsConfiguration.addAllowedMethod("POST");
         corsConfiguration.addAllowedMethod("PUT");

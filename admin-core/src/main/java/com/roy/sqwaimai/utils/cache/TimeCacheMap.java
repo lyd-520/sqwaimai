@@ -6,9 +6,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-/**
- * Created by zt on 2017/4/12 0012.
- */
 public class TimeCacheMap<K, V> {
     private static final int DEFAULT_NUM_BUCKETS = 3;
 
@@ -36,9 +33,9 @@ public class TimeCacheMap<K, V> {
             throw new IllegalArgumentException("numBuckets must be >= 2");
         }
         //构造函数中，按照桶的数量，初始桶
-        buckets = new LinkedList<HashMap<K, V>>();
+        buckets = new LinkedList<>();
         for (int i = 0; i < numBuckets; i++) {
-            buckets.add(new HashMap<K, V>());
+            buckets.add(new HashMap<>());
         }
 
 
