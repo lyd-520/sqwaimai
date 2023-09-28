@@ -13,8 +13,8 @@ let imgBaseUrl = '';
 
 
 if (process.env.NODE_ENV == 'development') {
-  imgBaseUrl = 'http://localhost:8082/file/getImgStream?fileName='
-  baseUrl = "http://localhost:8082"
+  imgBaseUrl = 'http://localhost:7081/file/getImgStream?fileName='
+  baseUrl = "http://localhost:7081"
 } else if (process.env.NODE_ENV == 'production') {
   baseUrl = 'http://waimai-api.microapp.store/api';
   imgBaseUrl = 'http://waimai-api.microapp.store/api/file/getImgStream?fileName=';

@@ -37,7 +37,7 @@ compiler.plugin('compilation', function(compilation) {
 var context = config.dev.context
 
 switch(process.env.NODE_ENV){
-    case 'local': var proxypath = 'http://localhost:8082'; break;
+    case 'local': var proxypath = 'http://localhost:7081'; break;
     case 'online': var proxypath = 'http://waimai-api.microapp.store/api'; break;
     default:  var proxypath = config.dev.proxypath;
 }

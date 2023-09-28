@@ -26,7 +26,6 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
 			method: type,
 			mode: "cors",
 			cache: "force-cache",
-			credentials: 'include'
 		}
 
 		if (type == 'POST') {
