@@ -23,7 +23,8 @@ public class RedisLockDao {
     public Boolean lock(Object lock){
         String lockKey = RedisLockDao.LOCK_PREFIX+lock.toString();
         long expireAt = System.currentTimeMillis()+LOCK_EXPIRE+1;
-        Boolean acquire = (Boolean) redisTemplate.execute((RedisCallback) connection -> connection.setNX(lockKey.getBytes(StandardCharsets.UTF_8), String.valueOf(expireAt).getBytes(StandardCharsets.UTF_8)));
+        Boolean acquire = (Boolean) redisTemplate.execute((RedisCallback) connection ->
+                connection.setNX(lockKey.getBytes(StandardCharsets.UTF_8), String.valueOf(expireAt).getBytes(StandardCharsets.UTF_8)));
         if(acquire){
             redisTemplate.expire(lockKey.getBytes(StandardCharsets.UTF_8),Duration.ofMillis(LOCK_EXPIRE));
         }else{
